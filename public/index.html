@@ -1,65 +1,170 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="Author" content="David Harper">
+  <meta name="description" content="Home and experimentation page for David Harper">
+  <meta name="keywords" content="Firebase,Cloud Firestore,HTML,JavaScript">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/7.3.0/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/7.3.0/firebase-auth.js"></script>
-    <script defer src="/__/firebase/7.3.0/firebase-database.js"></script>
-    <script defer src="/__/firebase/7.3.0/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/7.3.0/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script defer src="/__/firebase/init.js"></script>
+  <title>David Harper's Food Page</title>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
+  <!-- Web Application Manifest -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+
+  <!-- Styles for gallery -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    .mySlides {display:none}
+    .w3-left, .w3-right, .w3-badge {cursor:pointer}
+    .w3-badge {height:20px;width:20px;padding:0}
+  </style>
+
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.deep_purple-indigo.min.css">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+  <!-- App Styling -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+
+  <!-- Enable First Input Delay polyfill library. -->
+  <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
+  <!-- End of section copied from FriendlyChat -->
+
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title">Random Foodie Title</span>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
 
-        try {
-          let app = firebase.app();
-          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
+          <!-- log in with Google. -->
+          <div id="user-container">
+            <div hidden id="user-pic"></div>
+            <div hidden id="user-name"></div>            
+            <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+              Sign-out
+            </button>
+            <button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+              <i class="material-icons">account_circle</i>Sign-in with Google
+            </button>
+          </div>
+
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Contents</span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="javascript:linkClicked('Home');">Recipies</a>
+          <a class="mdl-navigation__link" href="javascript:linkClicked('AddRecipe');">AddRecipe</a>
+          <a class="mdl-navigation__link" href="javascript:linkClicked('ShoppingList');">Shopping List</a>
+          <a class="mdl-navigation__link" href="javascript:linkClicked('About');">About</a>
+        </nav>
+      </div>
+
+      <main class="mdl-layout__content">
+        <div hidden id="home-container">
+            <div class="mdl-grid portfolio-max-width">
+              <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Recipies</h2>
+              </div>              
+            </div>
+        </div>
+
+        <div hidden id="new-container">
+            <div class="mdl-grid portfolio-max-width">
+              <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Add new recipe</h2>
+              </div>              
+            </div>
+        </div>
+
+        <div hidden id="shoppingList-container" class="mdl-layout__content mdl-layout-spacer">
+            <div class="mdl-grid portfolio-max-width">
+              <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+  
+                <div class="mdl-card__title">
+                  <h2 class="mdl-card__title-text">Shopping List</h2>
+                </div><!--<h2 class="mdl-layout-title">Shopping List</h2>-->
+  
+                <div style = "padding-left:10px; padding-right:10px;">
+                  <table id="shoppingList-table" class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp">
+                    <thead>
+                      <tr> 
+                        <th><!--dummy column header for check boxes--></th>
+                        <th class="mdl-data-table__cell--non-numeric">Item</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                      </tr>
+                    </thead>
+                    <tbody id="shoppingListContents">    
+                    </tbody>  
+                  </table>
+                </div>
+  
+                <br>
+                <form id="shoppingList-form" action="#" style = "padding:10px;">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="itemDesc" />
+                    <label class="mdl-textfield__label" for="sample3">New Item Desc</label>
+                  </div>
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="itemQty" />
+                    <label class="mdl-textfield__label" for="sample3">Quantity</label>
+                  </div>              
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="itemUnit" />
+                    <label class="mdl-textfield__label" for="sample3">Unit Type</label>
+                  </div>
+                  
+                  <div style = "padding:10px;">  
+                    <button id="submitItem" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Item</button>
+                    <button id="submitRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Refresh List</button>
+                  </div>  
+                </form>
+              </div>
+            </div>
+          </div>   
+
+        <div hidden id="about-container">
+            <div class="mdl-grid portfolio-max-width">
+              <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">About</h2>
+              </div>              
+            </div>
+        </div>
+
+        <br>
+  
+        <p id="load">Firebase SDK Loading&hellip;</p>
+        <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+          <div class="mdl-snackbar__text"></div>
+          <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+      </main>
+  <!--------------------------------------------->
+
+  <!-- Import and configure the Firebase SDK -->
+  <!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
+  <!-- update the version number as needed -->
+  <script  src="/__/firebase/7.3.0/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script  src="/__/firebase/7.3.0/firebase-auth.js"></script>
+  <script  src="/__/firebase/7.3.0/firebase-firestore.js"></script>  
+  <!-- <script defer src="/__/firebase/7.3.0/firebase-database.js"></script> -->
+  <!-- <script defer src="/__/firebase/7.3.0/firebase-messaging.js"></script> -->
+  <!-- <script defer src="/__/firebase/7.3.0/firebase-storage.js"></script> -->
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script  src="/__/firebase/init.js"></script>
+
+  <!-- Scripts below control authentication and page contend -->
+  <script src="scripts/index.js"></script>
+
   </body>
 </html>
