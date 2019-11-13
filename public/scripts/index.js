@@ -292,8 +292,10 @@ function addSizeToGoogleProfilePic(url) {
 /*=====================================================================================================*/
   // Menu selection and showing/hiding div elements
   
-  //const mainDiv = document.querySelector(".page-content");
+  
   const homeElement = document.getElementById('home-container');
+  const recipesElement = document.getElementById('recipes-container'); // This is within home-container
+
   const NewElement = document.getElementById('new-container');
   const shoppingListElement = document.getElementById('shoppingList-container');
   const aboutElement = document.getElementById('about-container');
@@ -357,13 +359,73 @@ function addSizeToGoogleProfilePic(url) {
     }
   }
 
+/*=======================================================================================================*/
 /* Home - Recipies */
+
+// const homeElement = document.getElementById('home-container'); - Home element defined above
+
+//var recipiesListData = firestore.collection('recipies');
+
 function homeShow(){
     // Display and populate the gallery.
     console.log('Show Home:');
     
+    popRecipes();
+
     homeElement.removeAttribute('hidden');  
   }
+
+function popRecipes(){
+    console.log('popRecipes:');
+
+    const query = firestore.collection('recipes');
+
+    console.log('Got Recipes:');
+
+    // Start listening to the query to get shopping list data.
+    query.onSnapshot(function(snapshot) {
+        snapshot.docChanges().forEach(function(change) {
+        
+        var rowid = 0
+        
+        if (change.type === 'removed') {
+            deleteListItem(change.doc.id);
+        } else {
+            var ListItem = change.doc.data();
+            console.log('Resipes list: ', ListItem.title, ', ', ListItem.desc);
+            displayRecipeCard(change.doc.id, ListItem.title, ListItem.desc)      
+        }
+        });
+    })}; 
+    
+    function displayRecipeCard(id, title, desc){
+        console.log('displayListItem: ', id, title, desc);
+
+        const container = document.createElement('div');
+        container.setAttribute('id', id);
+      
+        var tableRow = document.getElementById(id) 
+
+        var content = '';
+        content += `<div class="mdl-cell mdl-cell--6-col">`
+        content += `<div class="demo-card-square mdl-card mdl-shadow--2dp">`
+
+
+        content += `<figure class="mdl-card__media">
+                        <img src="/images/default.jpg" alt="" style="width:100%" />
+                    </figure>`
+
+        content += '<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text" id="' + id + '">' + title + '</h2></div>';
+        content += '<div class="mdl-card__supporting-text">' + desc + '</div>';
+        content += '</div></div></div>';
+      
+        container.innerHTML = content;
+          
+        console.log('container.innerHTML: ', container.innerHTML);
+        
+        recipesElement.appendChild(container);
+    }
+
 
 /*=======================================================================================================*/
 /* Add new recipie */
@@ -388,17 +450,6 @@ function shoppingListHTML(){
   
   }
 
-/*=======================================================================================================*/
-/* Add new recipie */
-function aboutShow(){
-    // Display and populate the gallery.
-    console.log('Show About:');
-    
-    aboutElement.removeAttribute('hidden');  
-  }
-
-/*=======================================================================================================*/
-/* Shopping List */
 
 const shoppingListContents = document.getElementById('shoppingListContents');
 
@@ -568,11 +619,16 @@ function popShoppingList(){
         fc = shoppingListContents.firstChild;
     }
   }
-
 /*=======================================================================================================*/
 /* About */
+function aboutShow(){
+    // Display the about info.
+    console.log('Show About:');
+    
+    aboutElement.removeAttribute('hidden');  
+  }
 
-
+// Currently defined by HTML.
 
 /*=======================================================================================================*/
 // Utility functions
