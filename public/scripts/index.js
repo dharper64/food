@@ -364,6 +364,14 @@ function addSizeToGoogleProfilePic(url) {
 
 // const homeElement = document.getElementById('home-container'); - Home element defined above
 
+//var items = document.getElementsByClassName('cardAction')
+//selectedRecipeCard.addEventListener('click', loadRecipeDetail());
+
+
+var testButtonElement = document.getElementById('testBtn');
+testButtonElement.addEventListener('click', loadRecipeDetail());
+
+
 //var recipiesListData = firestore.collection('recipies');
 
 function homeShow(){
@@ -396,36 +404,60 @@ function popRecipes(){
             displayRecipeCard(change.doc.id, ListItem.title, ListItem.desc)      
         }
         });
-    })}; 
+    })
+    console.log('Add card events:');
+
+    // Example of getting IDs
+    // https://codepen.io/bubblesphere/pen/PWBQRo
     
-    function displayRecipeCard(id, title, desc){
-        console.log('displayListItem: ', id, title, desc);
+    var items = document.getElementsByClassName('menu');
+    for (var i = 0; i < items.length; i++) {
+        console.log('Item:',i);
+        items[i].addEventListener('click', printDetails);
+      }
 
-        const container = document.createElement('div');
-        container.setAttribute('id', id);
-      
-        var tableRow = document.getElementById(id) 
+    console.log('Add card events: Done');      
+}; 
+    
+function displayRecipeCard(id, title, desc){
+    console.log('displayListItem: ', id, title, desc);
 
-        var content = '';
-        content += `<div class="mdl-cell mdl-cell--6-col">`
-        content += `<div class="demo-card-square mdl-card mdl-shadow--2dp">`
+    const container = document.createElement('div');
+    container.setAttribute('id', id);
+    
+    var tableRow = document.getElementById(id) 
 
+    var content = '';
+    content += `<div class="recipeCard mdl-cell mdl-cell--6-col">`
+    content += `<div class="demo-card-square mdl-card mdl-shadow--2dp">`
 
-        content += `<figure class="mdl-card__media">
-                        <img src="/images/default.jpg" alt="" style="width:100%" />
-                    </figure>`
+    content += `<figure class="mdl-card__media">
+                    <img src="/images/default.jpg" alt="" style="width:100%" />
+                </figure>`
 
-        content += '<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text" id="' + id + '">' + title + '</h2></div>';
-        content += '<div class="mdl-card__supporting-text">' + desc + '</div>';
-        content += '</div></div></div>';
-      
-        container.innerHTML = content;
-          
-        console.log('container.innerHTML: ', container.innerHTML);
+    content += `<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text" id="` + id + `">` + title + `</h2></div>`;
+    content += `<div class="mdl-card__supporting-text">` + desc + `</div>`;
+    content += `<div class="cardAction mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Recipe</a>
+                </div>`;
+    content += `</div>
+                </div>
+                </div>`;
+    
+    container.innerHTML = content;
         
-        recipesElement.appendChild(container);
-    }
+    console.log('container.innerHTML: ', container.innerHTML);
+    
+    recipesElement.appendChild(container);
+}
 
+function printDetails(e) {
+console.log("Clicked " + this.id);
+}
+
+function loadRecipeDetail(){        
+    console.log('loadRecipeDetail:');
+}
 
 /*=======================================================================================================*/
 /* Add new recipie */
