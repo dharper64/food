@@ -338,6 +338,7 @@ function addSizeToGoogleProfilePic(url) {
     switch(selection) {
       case 'Home':
         homeShow();
+        addRecipeCardEvents();
         break;
       case 'AddRecipe':
         NewShow();
@@ -355,6 +356,7 @@ function addSizeToGoogleProfilePic(url) {
         break;
       default:
         homeShow();
+        addRecipeCardEvents();
         break
     }
   }
@@ -364,12 +366,20 @@ function addSizeToGoogleProfilePic(url) {
 
 // const homeElement = document.getElementById('home-container'); - Home element defined above
 
-//var items = document.getElementsByClassName('cardAction')
-//selectedRecipeCard.addEventListener('click', loadRecipeDetail());
+//const selectedRecipeCard = document.getElementsByClassName('cardAction')
+//selectedRecipeCard.addEventListener('click', loadRecipeDetail);
+//selectedRecipeCard.addEventListener('click', function(){    
+//    console.log('Recipe card click event');
+//});
 
 
-var testButtonElement = document.getElementById('testBtn');
-testButtonElement.addEventListener('click', loadRecipeDetail());
+// Test button with event listener
+const testButtonElement = document.getElementById('testButton');
+testButtonElement.addEventListener('click', testAddEventsByClick)
+
+//testButtonElement.addEventListener('click', function(){    
+//    console.log('Test button click event');
+//});
 
 
 //var recipiesListData = firestore.collection('recipies');
@@ -405,20 +415,30 @@ function popRecipes(){
         }
         });
     })
-    console.log('Add card events:');
 
-    // Example of getting IDs
-    // https://codepen.io/bubblesphere/pen/PWBQRo
-    
-    var items = document.getElementsByClassName('menu');
-    for (var i = 0; i < items.length; i++) {
-        console.log('Item:',i);
-        items[i].addEventListener('click', printDetails);
-      }
-
-    console.log('Add card events: Done');      
 }; 
-    
+
+function addRecipeCardEvents(){
+  console.log('Add recipe card events:');
+
+  // Example of getting IDs
+  // https://codepen.io/bubblesphere/pen/PWBQRo
+  
+  //var items = document.getElementsByClassName('recipeCard');
+  var items = document.getElementsByClassName('cardAction');
+  //var items = document.getElementsByClassName('mdl-navigation__link');
+  
+  console.log('items.length:', items.length);
+
+  for (var i = 0; i < items.length; i++) {
+      console.log('Item:',items[i].innerHTML);
+      items[i].style.backgroundColor = "red";
+      //items[i].addEventListener('click', loadRecipeDetail);
+    }
+
+  console.log('Added card events: Done');   
+}
+
 function displayRecipeCard(id, title, desc){
     console.log('displayListItem: ', id, title, desc);
 
@@ -428,16 +448,16 @@ function displayRecipeCard(id, title, desc){
     var tableRow = document.getElementById(id) 
 
     var content = '';
-    content += `<div class="recipeCard mdl-cell mdl-cell--6-col">`
-    content += `<div class="demo-card-square mdl-card mdl-shadow--2dp">`
+    content += `<div class="mdl-cell mdl-cell--6-col">`
+    content += `<div class="recipeCard demo-card-square mdl-card mdl-shadow--2dp">`
 
     content += `<figure class="mdl-card__media">
                     <img src="/images/default.jpg" alt="" style="width:100%" />
                 </figure>`
 
-    content += `<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text" id="` + id + `">` + title + `</h2></div>`;
+    content += `<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text">` + title + `"</h2></div>`;
     content += `<div class="mdl-card__supporting-text">` + desc + `</div>`;
-    content += `<div class="cardAction mdl-card__actions mdl-card--border">
+    content += `<div id="` + id + ` class="cardAction mdl-card__actions mdl-card--border">
                 <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">View Recipe</a>
                 </div>`;
     content += `</div>
@@ -452,12 +472,17 @@ function displayRecipeCard(id, title, desc){
 }
 
 function printDetails(e) {
-console.log("Clicked " + this.id);
+  console.log("Clicked " + this.id);
 }
 
 function loadRecipeDetail(){        
     console.log('loadRecipeDetail:');
+    
 }
+function testAddEventsByClick(){
+  addRecipeCardEvents();
+}
+
 
 /*=======================================================================================================*/
 /* Add new recipie */
