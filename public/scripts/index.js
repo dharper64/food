@@ -378,6 +378,9 @@ function addSizeToGoogleProfilePic(url) {
 //    console.log('Recipe card click event');
 //});
 
+const recipeIDElement = document.getElementById('recipeID');
+
+
 
 //var recipiesListData = firestore.collection('recipies');
 
@@ -470,6 +473,14 @@ function loadRecipeDetail(id){
     console.log('loadRecipeDetail:', id);
     
     hideAllDynamicDivs();
+
+    recipeIDElement.innerHTML = "Recipe ID : " + id
+
+    // Get data for selected recipe
+
+    //var recipe = firebase.firestore().collection('recipes').doc(id).get();
+
+    //recipe.
 
     recipeOuterElement.removeAttribute('hidden'); 
 }
