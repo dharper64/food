@@ -482,6 +482,16 @@ function loadRecipeDetail(id){
 
     //recipe.
 
+    // See: https://stackoverflow.com/questions/47876754/query-firestore-database-for-document-id
+
+    // Try
+    //firebase.firestore().collection("Your collection").doc(documentId).get().then( (docRef ) => {    
+    //  console.log(doc.data())          
+    //}).catch( (error) => { })
+
+
+
+
     recipeOuterElement.removeAttribute('hidden'); 
 }
 
