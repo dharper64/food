@@ -293,12 +293,19 @@ function addSizeToGoogleProfilePic(url) {
   // Menu selection and showing/hiding div elements
   
   
-  const homeElement = document.getElementById('home-container');
-  const recipesElement = document.getElementById('recipes-container'); // This is within home-container
+  const homeElement = document.getElementById('home-container');  
+  const recipeListElement = document.getElementById('recipes-list-container'); // This is within home-container
+  const recipeOuterElement = document.getElementById('recipe-outer-container');
 
   const NewElement = document.getElementById('new-container');
   const shoppingListElement = document.getElementById('shoppingList-container');
   const aboutElement = document.getElementById('about-container');
+  
+  const goHomeButtonElement = document.getElementById('goHome');
+  goHomeButtonElement.addEventListener('click', function() {
+    console.log('Go Home Button Clicked');   
+    linkClicked("Home");
+  });  
 
   document.querySelector('.mdl-layout__drawer').addEventListener('click', closeMenu);
 
@@ -314,6 +321,7 @@ function addSizeToGoogleProfilePic(url) {
 
     //mainDiv.setAttribute('hidden', 'true');
     homeElement.setAttribute('hidden', 'true');  
+    recipeOuterElement.setAttribute('hidden', 'true');  
     NewElement.setAttribute('hidden', 'true');
     shoppingListElement.setAttribute('hidden', 'true');
     aboutElement.setAttribute('hidden', 'true');
@@ -384,6 +392,8 @@ function homeShow(){
 
 function popRecipes(){
     console.log('popRecipes:');
+   
+    cleaRecipeListElement();
 
     const query = firestore.collection('recipes');
 
@@ -391,10 +401,7 @@ function popRecipes(){
 
     // Start listening to the query to get shopping list data.
     query.onSnapshot(function(snapshot) {
-        snapshot.docChanges().forEach(function(change) {
-        
-        var rowid = 0
-        
+        snapshot.docChanges().forEach(function(change) {                
         if (change.type === 'removed') {
             deleteListItem(change.doc.id);
         } else {
@@ -404,8 +411,20 @@ function popRecipes(){
         }
         });
     })
-
 }; 
+
+// Remove existing rows from recipe list table when selected from menu.
+function cleaRecipeListElement(){
+  console.log('cleaRecipeListElement...');
+  
+  var fc = recipeListElement.firstChild;
+
+  while( fc ) {
+    console.log('Clear recipe list row.');
+    recipeListElement.removeChild( fc );
+      fc = recipeListElement.firstChild;
+  }
+}
 
 function displayRecipeCard(id, title, desc){
     console.log('displayListItem: ', id, title, desc);
@@ -440,7 +459,7 @@ function displayRecipeCard(id, title, desc){
       loadRecipeDetail(container.id);
     });  
 
-    recipesElement.appendChild(container);
+    recipeListElement.appendChild(container);
 }
 
 function printDetails(e) {
@@ -450,6 +469,9 @@ function printDetails(e) {
 function loadRecipeDetail(id){        
     console.log('loadRecipeDetail:', id);
     
+    hideAllDynamicDivs();
+
+    recipeOuterElement.removeAttribute('hidden'); 
 }
 
 

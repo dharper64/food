@@ -72,8 +72,29 @@
 
       <main class="mdl-layout__content">
         <div hidden id="home-container">
-          <div class="mdl-grid portfolio-max-width" id="recipes-container">
+          <div class="mdl-grid portfolio-max-width" id="recipes-list-container">
               <!-- Contents populated from index.js -->
+          </div>
+        </div>
+
+        <div hidden id="recipe-outer-container">
+          <div class="demo-container mdl-grid"  id="detail-container">
+             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+              <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">            
+                <!-- Contents populated from index.js -->
+
+                <!-- <div style = "padding:10px;">   -->
+                <div style = "padding:10px;">  
+                    <h3 id="recipeTitle">recipeTitle</h3>
+                    <P id="recipeID">Recipe ID</P>
+                </div>  
+
+                <div style = "padding:10px;">  
+                  <button id="goHome" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Back</button>
+                </div>  
+
+              </div>
+            </div>
           </div>
         </div>
 
