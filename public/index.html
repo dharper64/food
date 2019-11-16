@@ -83,13 +83,38 @@
               <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">            
                 <!-- Contents populated from index.js -->
 
-                <!-- <div style = "padding:10px;">   -->
                 <div style = "padding:10px;">  
-                    <h3 id="recipeTitle">recipeTitle</h3>
-                    <P id="recipeID">Recipe ID</P>
+                    <h3 id="recipeTitle">Recipe Title</h3>
+                    <!-- <P id="recipeID">Recipe ID</P> --> <!-- Just for testing -->
+                    <P id="recipeAddedBy">AddedBy</P>
+                    <P id="recipeDesc">Recipe Description</P>
                 </div>  
                 
                 <!-- Added by -->
+                <!-- Description -->
+
+                <div class = "mdl-tabs mdl-js-tabs">
+                  <div class = "mdl-tabs__tab-bar">
+                    <a href = "#tab1-panel" class = "mdl-tabs__tab is-active">Ingredients</a>
+                    <a href = "#tab2-panel" class = "mdl-tabs__tab">Method</a>
+                  </div>
+
+                  <div class = "mdl-tabs__panel is-active" id = "tab1-panel">
+                    <div style = "padding:20px;">  
+                        <ul id = "ingredients" class="demo-list-item mdl-list" style="list-style-type:disc;">
+                          <!-- Generated from index.js -->                      
+                        </ul>
+                    </div>
+                  </div>
+                
+                  <div class = "mdl-tabs__panel" id = "tab2-panel">
+                    <div style = "padding:20px;">  
+                      <ul id = "method" class="demo-list-item mdl-list">
+                        <!-- Generated from index.js -->                      
+                      </ul>
+                    </div>   
+                  </div>
+                </div>
 
                 <div style = "padding:10px;">  
                   <button id="goHome" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Back</button>

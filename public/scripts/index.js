@@ -378,9 +378,12 @@ function addSizeToGoogleProfilePic(url) {
 //    console.log('Recipe card click event');
 //});
 
-const recipeIDElement = document.getElementById('recipeID');
-
-
+const recipeTitleIDElement = document.getElementById('recipeTitle');
+//const recipeIDElement = document.getElementById('recipeID');
+const recipeAddedByElement = document.getElementById('recipeAddedBy');
+const recipeDescElement = document.getElementById('recipeDesc');
+const ingredientsElement = document.getElementById('ingredients');
+const methodElement = document.getElementById('method');
 
 //var recipiesListData = firestore.collection('recipies');
 
@@ -474,27 +477,163 @@ function loadRecipeDetail(id){
     
     hideAllDynamicDivs();
 
-    recipeIDElement.innerHTML = "Recipe ID : " + id
-
     // Get data for selected recipe
 
-    //var recipe = firebase.firestore().collection('recipes').doc(id).get();
+    // recipeIDElement.innerHTML = "Recipe ID : " + id
 
-    //recipe.
+    // Load Recipe Header
+    loadRecipeHeader(id);
 
-    // See: https://stackoverflow.com/questions/47876754/query-firestore-database-for-document-id
+    // Load Recipe Metingredients
+    loadRecipeIngredients(id);
 
-    // Try
-    //firebase.firestore().collection("Your collection").doc(documentId).get().then( (docRef ) => {    
-    //  console.log(doc.data())          
-    //}).catch( (error) => { })
-
-
-
+    // Load Recipe Method
+    loadRecipeMethod(id);
 
     recipeOuterElement.removeAttribute('hidden'); 
 }
 
+function loadRecipeHeader(id){ 
+  console.log('loadRecipeHeader: ', id);
+
+  var docRef = firestore.collection('recipes').doc(id);
+
+  docRef.get().then(function(doc) {
+      if (doc.exists) {
+          //console.log("Document data:", doc.data());
+
+          var RecipeItem = doc.data();
+          console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
+
+          recipeTitleIDElement.innerHTML = RecipeItem.title
+          recipeAddedByElement.innerHTML = "Submitted By : " + RecipeItem.addedBy
+          recipeDescElement.innerHTML = RecipeItem.desc
+
+      } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+      }
+  }).catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+
+}
+
+function loadRecipeIngredients(id){ 
+  console.log('loadRecipeIngredients: ', id);
+
+  clearIngredientsListElement();
+
+  const query = firestore.collection('recipes').doc(id).collection('Ingredients')
+  .orderBy('orderBy', 'asc');
+  // See https://firebase.google.com/docs/firestore/data-model for sub collection.
+
+  methodElement.deleteListItem;
+
+  // Start listening to the query to get shopping list data.
+  query.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+    //console.log("Document data:", change.doc.data());
+
+    var ListItem = change.doc.data();
+    console.log('Method: ', ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
+    displayIngredientItem(change.doc.id, ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
+
+    }) 
+  })
+}
+
+function clearIngredientsListElement(){
+  console.log('cleaMethodistElement...');
+  
+  var fc = ingredientsElement.firstChild;
+
+  while( fc ) {
+    console.log('Clear method list row.');
+    ingredientsElement.removeChild( fc );
+      fc = ingredientsElement.firstChild;
+  }
+}
+
+function displayIngredientItem(id, orderBy, item, qty, unit) {
+  console.log('displayMethodItem: ', orderBy, item, qty, unit);
+  
+  const container = document.createElement('li');
+  container.setAttribute('id', id);
+
+  var tableRow = document.getElementById(id)
+
+  var content = `<li id="row[` + id + `] class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          ` +  item + ` ` + qty + ` ` + unit + ` 
+          </span>
+        </li>`;
+
+  container.innerHTML = content;
+    
+  console.log('container.innerHTML: ', container.innerHTML);
+
+  ingredientsElement.appendChild(container);
+}
+
+function loadRecipeMethod(id){ 
+  console.log('loadRecipeHeader: ', id);
+  // methodElement
+
+  clearMethodListElement();
+
+  const query = firestore.collection('recipes').doc(id).collection('Method')
+  .orderBy('orderBy', 'asc');
+  // See https://firebase.google.com/docs/firestore/data-model for sub collection.
+
+  methodElement.deleteListItem;
+
+  // Start listening to the query to get shopping list data.
+  query.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+    //console.log("Document data:", change.doc.data());
+
+    var ListItem = change.doc.data();
+    console.log('Method: ', ListItem.orderBy, ListItem.method);
+    displayMethodItem(change.doc.id, ListItem.orderBy, ListItem.method);
+
+    }) 
+  })
+}
+
+function clearMethodListElement(){
+  console.log('cleaMethodistElement...');
+  
+  var fc = methodElement.firstChild;
+
+  while( fc ) {
+    console.log('Clear method list item.');
+    methodElement.removeChild( fc );
+      fc = methodElement.firstChild;
+  }
+}
+
+function displayMethodItem(id, orderBy, method) {
+  console.log('displayMethodItem: ', orderBy, method);
+  
+  const container = document.createElement('li');
+  container.setAttribute('id', id);
+
+  var tableRow = document.getElementById(id)
+
+  var content = `<li  id="row[` + id + `]class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          ` + orderBy + `. ` + method + `
+          </span>
+        </li>
+        <br>`;
+
+  container.innerHTML = content;
+    
+  console.log('container.innerHTML: ', container.innerHTML);
+
+  methodElement.appendChild(container);
+}
 
 /*=======================================================================================================*/
 /* Add new recipie */
