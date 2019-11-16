@@ -35,6 +35,7 @@
   <!-- End of section copied from FriendlyChat -->
 
   </head>
+
   <body>
 
     <!-- Always shows a header, even in smaller screens. -->
@@ -57,9 +58,9 @@
               <i class="material-icons">account_circle</i>Sign-in with Google
             </button>
           </div>
-
         </div>
       </header>
+
       <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">Contents</span>
         <nav class="mdl-navigation">
@@ -79,15 +80,15 @@
 
         <div hidden id="recipe-outer-container">
           <div class="demo-container mdl-grid"  id="detail-container">
-             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+            <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone">
               <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">            
                 <!-- Contents populated from index.js -->
 
                 <div style = "padding:10px;">  
-                    <h3 id="recipeTitle">Recipe Title</h3>
-                    <!-- <P id="recipeID">Recipe ID</P> --> <!-- Just for testing -->
-                    <P id="recipeAddedBy">AddedBy</P>
-                    <P id="recipeDesc">Recipe Description</P>
+                  <h3 id="recipeTitle">Recipe Title</h3>
+                  <!-- <P id="recipeID">Recipe ID</P> --> <!-- Just for testing -->
+                  <P id="recipeAddedBy">AddedBy</P>
+                  <P id="recipeDesc">Recipe Description</P>
                 </div>  
                 
                 <!-- Added by -->
@@ -130,59 +131,59 @@
         </div>
 
         <div hidden id="new-container">
-            <div class="mdl-grid portfolio-max-width">
-              <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">Add new recipe</h2>
-              </div>              
-            </div>
+          <div class="mdl-grid portfolio-max-width">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">Add new recipe</h2>
+            </div>              
+          </div>
         </div>
 
         <div hidden id="shoppingList-container" class="mdl-layout__content mdl-layout-spacer">
-            <div class="mdl-grid portfolio-max-width">
-              <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
-  
-                <div class="mdl-card__title">
-                  <h2 class="mdl-card__title-text">Shopping List</h2>
-                </div><!--<h2 class="mdl-layout-title">Shopping List</h2>-->
-  
-                <div style = "padding-left:10px; padding-right:10px;">
-                  <table id="shoppingList-table" class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp">
-                    <thead>
-                      <tr> 
-                        <th><!--dummy column header for check boxes--></th>
-                        <th class="mdl-data-table__cell--non-numeric">Item</th>
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                      </tr>
-                    </thead>
-                    <tbody id="shoppingListContents">    
-                    </tbody>  
-                  </table>
-                </div>
-  
-                <br>
-                <form id="shoppingList-form" action="#" style = "padding:10px;">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="itemDesc" />
-                    <label class="mdl-textfield__label" for="sample3">New Item Desc</label>
-                  </div>
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="itemQty" />
-                    <label class="mdl-textfield__label" for="sample3">Quantity</label>
-                  </div>              
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="itemUnit" />
-                    <label class="mdl-textfield__label" for="sample3">Unit Type</label>
-                  </div>
-                  
-                  <div style = "padding:10px;">  
-                    <button id="submitItem" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Item</button>
-                    <button id="submitRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Refresh List</button>
-                  </div>  
-                </form>
+          <div class="mdl-grid portfolio-max-width">
+            <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+
+              <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Shopping List</h2>
+              </div><!--<h2 class="mdl-layout-title">Shopping List</h2>-->
+
+              <div style = "padding-left:10px; padding-right:10px;">
+                <table id="shoppingList-table" class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp">
+                  <thead>
+                    <tr> 
+                      <th><!--dummy column header for check boxes--></th>
+                      <th class="mdl-data-table__cell--non-numeric">Item</th>
+                      <th>Quantity</th>
+                      <th>Unit</th>
+                    </tr>
+                  </thead>
+                  <tbody id="shoppingListContents">    
+                  </tbody>  
+                </table>
               </div>
+
+              <br>
+              <form id="shoppingList-form" action="#" style = "padding:10px;">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text" id="itemDesc" />
+                  <label class="mdl-textfield__label" for="sample3">New Item Desc</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text" id="itemQty" />
+                  <label class="mdl-textfield__label" for="sample3">Quantity</label>
+                </div>              
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text" id="itemUnit" />
+                  <label class="mdl-textfield__label" for="sample3">Unit Type</label>
+                </div>
+                
+                <div style = "padding:10px;">  
+                  <button id="submitItem" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Item</button>
+                  <button id="submitRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Refresh List</button>
+                </div>  
+              </form>
             </div>
-          </div>   
+          </div>
+        </div>   
 
         <div hidden id="about-container">
             <div class="mdl-grid portfolio-max-width">
