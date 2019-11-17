@@ -173,6 +173,7 @@ function getUserName() {
 // Returns true if a user is signed-in.
 function isUserSignedIn() {
   console.log("isUserSignedIn...");
+  console.log("Is User Signed In...", firebase.auth().currentUser);
   return !!firebase.auth().currentUser;
 }
 
@@ -255,6 +256,7 @@ function checkSignedInWithMessage() {
   console.log("checkSignedIn...");
   // Return true if the user is signed in Firebase
   if (isUserSignedIn()) {
+    console.log("User is signed in.");
     return true;
   }
 
@@ -291,7 +293,6 @@ function addSizeToGoogleProfilePic(url) {
 
 /*=====================================================================================================*/
   // Menu selection and showing/hiding div elements
-  
   
   const homeElement = document.getElementById('home-container');  
   const recipeListElement = document.getElementById('recipes-list-container'); // This is within home-container
@@ -347,16 +348,21 @@ function addSizeToGoogleProfilePic(url) {
       case 'Home':
         homeShow();
         break;
-      case 'AddRecipe':
-        NewShow();
+      case 'AddRecipe':        
+        if (checkSignedInWithMessage()) {
+          NewShow();
+        } else {            
+          hideAllDynamicDivs();
+          updateMainDiv("Home");
+        }        
         break;
       case 'ShoppingList':
-          if (checkSignedInWithMessage()) {
-            shoppingListHTML();
-          } else {            
-            hideAllDynamicDivs();
-            updateMainDiv("Home");
-          }
+        if (checkSignedInWithMessage()) {
+          shoppingListHTML();
+        } else {            
+          hideAllDynamicDivs();
+          updateMainDiv("Home");
+        }
         break;
       case 'About':
         aboutShow();
@@ -641,7 +647,29 @@ function NewShow(){
     // Display and populate the gallery.
     console.log('Show New:');
     
+    popSubmitForm(0);
+
     NewElement.removeAttribute('hidden');  
+  }
+
+  // newTitle
+  const newTitleElement = document.getElementById('newTitle');
+
+  // NewSubmittedBy
+  const newSubmittedByElement = document.getElementById('NewSubmittedBy');
+
+  // Submit new recipe list buttons
+  const saveRecipeButtonElement = document.getElementById('saveRecipe');
+  
+  function popSubmitForm(recipeID){
+    
+    console.log('popSubmitForm');
+    //newSubmittedByElement. = firebase.auth().currentUser.displayName;
+    // firebase.auth().currentUser
+
+    console.log('User: ', firebase.auth().currentUser.displayName);
+    document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = firebase.auth().currentUser.displayName;
+
   }
 
 /*=======================================================================================================*/
@@ -667,8 +695,11 @@ const inputItemDescData = document.querySelector("#itemDesc");
 const inputItemQtyData = document.querySelector("#itemQty");
 const inputItemUnitData = document.querySelector("#itemUnit");
 
+// Shopping list buttons
 const submitItemButtonElement = document.getElementById('submitItem');
 const submitRefreshButtonElement = document.getElementById('submitRefresh');
+
+
 
 var shoppingListData = firestore.collection('shoppingList');
 
