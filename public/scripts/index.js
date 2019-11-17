@@ -496,6 +496,8 @@ function loadRecipeDetail(id){
     // Load Recipe Method
     loadRecipeMethod(id);
 
+    console.log('loadRecipeDetail: Done', id);
+
     recipeOuterElement.removeAttribute('hidden'); 
 }
 
