@@ -483,6 +483,8 @@ function loadRecipeDetail(id){
     
     hideAllDynamicDivs();
 
+    recipeOuterElement.removeAttribute('hidden'); 
+    
     // Get data for selected recipe
 
     // recipeIDElement.innerHTML = "Recipe ID : " + id
@@ -499,6 +501,8 @@ function loadRecipeDetail(id){
     console.log('loadRecipeDetail: Done', id);
 
     recipeOuterElement.removeAttribute('hidden'); 
+    
+    console.log('recipeOuterElement: unhidden');
 }
 
 function loadRecipeHeader(id){ 
@@ -552,7 +556,7 @@ function loadRecipeIngredients(id){
 }
 
 function clearIngredientsListElement(){
-  console.log('cleaMethodistElement...');
+  console.log('cleaMethodListElement...');
   
   var fc = ingredientsElement.firstChild;
 
@@ -610,7 +614,7 @@ function loadRecipeMethod(id){
 }
 
 function clearMethodListElement(){
-  console.log('cleaMethodistElement...');
+  console.log('cleaMethodListElement...');
   
   var fc = methodElement.firstChild;
 

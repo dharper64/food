@@ -78,9 +78,20 @@
           </div>
         </div>
 
-        <div hidden id="recipe-outer-container">
+
+        <div hidden id="recipe-outer-container-2">
           <div class="demo-container mdl-grid"  id="detail-container">
             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone">
+
+            <P>Test</P>
+
+            </div>
+          </div>
+        </div>
+
+        <div hidden id="recipe-outer-container">
+          <div class="demo-container mdl-grid"  id="detail-container">
+            <!--<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"> -->
               <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">            
                 <!-- Contents populated from index.js -->
 
@@ -98,6 +109,7 @@
                   <div class = "mdl-tabs__tab-bar">
                     <a href = "#tab1-panel" class = "mdl-tabs__tab is-active">Ingredients</a>
                     <a href = "#tab2-panel" class = "mdl-tabs__tab">Method</a>
+                    <a href = "#tab3-panel" class = "mdl-tabs__tab">Comments</a>
                   </div>
 
                   <div class = "mdl-tabs__panel is-active" id = "tab1-panel">
@@ -115,6 +127,15 @@
                       </ul>
                     </div>   
                   </div>
+                  
+                  <div class = "mdl-tabs__panel" id = "tab3-panel">
+                      <div style = "padding:20px;">  
+                        <ul id = "method" class="demo-list-item mdl-list">
+                          <!-- Generated from index.js -->          
+                          <P>Comments will be listed here.</P>            
+                        </ul>
+                      </div>   
+                    </div>
                 </div>
 
                 <div style = "padding:10px;">  
@@ -126,7 +147,7 @@
                 </div>  
 
               </div>
-            </div>
+            <!--</div> -->
           </div>
         </div>
 
