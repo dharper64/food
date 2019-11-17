@@ -65,7 +65,7 @@
         <span class="mdl-layout-title">Contents</span>
         <nav class="mdl-navigation">
           <a class="mdl-navigation__link" href="javascript:linkClicked('Home');">Recipies</a>
-          <a class="mdl-navigation__link" href="javascript:linkClicked('AddRecipe');">AddRecipe</a>
+          <a class="mdl-navigation__link" href="javascript:linkClicked('AddRecipe');">Submit Recipe</a>
           <a class="mdl-navigation__link" href="javascript:linkClicked('ShoppingList');">Shopping List</a>
           <a class="mdl-navigation__link" href="javascript:linkClicked('About');">About</a>
         </nav>
@@ -131,11 +131,55 @@
         </div>
 
         <div hidden id="new-container">
-          <div class="mdl-grid portfolio-max-width">
-            <div class="mdl-card__title">
-              <h2 class="mdl-card__title-text">Add new recipe</h2>
-            </div>              
-          </div>
+            <div class="mdl-grid portfolio-max-width">
+              <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                <div class="mdl-card__title">
+                  <h2 class="mdl-card__title-text">Submit new recipe</h2>
+                </div>   
+                <div class="mdl-card__supporting-text">
+                  <form id="UpdateNew-form" action="#" style = "padding:10px;">
+                    <table border = "0">
+                      <tbody>
+                        <tr>
+                          <td> 
+                            <!-- Title -->
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <input class="mdl-textfield__input" type="text" id="newTitle" />
+                              <label class="mdl-textfield__label" for="sample3">Recipe Title</label>
+                            </div>        
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>         
+                            <!-- Submitted by - displayName can be edited -->
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <input class="mdl-textfield__input" type="text" id="NewSubmittedBy" />
+                              <label class="mdl-textfield__label" for="sample3">Submitted by</label>
+                            </div>         
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>        
+                            <!-- Description -->
+                            <div class="mdl-textfield mdl-js-textfield">
+                              <textarea class="mdl-textfield__input" type="text" rows= "3" id="NewDescription" ></textarea>
+                              <label class="mdl-textfield__label" for="sample5">Recipe description...</label>
+                            </div>
+                            <!-- Ingredients -->
+                            <!-- Method -->
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div style = "padding:10px;">  
+                        <table border = "0">                       
+                          <td><button id="saveUpdate" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button></td>
+                        </table>
+                      </div>  
+                  </form>   
+                </div>          
+              </div>        
+            </div>
         </div>
 
         <div hidden id="shoppingList-container" class="mdl-layout__content mdl-layout-spacer">
