@@ -301,12 +301,6 @@ function addSizeToGoogleProfilePic(url) {
   const NewElement = document.getElementById('new-container');
   const shoppingListElement = document.getElementById('shoppingList-container');
   const aboutElement = document.getElementById('about-container');
-  
-  const goHomeButtonElement = document.getElementById('goHome');
-  goHomeButtonElement.addEventListener('click', function() {
-    console.log('Go Home Button Clicked');   
-    linkClicked("Home");
-  });  
 
   document.querySelector('.mdl-layout__drawer').addEventListener('click', closeMenu);
 
@@ -374,7 +368,7 @@ function addSizeToGoogleProfilePic(url) {
   }
 
 /*=======================================================================================================*/
-/* Home - Recipies */
+/* Home - Recipie Cardss */
 
 // const homeElement = document.getElementById('home-container'); - Home element defined above
 
@@ -384,12 +378,54 @@ function addSizeToGoogleProfilePic(url) {
 //    console.log('Recipe card click event');
 //});
 
+var recipeID = 0;
+
 const recipeTitleIDElement = document.getElementById('recipeTitle');
 //const recipeIDElement = document.getElementById('recipeID');
 const recipeAddedByElement = document.getElementById('recipeAddedBy');
 const recipeDescElement = document.getElementById('recipeDesc');
 const ingredientsElement = document.getElementById('ingredients');
 const methodElement = document.getElementById('method');
+
+const goHomeButtonElement = document.getElementById('goHome');
+const addToShoppingListButtonElement = document.getElementById('addToShoppingList');
+const editRecipeButtonElement = document.getElementById('editRecipe');
+
+goHomeButtonElement.addEventListener('click', function() {
+  console.log('Go Home Button Clicked');   
+  linkClicked("Home");
+});  
+
+addToShoppingListButtonElement.addEventListener('click', function() {
+  console.log('Add to shopping list Button Clicked');   
+
+  //var x = document.getElementById("myLI").parentElement.nodeName;
+  //var id = addToShoppingListButtonElement.parentElement.id
+
+  console.log('addIncredientsToShoppingList ', recipeID);
+
+  //linkClicked("Home");
+}); 
+
+editRecipeButtonElement.addEventListener('click', function() {
+  console.log('Edit Button Clicked');   
+  
+  //var x = document.getElementById("myLI").parentElement.nodeName;
+  //var id = editRecipeButtonElement.parentElement.id;
+
+  console.log('addIncredientsToShoppingList ', recipeID);
+
+  UpdateShow();
+
+  //linkClicked("Home");
+}); 
+
+
+
+//addToShoppingListButtonElement.addEventListener('click', addIncredientsToShoppingList());
+//editRecipeButtonElement.addEventListener('click', editRecipe());
+
+
 
 //var recipiesListData = firestore.collection('recipies');
 
@@ -484,7 +520,7 @@ function loadRecipeDetail(id){
     hideAllDynamicDivs();
 
     recipeOuterElement.removeAttribute('hidden'); 
-    
+
     // Get data for selected recipe
 
     // recipeIDElement.innerHTML = "Recipe ID : " + id
@@ -512,18 +548,22 @@ function loadRecipeHeader(id){
 
   docRef.get().then(function(doc) {
       if (doc.exists) {
-          //console.log("Document data:", doc.data());
+        recipeID = id;
 
-          var RecipeItem = doc.data();
-          console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
+        //console.log("Document data:", doc.data());
 
-          recipeTitleIDElement.innerHTML = RecipeItem.title
-          recipeAddedByElement.innerHTML = "Submitted By : " + RecipeItem.addedBy
-          recipeDescElement.innerHTML = RecipeItem.desc
+        var RecipeItem = doc.data();
+        console.log('Resipe id:', recipeID);
+        console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
+
+        recipeTitleIDElement.innerHTML = RecipeItem.title
+        recipeAddedByElement.innerHTML = "Submitted By : " + RecipeItem.addedBy
+        recipeDescElement.innerHTML = RecipeItem.desc
 
       } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
+        recipeID = '';
       }
   }).catch(function(error) {
       console.log("Error getting document:", error);
@@ -647,35 +687,54 @@ function displayMethodItem(id, orderBy, method) {
   methodElement.appendChild(container);
 }
 
+
+
 /*=======================================================================================================*/
 /* Add new recipie */
+
+const NewUpdateTitleElement = document.getElementById('NewUpdateTitle');  // NewUpdateTitle - Display New or update as required.
+const newTitleElement = document.getElementById('newTitle');              // newTitle
+const newSubmittedByElement = document.getElementById('NewSubmittedBy');  // NewSubmittedBy
+const saveRecipeButtonElement = document.getElementById('saveRecipe');    // Submit new recipe list buttons
+
+saveRecipeButtonElement.addEventListener('click', SaveUpdateRecipe);
+
+
+
 function NewShow(){
     // Display and populate the gallery.
     console.log('Show New:');
     
-    popSubmitForm(0);
+    recipeID = '';
+
+    popSubmitForm();
+
+    NewElement.removeAttribute('hidden');  
+  }
+  
+  function UpdateShow(){
+    // Display and populate the gallery.
+    console.log('Show New:');
+    
+    popSubmitForm();
 
     NewElement.removeAttribute('hidden');  
   }
 
-  // newTitle
-  const newTitleElement = document.getElementById('newTitle');
-
-  // NewSubmittedBy
-  const newSubmittedByElement = document.getElementById('NewSubmittedBy');
-
-  // Submit new recipe list buttons
-  const saveRecipeButtonElement = document.getElementById('saveRecipe');
-  
-  function popSubmitForm(recipeID){
+  function popSubmitForm(){
     
-    console.log('popSubmitForm');
+    console.log('popSubmitForm ', recipeID);
     //newSubmittedByElement. = firebase.auth().currentUser.displayName;
     // firebase.auth().currentUser
 
     console.log('User: ', firebase.auth().currentUser.displayName);
     document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = firebase.auth().currentUser.displayName;
 
+  }
+
+  function SaveUpdateRecipe(){
+    console.log('SaveUpdateRecipe ', recipeID);
+    
   }
 
 /*=======================================================================================================*/
