@@ -159,40 +159,38 @@
                   <h2 id = "NewUpdateTitle" class="mdl-card__title-text">Submit/Update recipe</h2>
                 </div>   
                 <div class="mdl-card__supporting-text">
+                  
                   <form id="UpdateNew-form" action="#" style = "padding:10px;">
-                    <table border = "0">
-                      <tbody>
-                        <tr>
-                          <td>  
-                            <!-- Title -->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+
+                    <table border = "0" cellpadding="10">
+                        <tbody>
+                          <tr>
+                            <td><h5>Title</h2></td>
+                            <td>                            
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield__input">
                               <input class="mdl-textfield__input" type="text" id="newTitle" />
-                              <label class="mdl-textfield__label" for="sample3">Recipe Title</label>
-                            </div>        
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <!-- Submitted by - displayName can be edited -->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" id="NewSubmittedBy" /><p>(Submitted by)</p>
-                              <!-- <label class="mdl-textfield__label" for="sample3">Submitted by</label> -->
-                            </div>         
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>        
-                            <!-- Description -->
-                            <div class="mdl-textfield mdl-js-textfield">
-                              <textarea class="mdl-textfield__input" type="text" rows= "3" id="NewDescription" ></textarea>
-                              <label class="mdl-textfield__label" for="sample5">Recipe description...</label>
-                            </div>
-                            <!-- Ingredients -->
-                            <!-- Method -->
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                              </div>  
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><h5>Submitted By</h2></td>
+                            <td>
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield__input">
+                              <input class="mdl-textfield__input" type="text" id="NewSubmittedBy" />
+                              </div>    
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><h5>Description</h2></td>
+                            <td>
+                              <div class="mdl-textfield mdl-js-textfield">
+                                <textarea class="mdl-textfield__input" type="text" rows= "3" id="NewDescription" ></textarea>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
                     <div style = "padding:10px;">  
                         <table border = "0">                       
                           <td><button id="saveRecipe" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button></td>
