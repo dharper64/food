@@ -379,7 +379,7 @@ function addSizeToGoogleProfilePic(url) {
 //    console.log('Recipe card click event');
 //});
 
-var recipeID = 0;
+var selectedRecipeID = 0;
 
 const recipeTitleIDElement = document.getElementById('recipeTitle');
 //const recipeIDElement = document.getElementById('recipeID');
@@ -403,7 +403,7 @@ addToShoppingListButtonElement.addEventListener('click', function() {
   //var x = document.getElementById("myLI").parentElement.nodeName;
   //var id = addToShoppingListButtonElement.parentElement.id
 
-  console.log('addIncredientsToShoppingList ', recipeID);
+  console.log('addIncredientsToShoppingList ', selectedRecipeID);
 
   //linkClicked("Home");
 }); 
@@ -414,7 +414,7 @@ editRecipeButtonElement.addEventListener('click', function() {
   //var x = document.getElementById("myLI").parentElement.nodeName;
   //var id = editRecipeButtonElement.parentElement.id;
 
-  console.log('addIncredientsToShoppingList ', recipeID);
+  console.log('addIncredientsToShoppingList ', selectedRecipeID);
 
   UpdateShow();
 
@@ -549,12 +549,12 @@ function loadRecipeHeader(id){
 
   docRef.get().then(function(doc) {
       if (doc.exists) {
-        recipeID = id;
+        selectedRecipeID = id;
 
         //console.log("Document data:", doc.data());
 
         var RecipeItem = doc.data();
-        console.log('Resipe id:', recipeID);
+        console.log('Resipe id:', selectedRecipeID);
         console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
 
         recipeTitleIDElement.innerHTML = RecipeItem.title
@@ -564,7 +564,7 @@ function loadRecipeHeader(id){
       } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
-        recipeID = '';
+        selectedRecipeID = '';
       }
   }).catch(function(error) {
       console.log("Error getting document:", error);
@@ -705,7 +705,7 @@ function NewShow(){
     // Display and populate the gallery.
     console.log('Show New:');
     
-    recipeID = '';
+    selectedRecipeID = '';
 
     NewSubmitForm();
 
@@ -769,7 +769,7 @@ function NewShow(){
   }
 
   function SaveUpdateRecipe(){
-    console.log('SaveUpdateRecipe ', recipeID);
+    console.log('SaveUpdateRecipe ', selectedRecipeID);
     
   }
 
