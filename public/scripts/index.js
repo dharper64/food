@@ -24,9 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var firestore = firebase.firestore();
 
 /*=====================================================================================================*/
-/** Handles authentication */
-
-//'use strict';
+/* #region Authentication */
 
 // Shortcuts to DOM Elements.
 var userPicElement = document.getElementById('user-pic');
@@ -290,8 +288,9 @@ function addSizeToGoogleProfilePic(url) {
 
   return url;
 }
-
+/* #endregion */
 /*=====================================================================================================*/
+/* #region MenuSelection */
   // Menu selection and showing/hiding div elements
   
   const homeElement = document.getElementById('home-container');  
@@ -367,8 +366,10 @@ function addSizeToGoogleProfilePic(url) {
     }
   }
 
+/* #endregion */
 /*=======================================================================================================*/
-/* Home - Recipie Cardss */
+/* #region RecipieCards */
+/* Home - Recipie Cards */
 
 // const homeElement = document.getElementById('home-container'); - Home element defined above
 
@@ -687,8 +688,7 @@ function displayMethodItem(id, orderBy, method) {
   methodElement.appendChild(container);
 }
 
-
-
+/* #endregion */
 /*=======================================================================================================*/
 /* Add new recipie */
 
@@ -707,28 +707,64 @@ function NewShow(){
     
     recipeID = '';
 
-    popSubmitForm();
+    NewSubmitForm();
 
     NewElement.removeAttribute('hidden');  
   }
   
   function UpdateShow(){
     // Display and populate the gallery.
-    console.log('Show New:');
+    console.log('Show Update:');
+
+    recipeOuterElement.setAttribute('hidden', 'true');  
     
     popSubmitForm();
 
     NewElement.removeAttribute('hidden');  
   }
 
-  function popSubmitForm(){
+  function NewSubmitForm(){
     
-    console.log('popSubmitForm ', recipeID);
+    console.log('NewSubmitForm ');
     //newSubmittedByElement. = firebase.auth().currentUser.displayName;
     // firebase.auth().currentUser
 
     console.log('User: ', firebase.auth().currentUser.displayName);
     document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = firebase.auth().currentUser.displayName;
+
+  }
+
+  function popSubmitForm(){
+    
+    console.log('popSubmitForm ', recipeID);
+
+    var recipeHeader = firestore.collection("recipes").doc(recipeID);
+
+    // ToDo
+    recipeHeader.get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Recipe Header data:", doc.data());
+
+            // title - newTitle
+            // addedBy - NewSubmittedBy
+            // Desc - NewDescription
+
+            var RecipeItem = doc.data();
+            console.log('Resipe id:', recipeID);
+            console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
+
+            document.forms['UpdateNew-form'].elements['NewUpdateTitle'].value = 'Update Recipe'
+            document.forms['UpdateNew-form'].elements['newTitle'].value = RecipeItem.title
+            document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = RecipeItem.addedBy            
+            document.forms['UpdateNew-form'].elements['NewDescription'].value = RecipeItem.desc
+
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
 
   }
 
