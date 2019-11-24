@@ -695,11 +695,10 @@ function displayMethodItem(id, orderBy, method) {
 const NewUpdateTitleElement = document.getElementById('NewUpdateTitle');  // NewUpdateTitle - Display New or update as required.
 const newTitleElement = document.getElementById('newTitle');              // newTitle
 const newSubmittedByElement = document.getElementById('NewSubmittedBy');  // NewSubmittedBy
+const newDescElement = document.getElementById('NewDescription');  // NewDesc
 const saveRecipeButtonElement = document.getElementById('saveRecipe');    // Submit new recipe list buttons
 
 saveRecipeButtonElement.addEventListener('click', SaveUpdateRecipe);
-
-
 
 function NewShow(){
     // Display and populate the gallery.
@@ -773,7 +772,19 @@ function NewShow(){
 
   function SaveUpdateRecipe(){
     console.log('SaveUpdateRecipe ', selectedRecipeID);
-    
+
+    var titleTxt = newTitleElement.value;
+    var submittedTxt = newSubmittedByElement.value;
+    var descTxt = newDescElement.value;
+
+    firestore.collection("recipes").doc(selectedRecipeID).update({
+      title: titleTxt,
+      addedBy: submittedTxt,
+      desc: descTxt
+    });
+
+    console.log('Recipe header updated');
+
   }
 
 /*=======================================================================================================*/
