@@ -732,13 +732,15 @@ function NewShow(){
     console.log('User: ', firebase.auth().currentUser.displayName);
     document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = firebase.auth().currentUser.displayName;
 
+    NewUpdateTitleElement.innerHTML = 'New Recipe'
+
   }
 
   function popSubmitForm(){
     
-    console.log('popSubmitForm ', recipeID);
+    console.log('popSubmitForm ', selectedRecipeID);
 
-    var recipeHeader = firestore.collection("recipes").doc(recipeID);
+    var recipeHeader = firestore.collection("recipes").doc(selectedRecipeID);
 
     // ToDo
     recipeHeader.get().then(function(doc) {
@@ -750,10 +752,11 @@ function NewShow(){
             // Desc - NewDescription
 
             var RecipeItem = doc.data();
-            console.log('Resipe id:', recipeID);
+            console.log('Resipe id:', selectedRecipeID);
             console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
 
-            document.forms['UpdateNew-form'].elements['NewUpdateTitle'].value = 'Update Recipe'
+            NewUpdateTitleElement.innerHTML = 'Update Recipe'
+
             document.forms['UpdateNew-form'].elements['newTitle'].value = RecipeItem.title
             document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = RecipeItem.addedBy            
             document.forms['UpdateNew-form'].elements['NewDescription'].value = RecipeItem.desc
