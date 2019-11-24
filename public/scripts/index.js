@@ -774,16 +774,35 @@ function NewShow(){
     var submittedTxt = newSubmittedByElement.value;
     var descTxt = newDescElement.value;
 
-    firestore.collection("recipes").doc(selectedRecipeID).update({
-      title: titleTxt,
-      addedBy: submittedTxt,
-      desc: descTxt
-    });
+    if(validateHeaderUpdate(titleTxt, submittedTxt, descTxt)){
+      firestore.collection("recipes").doc(selectedRecipeID).update({
+        title: titleTxt,
+        addedBy: submittedTxt,
+        desc: descTxt
+      });
+  
+      popupToastMsg('Recipe has been updated');
+  
+      console.log('Recipe header updated');
+    } else {
+      console.log('Recipe header updated failed');
+    }
+  }
 
-    popupToastMsg('Recipe has been updated');
-
-    console.log('Recipe header updated');
-
+  function validateHeaderUpdate(titleTxt, submittedTxt, descTxt){
+    if (titleTxt == "") {
+      popupToastMsg("Please enter a recipe title");
+      return false;
+    }
+    if (submittedTxt == "") {
+      popupToastMsg("Please enter a your name.");
+      return false;
+    }
+    if (descTxt == "") {
+      popupToastMsg("Please enter a recipe description.");
+      return false;
+    }
+    return true;
   }
 
 /*=======================================================================================================*/
