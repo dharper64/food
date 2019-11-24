@@ -258,14 +258,11 @@ function checkSignedInWithMessage() {
     return true;
   }
 
-  // Display a message to the user using a Toast.
-  var data = {
-    message: 'You must sign-in first',
-    timeout: 2000
-  };
-  signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+  popupToastMsg('You must sign-in first');
+
   return false;
 }
+
 
 // Resets the given MaterialTextField.
 function resetMaterialTextfield(element) {
@@ -783,6 +780,8 @@ function NewShow(){
       desc: descTxt
     });
 
+    popupToastMsg('Recipe has been updated');
+
     console.log('Recipe header updated');
 
   }
@@ -986,6 +985,15 @@ function aboutShow(){
 
 /*=======================================================================================================*/
 // Utility functions
+
+  function popupToastMsg(msgTxt){
+    // Display a message to the user using a Toast.
+    var data = {
+      message: msgTxt,
+      timeout: 2000
+    };
+    signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+  }
 
   /* Date Formatting */
   function dateStringShort(){
