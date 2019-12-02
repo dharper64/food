@@ -726,10 +726,14 @@ function NewShow(){
     // firebase.auth().currentUser
 
     console.log('User: ', firebase.auth().currentUser.displayName);
+    
+    document.forms['UpdateNew-form'].elements['newTitle'].value = "";
     document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = firebase.auth().currentUser.displayName;
+    document.forms['UpdateNew-form'].elements['NewDescription'].value = "";
 
     NewUpdateTitleElement.innerHTML = 'New Recipe'
 
+    console.log('NewSubmitForm defaults set');
   }
 
   function popSubmitForm(){
@@ -768,22 +772,49 @@ function NewShow(){
   }
 
   function SaveUpdateRecipe(){
-    console.log('SaveUpdateRecipe ', selectedRecipeID);
+    if (selectedRecipeID !== ""){
+      console.log('SaveUpdateRecipe : Update - ', selectedRecipeID);
+    } else {
+      console.log('SaveUpdateRecipe : New');
+    }
 
     var titleTxt = newTitleElement.value;
     var submittedTxt = newSubmittedByElement.value;
     var descTxt = newDescElement.value;
 
+    console.log('titleTxt : ', titleTxt);
+    console.log('submittedTxt : ', submittedTxt);
+    console.log('descTxt : ', descTxt);
+
     if(validateHeaderUpdate(titleTxt, submittedTxt, descTxt)){
-      firestore.collection("recipes").doc(selectedRecipeID).update({
-        title: titleTxt,
-        addedBy: submittedTxt,
-        desc: descTxt
-      });
+      if(selectedRecipeID !== ""){
+        firestore.collection("recipes").doc(selectedRecipeID).update({
+          title: titleTxt,
+          addedBy: submittedTxt,
+          desc: descTxt
+        });
+
+        console.log('Recipe header updated');
+        popupToastMsg('Recipe has been updated');    
+
+      } else {
+        // Add a new document with a generated id.
+        firestore.collection("recipes").add({
+          title: titleTxt,
+          addedBy: submittedTxt, // Name chosen by user to display with recipe.
+          desc: descTxt,
+          user: firebase.auth().currentUser.email // Used to identify owner for allowing updates etc.          
+        })
+        .then(function(docRef) {
+          selectedRecipeID = docRef.id;
+          console.log("New recipe header saved with ID: ", docRef.id);
+          popupToastMsg('New recipe header has been added');    
+        })
+        .catch(function(error) {
+          console.error("Error adding new recipe header: ", error);
+        });
+      }
   
-      popupToastMsg('Recipe has been updated');
-  
-      console.log('Recipe header updated');
     } else {
       console.log('Recipe header updated failed');
     }
