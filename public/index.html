@@ -193,7 +193,7 @@
 
                     <div style = "padding:10px;">  
                         <table border = "0">                       
-                          <td><button id="saveRecipe" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button></td>
+                          <td><button id="saveRecipeHeader" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button></td>
                         </table>
                       </div>  
                   </form>   
@@ -206,10 +206,10 @@
                       <!-- <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp"> -->
           
                         <!--<div class="mdl-card__title">
-                          <h2 class="mdl-card__title-text">Ingedients</h2>
+                          <h2 class="mdl-card__title-text">ingredients</h2>
                         </div> -->
                         <!--<h2 class="mdl-layout-title">Shopping List</h2>-->
-                        <h2 class="mdl-card__title-text">Ingedients</h2>
+                        <h2 class="mdl-card__title-text">ingredients</h2>
                         <br>
 
                         <div style = "padding-left:10px; padding-right:10px;">
@@ -222,7 +222,7 @@
                                 <th><!--dummy column header for delete buttons--></th>
                               </tr>
                             </thead>
-                            <tbody id="ingedientsListContents">    
+                            <tbody id="ingredientsListContents">    
                             </tbody>  
                           </table>
                         </div>
@@ -230,23 +230,24 @@
                         <br>
                         <form id="ingredients-form" action="#" style = "padding:10px;">
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="itemNum" />
+                            <input class="mdl-textfield__input" type="text" id="ingredientNum" />
                             <label class="mdl-textfield__label" for="sample3">Item No.</label>
                           </div>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="itemDesc" />
-                            <label class="mdl-textfield__label" for="sample3">Ingrdient Desciption</label>
+                            <input class="mdl-textfield__input" type="text" id="ingredientDesc" />
+                            <label class="mdl-textfield__label" for="sample3">Ingredient Desciption</label>
                           </div>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="itemQty" />
+                            <input class="mdl-textfield__input" type="text" id="ingredientQty" />
                             <label class="mdl-textfield__label" for="sample3">Quantity</label>
                           </div>                      
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="itemUnit" />
+                            <input class="mdl-textfield__input" type="text" id="ingredientUnit" />
                             <label class="mdl-textfield__label" for="sample3">Unit Type</label>
                           </div>
                                            
                           <div style = "padding:10px;">  
+                            <button id="AddIngredient" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Item</button>
                             <button id="submitIngredient" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Ingredient</button>
                           </div>  
                         </form>

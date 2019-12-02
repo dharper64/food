@@ -704,20 +704,36 @@ const NewUpdateTitleElement = document.getElementById('NewUpdateTitle');  // New
 const newTitleElement = document.getElementById('newTitle');              // newTitle
 const newSubmittedByElement = document.getElementById('NewSubmittedBy');  // NewSubmittedBy
 const newDescElement = document.getElementById('NewDescription');         // NewDesc
-const saveRecipeButtonElement = document.getElementById('saveRecipe');    // Submit new recipe list buttons
-const recipeDetailUpdateEement = document.getElementById('detail-Update');
+const saveRecipeHeadeButtonElement = document.getElementById('saveRecipeHeader'); // Submit new recipe header button
+const recipeDetailUpdateEement = document.getElementById('detail-Update');// Container for ingredients and method
 
-var deleteIngredientButton = document.getElementsByClassName("delete-ingredient");
+//var deleteIngredientButton = document.getElementsByClassName("delete-ingredient"); // Delete ingredient row?
 
-const ingredientListContents = document.getElementById('ingedientsListContents');
+const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
+const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
 
-saveRecipeButtonElement.addEventListener('click', SaveUpdateRecipe);
+const AddIngredientBtnElement = document.getElementById('AddIngredient'); //Test button
 
-deleteIngredientButton.addEventListener('click', function(){
-  console.log('deleteIngredientButton');
+const inputingredientNumData = document.querySelector("#ingredientNum");
+const inputingredientDescData = document.querySelector("#ingredientDesc");
+const inputingredientQtyData = document.querySelector("#ingredientQty");
+const inputingredientUnitData = document.querySelector("#ingredientUnit");
 
+//var ingredientsListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+
+saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe());
+
+AddIngredientBtnElement.addEventListener('click', function(){
+  console.log('AddIngredientBtnElement');  
 });
 
+//deleteIngredientButton.addEventListener('click', function(){
+//  console.log('deleteIngredientButton');
+//});
+
+submitIngredientButton.addEventListener('click', function() {
+  console.log("Adding ingredient item.");
+});
 
 function NewShow(){
     // Display and populate the gallery.
@@ -797,6 +813,7 @@ function NewShow(){
     });
   }
   
+
   function popRecipeDetailForUpdate(){
     console.log("popRecipeDetailForUpdate");
 
@@ -854,9 +871,18 @@ function NewShow(){
   
     container.innerHTML = content;
       
-    container.addEventListener('click', function() {
-      console.log('Click',container.id);   
-      deleteIngredient(container.id);
+    //console.log('container.innerHTML',container.innerHTML);   
+
+    container.addEventListener('click', function(e) {
+      console.log('Click',e);   
+      
+      var r = confirm("Remove '" + item + "' from the ingredients list?");
+      if (r == true) {
+        deleteIngredient(container.id);
+      } else {
+        console.log('ignore click');  
+      }
+
     });  
 
     console.log('container.innerHTML: ', container.innerHTML);
