@@ -704,7 +704,7 @@ const NewUpdateTitleElement = document.getElementById('NewUpdateTitle');  // New
 const newTitleElement = document.getElementById('newTitle');              // newTitle
 const newSubmittedByElement = document.getElementById('NewSubmittedBy');  // NewSubmittedBy
 const newDescElement = document.getElementById('NewDescription');         // NewDesc
-const saveRecipeHeadeButtonElement = document.getElementById('saveRecipeHeader'); // Submit new recipe header button
+const saveRecipeHeadeButtonElement = document.getElementById('saveRecipeHeader'); // Submit new/update recipe header button
 const recipeDetailUpdateEement = document.getElementById('detail-Update');// Container for ingredients and method
 
 //var deleteIngredientButton = document.getElementsByClassName("delete-ingredient"); // Delete ingredient row?
@@ -712,7 +712,7 @@ const recipeDetailUpdateEement = document.getElementById('detail-Update');// Con
 const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
 const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
 
-const AddIngredientBtnElement = document.getElementById('AddIngredient'); //Test button
+//const AddIngredientBtnElement = document.getElementById('AddIngredient'); //Test button
 
 const inputingredientNumData = document.querySelector("#ingredientNum");
 const inputingredientDescData = document.querySelector("#ingredientDesc");
@@ -721,11 +721,11 @@ const inputingredientUnitData = document.querySelector("#ingredientUnit");
 
 //var ingredientsListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
 
-saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe());
+saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe);
 
-AddIngredientBtnElement.addEventListener('click', function(){
-  console.log('AddIngredientBtnElement');  
-});
+//AddIngredientBtnElement.addEventListener('click', function(){
+//  console.log('AddIngredientBtnElement');  
+//});
 
 //deleteIngredientButton.addEventListener('click', function(){
 //  console.log('deleteIngredientButton');
@@ -733,6 +733,34 @@ AddIngredientBtnElement.addEventListener('click', function(){
 
 submitIngredientButton.addEventListener('click', function() {
   console.log("Adding ingredient item.");
+
+  if (inputItemDescData.value){
+    const itemNum = inputIngedientNumData.value;
+    const itemDesc = inputIngedientDescData.value;
+    const itemQty = inputIngedientQtyData.value;
+    const itemUnit = inputIngedientUnitData.value;
+    
+    return ingredientsListData.add({
+      orderBy: itemNum,
+      item: itemDesc,
+      qty: itemQty,
+      unit: itemUnit,
+      user: firebase.auth().currentUser.email
+    }).then(function() {
+      
+      resetMaterialTextfield(inputIngedientNumData);
+      resetMaterialTextfield(inputIngedientDescData);
+      resetMaterialTextfield(inputIngedientQtyData);
+      resetMaterialTextfield(inputIngedientUnitData);
+      
+      console.log("Ingredient list item saved")
+    }).catch(function (error){
+      console.log("Got an error: ", error)
+    });
+  } else {
+    console.log("Nothing to save.");
+  }
+  console.log("click done.");
 });
 
 function NewShow(){
