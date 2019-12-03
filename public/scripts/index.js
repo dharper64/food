@@ -411,7 +411,7 @@ editRecipeButtonElement.addEventListener('click', function() {
   //var x = document.getElementById("myLI").parentElement.nodeName;
   //var id = editRecipeButtonElement.parentElement.id;
 
-  console.log('addIncredientsToShoppingList ', selectedRecipeID);
+  console.log('addIncredientsToEditList ', selectedRecipeID);
 
   UpdateShow();
 
@@ -474,6 +474,15 @@ function cleaRecipeListElement(){
 
 function displayRecipeCard(id, title, desc){
     console.log('displayListItem: ', id, title, desc);
+
+    if (desc.length > 125){
+      console.log('Recipe description too long', desc.length);
+      desc = desc.substring(1, 122);
+      desc = desc + '...';
+    } else {
+      console.log('Recipe description too short', desc.length);
+      desc = desc.padEnd(125);
+    }
 
     const container = document.createElement('div');
     container.setAttribute('id', id);
@@ -712,34 +721,43 @@ const recipeDetailUpdateEement = document.getElementById('detail-Update');// Con
 const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
 const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
 
-//const AddIngredientBtnElement = document.getElementById('AddIngredient'); //Test button
-
-const inputingredientNumData = document.querySelector("#ingredientNum");
-const inputingredientDescData = document.querySelector("#ingredientDesc");
-const inputingredientQtyData = document.querySelector("#ingredientQty");
-const inputingredientUnitData = document.querySelector("#ingredientUnit");
-
-//var ingredientsListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
 
 saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe);
 
-//AddIngredientBtnElement.addEventListener('click', function(){
-//  console.log('AddIngredientBtnElement');  
-//});
+/*
+submitIngredientButton.addEventListener('click', function(){
+  console.log('submitIngredientButton');  
+});
+*/
+
+//const AddIngredientBtnElement = document.getElementById('AddIngredient'); //Test button
+
+const inputIngredientNumData = document.querySelector("#ingredientNum");
+const inputIngredientDescData = document.querySelector("#ingredientDesc");
+const inputIngredientQtyData = document.querySelector("#ingredientQty");
+const inputIngredientUnitData = document.querySelector("#ingredientUnit");
+
+
+
 
 //deleteIngredientButton.addEventListener('click', function(){
 //  console.log('deleteIngredientButton');
 //});
 
-submitIngredientButton.addEventListener('click', function() {
+
+submitIngredientButton.addEventListener('click', function(){
   console.log("Adding ingredient item.");
 
-  if (inputItemDescData.value){
-    const itemNum = inputIngedientNumData.value;
-    const itemDesc = inputIngedientDescData.value;
-    const itemQty = inputIngedientQtyData.value;
-    const itemUnit = inputIngedientUnitData.value;
+  if (inputIngredientDescData.value){
+    const itemNum = inputIngredientNumData.value;
+    const itemDesc = inputIngredientDescData.value;
+    const itemQty = inputIngredientQtyData.value;
+    const itemUnit = inputIngredientUnitData.value;
     
+    console.log("Instanciate ingredient collection.");
+
+    var ingredientsListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+
     return ingredientsListData.add({
       orderBy: itemNum,
       item: itemDesc,
@@ -748,10 +766,10 @@ submitIngredientButton.addEventListener('click', function() {
       user: firebase.auth().currentUser.email
     }).then(function() {
       
-      resetMaterialTextfield(inputIngedientNumData);
-      resetMaterialTextfield(inputIngedientDescData);
-      resetMaterialTextfield(inputIngedientQtyData);
-      resetMaterialTextfield(inputIngedientUnitData);
+      resetMaterialTextfield(inputIngredientNumData);
+      resetMaterialTextfield(inputIngredientDescData);
+      resetMaterialTextfield(inputIngredientQtyData);
+      resetMaterialTextfield(inputIngredientUnitData);
       
       console.log("Ingredient list item saved")
     }).catch(function (error){
@@ -759,9 +777,12 @@ submitIngredientButton.addEventListener('click', function() {
     });
   } else {
     console.log("Nothing to save.");
+    popupToastMsg('PLease enter a description of the ingredients.');    
   }
+
   console.log("click done.");
 });
+
 
 function NewShow(){
     // Display and populate the gallery.
@@ -841,9 +862,10 @@ function NewShow(){
     });
   }
   
-
   function popRecipeDetailForUpdate(){
     console.log("popRecipeDetailForUpdate");
+
+    clearIngredientsList();
 
     //const query = firestore.collection('shoppingList');
     const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
@@ -874,6 +896,19 @@ function NewShow(){
     
     recipeDetailUpdateEement.removeAttribute('hidden'); 
 
+  }
+
+  // Remove existing rows from the ingredients list table when selected from menu.
+  function clearIngredientsList(){
+    console.log('clearIngredientsList...');
+    
+    var fc = ingredientListContents.firstChild;
+
+    while( fc ) {
+      console.log('Clear shopping list row.');
+      ingredientListContents.removeChild( fc );
+        fc = ingredientListContents.firstChild;
+    }
   }
 
   // Build HTML for the shopping list rows
