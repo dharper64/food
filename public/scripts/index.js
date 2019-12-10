@@ -723,25 +723,10 @@ const submitIngredientButton = document.getElementById('submitIngredient'); // B
 
 saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe);
 
-/*
-submitIngredientButton.addEventListener('click', function(){
-  console.log('submitIngredientButton');  
-});
-*/
-
-//const AddIngredientBtnElement = document.getElementById('AddIngredient'); //Test button
-
 const inputIngredientNumData = document.querySelector("#ingredientNum");
 const inputIngredientDescData = document.querySelector("#ingredientDesc");
 const inputIngredientQtyData = document.querySelector("#ingredientQty");
 const inputIngredientUnitData = document.querySelector("#ingredientUnit");
-
-//deleteIngredientButton.addEventListener('click', function(){
-//  console.log('deleteIngredientButton');
-//});
-
-//var ingredientsUpdateListData;
-//var ingredientsUpdateListData = firestore.collection('recipes').doc(0).collection('Ingredients');
 
 submitIngredientButton.addEventListener('click', function(){
   console.log("Adding ingredient item.");
@@ -777,6 +762,9 @@ submitIngredientButton.addEventListener('click', function(){
         resetMaterialTextfield(inputIngredientUnitData);
         
         console.log("Ingredient list item saved")
+        
+        //popRecipeDetailForUpdate();
+
       }).catch(function (error){
         console.log("Got an error: ", error)
       });
@@ -792,9 +780,6 @@ function popRecipeDetailForUpdate(){
   console.log("popRecipeDetailForUpdate");
 
   clearIngredientsList();
-
-  //const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
-  //.orderBy('orderBy');
 
   var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').orderBy('orderBy');
 
@@ -953,11 +938,19 @@ function NewShow(){
     ingredientListContents.appendChild(container);
   }
 
+  function deleteIngredient(rowId){
+  
+    console.log('Recipe ', selectedRecipeID);   
+    console.log('deleteIngredient',rowId);   
 
-  function deleteIngredient(id){
-  
-    console.log('deleteIngredient',id);   
-  
+    // Delete the row...
+    //firestore.collection('shoppingList').doc(rowId).delete().then(function() {
+    firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
+      console.log("Item successfully deleted!");
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+
   }
 
   function SaveUpdateRecipe(){
@@ -1200,6 +1193,7 @@ function popShoppingList(){
     shoppingListContents.appendChild(container);
   }
 
+  /*
   // Delete a shopping list item from the table.
   function deleteListItem(id) {
     console.log('deleteListItem: ', id);
@@ -1209,6 +1203,7 @@ function popShoppingList(){
       div.parentNode.removeChild(div);
     }
   }
+  */
 
   // Remove existing rows from shopping list table when selected from menu.
   function clearShoppingList(){
@@ -1243,6 +1238,16 @@ function aboutShow(){
       timeout: 2000
     };
     signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+  }
+
+  // Delete item in shopping list or ingredient list from the data table.
+  function deleteListItem(id) {
+    console.log('deleteListItem: ', id);
+    var div = document.getElementById(id);
+    // If an element for that message exists we delete it.
+    if (div) {
+      div.parentNode.removeChild(div);
+    }
   }
 
   /* Date Formatting */
