@@ -748,38 +748,42 @@ const inputIngredientUnitData = document.querySelector("#ingredientUnit");
 submitIngredientButton.addEventListener('click', function(){
   console.log("Adding ingredient item.");
 
-  if (inputIngredientDescData.value){
-    const itemNum = inputIngredientNumData.value;
-    const itemDesc = inputIngredientDescData.value;
-    const itemQty = inputIngredientQtyData.value;
-    const itemUnit = inputIngredientUnitData.value;
-    
-    console.log("Instanciate ingredient collection.");
-
-    var ingredientsListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
-
-    return ingredientsListData.add({
-      orderBy: itemNum,
-      item: itemDesc,
-      qty: itemQty,
-      unit: itemUnit,
-      user: firebase.auth().currentUser.email
-    }).then(function() {
-      
-      resetMaterialTextfield(inputIngredientNumData);
-      resetMaterialTextfield(inputIngredientDescData);
-      resetMaterialTextfield(inputIngredientQtyData);
-      resetMaterialTextfield(inputIngredientUnitData);
-      
-      console.log("Ingredient list item saved")
-    }).catch(function (error){
-      console.log("Got an error: ", error)
-    });
+  if(isNaN(inputIngredientNumData.value)){
+    console.log("inputIngredientNumData.value is not a number.");
+    popupToastMsg("The 'Item No.' must be a number.");    
   } else {
-    console.log("Nothing to save.");
-    popupToastMsg('PLease enter a description of the ingredients.');    
-  }
+    if (inputIngredientDescData.value){
+      const itemNum = inputIngredientNumData.value;
+      const itemDesc = inputIngredientDescData.value;
+      const itemQty = inputIngredientQtyData.value;
+      const itemUnit = inputIngredientUnitData.value;
+      
+      console.log("Instanciate ingredient collection.");
 
+      //var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+
+      return ingredientsUpdateListData.add({
+        orderBy: itemNum,
+        item: itemDesc,
+        qty: itemQty,
+        unit: itemUnit,
+        user: firebase.auth().currentUser.email
+      }).then(function() {
+        
+        resetMaterialTextfield(inputIngredientNumData);
+        resetMaterialTextfield(inputIngredientDescData);
+        resetMaterialTextfield(inputIngredientQtyData);
+        resetMaterialTextfield(inputIngredientUnitData);
+        
+        console.log("Ingredient list item saved")
+      }).catch(function (error){
+        console.log("Got an error: ", error)
+      });
+    } else {
+      console.log("Nothing to save.");
+      popupToastMsg('PLease enter a description of the ingredients.');    
+    }
+  }
   console.log("click done.");
 });
 
