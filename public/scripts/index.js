@@ -721,7 +721,6 @@ const recipeDetailUpdateEement = document.getElementById('detail-Update');// Con
 const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
 const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
 
-
 saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe);
 
 /*
@@ -737,16 +736,16 @@ const inputIngredientDescData = document.querySelector("#ingredientDesc");
 const inputIngredientQtyData = document.querySelector("#ingredientQty");
 const inputIngredientUnitData = document.querySelector("#ingredientUnit");
 
-
-
-
 //deleteIngredientButton.addEventListener('click', function(){
 //  console.log('deleteIngredientButton');
 //});
 
+//var ingredientsUpdateListData;
+//var ingredientsUpdateListData = firestore.collection('recipes').doc(0).collection('Ingredients');
 
 submitIngredientButton.addEventListener('click', function(){
   console.log("Adding ingredient item.");
+
 
   if(isNaN(inputIngredientNumData.value)){
     console.log("inputIngredientNumData.value is not a number.");
@@ -761,6 +760,8 @@ submitIngredientButton.addEventListener('click', function(){
       console.log("Instanciate ingredient collection.");
 
       //var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+
+      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
 
       return ingredientsUpdateListData.add({
         orderBy: itemNum,
@@ -787,6 +788,35 @@ submitIngredientButton.addEventListener('click', function(){
   console.log("click done.");
 });
 
+function popRecipeDetailForUpdate(){
+  console.log("popRecipeDetailForUpdate");
+
+  clearIngredientsList();
+
+  //const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
+  //.orderBy('orderBy');
+
+  var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').orderBy('orderBy');
+
+  console.log('ingredientListTableRowHTML...');
+
+  // Start listening to the query to get shopping list data.
+  ingredientsUpdateListData.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+    
+    var rowid = 0
+    
+    if (change.type === 'removed') {
+      deleteListItem(change.doc.id);
+    } else {
+      var ListItem = change.doc.data();
+      console.log('Ingredients list item: ', ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
+      displayIngredientListItem(change.doc.id, ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit)      
+    }
+    });
+  })    
+  recipeDetailUpdateEement.removeAttribute('hidden'); 
+}
 
 function NewShow(){
     // Display and populate the gallery.
@@ -866,41 +896,7 @@ function NewShow(){
     });
   }
   
-  function popRecipeDetailForUpdate(){
-    console.log("popRecipeDetailForUpdate");
 
-    clearIngredientsList();
-
-    //const query = firestore.collection('shoppingList');
-    const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
-    .orderBy('orderBy');
-    // See https://firebase.google.com/docs/firestore/data-model for sub collection.
-  
-    console.log('ingredientListTableRowHTML...');
-  
-    //var query = firestore.collection('shoppingList');
-    //.orderBy('orderBy', 'desc')
-    //.limit(12);
-  
-    // Start listening to the query to get shopping list data.
-    query.onSnapshot(function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-      
-      var rowid = 0
-      
-      if (change.type === 'removed') {
-        deleteListItem(change.doc.id);
-      } else {
-        var ListItem = change.doc.data();
-        console.log('Ingredients list item: ', ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
-        displayIngredientListItem(change.doc.id, ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit)      
-      }
-      });
-    })
-    
-    recipeDetailUpdateEement.removeAttribute('hidden'); 
-
-  }
 
   // Remove existing rows from the ingredients list table when selected from menu.
   function clearIngredientsList(){
