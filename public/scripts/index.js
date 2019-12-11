@@ -340,7 +340,7 @@ function addSizeToGoogleProfilePic(url) {
         break;
       case 'AddRecipe':        
         if (checkSignedInWithMessage()) {
-          NewShow();
+          NewRecipeShow();
         } else {            
           hideAllDynamicDivs();
           updateMainDiv("Home");
@@ -716,65 +716,7 @@ const newDescElement = document.getElementById('NewDescription');         // New
 const saveRecipeHeadeButtonElement = document.getElementById('saveRecipeHeader'); // Submit new/update recipe header button
 const recipeDetailUpdateEement = document.getElementById('detail-Update');// Container for ingredients and method
 
-//var deleteIngredientButton = document.getElementsByClassName("delete-ingredient"); // Delete ingredient row?
-
-const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
-const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
-
 saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe);
-
-const inputIngredientNumData = document.querySelector("#ingredientNum");
-const inputIngredientDescData = document.querySelector("#ingredientDesc");
-const inputIngredientQtyData = document.querySelector("#ingredientQty");
-const inputIngredientUnitData = document.querySelector("#ingredientUnit");
-
-submitIngredientButton.addEventListener('click', function(){
-  console.log("Adding ingredient item.");
-
-
-  if(isNaN(inputIngredientNumData.value)){
-    console.log("inputIngredientNumData.value is not a number.");
-    popupToastMsg("The 'Item No.' must be a number.");    
-  } else {
-    if (inputIngredientDescData.value){
-      const itemNum = inputIngredientNumData.value;
-      const itemDesc = inputIngredientDescData.value;
-      const itemQty = inputIngredientQtyData.value;
-      const itemUnit = inputIngredientUnitData.value;
-      
-      console.log("Instanciate ingredient collection.");
-
-      //var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
-
-      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
-
-      return ingredientsUpdateListData.add({
-        orderBy: itemNum,
-        item: itemDesc,
-        qty: itemQty,
-        unit: itemUnit,
-        user: firebase.auth().currentUser.email
-      }).then(function() {
-        
-        resetMaterialTextfield(inputIngredientNumData);
-        resetMaterialTextfield(inputIngredientDescData);
-        resetMaterialTextfield(inputIngredientQtyData);
-        resetMaterialTextfield(inputIngredientUnitData);
-        
-        console.log("Ingredient list item saved")
-        
-        //popRecipeDetailForUpdate();
-
-      }).catch(function (error){
-        console.log("Got an error: ", error)
-      });
-    } else {
-      console.log("Nothing to save.");
-      popupToastMsg('PLease enter a description of the ingredients.');    
-    }
-  }
-  console.log("click done.");
-});
 
 function popRecipeDetailForUpdate(){
   console.log("popRecipeDetailForUpdate");
@@ -803,13 +745,13 @@ function popRecipeDetailForUpdate(){
   recipeDetailUpdateEement.removeAttribute('hidden'); 
 }
 
-function NewShow(){
+function NewRecipeShow(){
     // Display and populate the gallery.
     console.log('Show New:');
     
     selectedRecipeID = '';
 
-    NewSubmitForm();
+    NewRecipeForm();
 
     NewElement.removeAttribute('hidden');  
   }
@@ -820,16 +762,13 @@ function NewShow(){
 
     recipeOuterElement.setAttribute('hidden', 'true');  
     
-    popSubmitForm();
+    popRecipeForm();
 
     NewElement.removeAttribute('hidden');  
   }
 
-  function NewSubmitForm(){
-    
-    console.log('NewSubmitForm ');
-    //newSubmittedByElement. = firebase.auth().currentUser.displayName;
-    // firebase.auth().currentUser
+  function NewRecipeForm(){    
+    console.log('NewRecipeForm ');
 
     recipeDetailUpdateEement.setAttribute('hidden', 'true');  
     
@@ -841,15 +780,15 @@ function NewShow(){
 
     NewUpdateTitleElement.innerHTML = 'New Recipe'
     
-    console.log('NewSubmitForm defaults set');
+    console.log('NewRecipeForm defaults set');
   }
 
-  function popSubmitForm(){
+  function popRecipeForm(){
     
-    console.log('popSubmitForm ', selectedRecipeID);
+    console.log('popRecipeForm ', selectedRecipeID);
 
     if (selectedRecipeID !== ""){
-      console.log('popSubmitForm : Show detail');
+      console.log('popRecipeForm : Show detail');
     } else {
       console.log('SaveUpdateRecipe : Hide detail');
     }
@@ -881,78 +820,6 @@ function NewShow(){
     });
   }
   
-
-
-  // Remove existing rows from the ingredients list table when selected from menu.
-  function clearIngredientsList(){
-    console.log('clearIngredientsList...');
-    
-    var fc = ingredientListContents.firstChild;
-
-    while( fc ) {
-      console.log('Clear shopping list row.');
-      ingredientListContents.removeChild( fc );
-        fc = ingredientListContents.firstChild;
-    }
-  }
-
-  // Build HTML for the shopping list rows
-  function displayIngredientListItem(id, orderBy, item, qty, unit){
-    console.log('displayIngredientListItem: ', orderBy, item, qty, unit);
-  
-    const container = document.createElement('tr');
-    container.setAttribute('id', id);
-  
-    var tableRow = document.getElementById(id) 
-  
-    var content = '<tr>';  
-    content += `<td>` + orderBy + `</td>`;
-    content += `<td class="mdl-data-table__cell--non-numeric">` + item + `</td>`;
-    content += `<td>` + qty + ` ` + unit + `</td>`;
-    content += `<td>
-                  <!-- Colored FAB button with ripple -->
-                  <button id="row[` + id + `]" class="delete-ingredient mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">delete</i>
-                  </button>
-                </td>
-                </tr>`;
-  
-    container.innerHTML = content;
-      
-    //console.log('container.innerHTML',container.innerHTML);   
-
-    container.addEventListener('click', function(e) {
-      console.log('Click',e);   
-      
-      var r = confirm("Remove '" + item + "' from the ingredients list?");
-      if (r == true) {
-        deleteIngredient(container.id);
-      } else {
-        console.log('ignore click');  
-      }
-
-    });  
-
-    console.log('container.innerHTML: ', container.innerHTML);
-  
-    ingredientListContents.appendChild(container);
-  }
-
-  function deleteIngredient(rowId){
-  
-    console.log('Recipe ', selectedRecipeID);   
-    console.log('deleteIngredient',rowId);   
-
-    // Delete the row...
-    //firestore.collection('shoppingList').doc(rowId).delete().then(function() {
-    firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
-      console.log("Item successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing document: ", error);
-    });
-
-  }
-
   function SaveUpdateRecipe(){
     if (selectedRecipeID !== ""){
       console.log('SaveUpdateRecipe : Update - ', selectedRecipeID);
@@ -990,7 +857,7 @@ function NewShow(){
         .then(function(docRef) {
           selectedRecipeID = docRef.id;
           console.log("New recipe header saved with ID: ", docRef.id);
-          popSubmitForm();
+          popRecipeForm();
           popupToastMsg('New recipe header has been added');    
         })
         .catch(function(error) {
@@ -1019,6 +886,161 @@ function NewShow(){
     return true;
   }
 
+/*----------------------------------------------------------------------------------------------------------*/
+/* Ingredients update & add */
+const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
+const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
+
+const inputIngredientNumData = document.querySelector("#ingredientNum");
+const inputIngredientDescData = document.querySelector("#ingredientDesc");
+const inputIngredientQtyData = document.querySelector("#ingredientQty");
+const inputIngredientUnitData = document.querySelector("#ingredientUnit");
+
+submitIngredientButton.addEventListener('click', function(){
+  console.log("Adding ingredient item.");
+
+  if(isNaN(inputIngredientNumData.value)){
+    console.log("inputIngredientNumData.value is not a number.");
+    popupToastMsg("The 'Item No.' must be a number.");    
+  } else if (isNaN(inputIngredientQtyData.value)){
+    console.log("inputIngredientQtyData.value is not a number.");
+    popupToastMsg("The 'Quantity' must be a number.");    
+  } else {
+    if (inputIngredientDescData.value){
+      const itemNum = inputIngredientNumData.value;
+      const itemDesc = inputIngredientDescData.value;
+      const itemQty = inputIngredientQtyData.value;
+      const itemUnit = inputIngredientUnitData.value;
+      
+      console.log("Instanciate ingredient collection.");
+
+      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+
+      return ingredientsUpdateListData.add({
+        orderBy: Number(itemNum),
+        item: itemDesc,
+        qty: Number(itemQty),
+        unit: itemUnit,
+        user: firebase.auth().currentUser.email
+      }).then(function() {
+        
+        resetMaterialTextfield(inputIngredientNumData);
+        resetMaterialTextfield(inputIngredientDescData);
+        resetMaterialTextfield(inputIngredientQtyData);
+        resetMaterialTextfield(inputIngredientUnitData);
+        
+        console.log("Ingredient list item saved")
+        
+        //popRecipeDetailForUpdate();
+
+      }).catch(function (error){
+        console.log("Got an error: ", error)
+      });
+    } else {
+      console.log("Nothing to save.");
+      popupToastMsg('Please enter a description of the ingredients.');    
+    }
+  }
+  console.log("click done.");
+});
+
+function clearIngredientsList(){
+  // Remove existing rows from the ingredients list table before being repopulated.
+  console.log('clearIngredientsList...');
+  
+  var fc = ingredientListContents.firstChild;
+
+  while( fc ) {
+    console.log('Clear shopping list row.');
+    ingredientListContents.removeChild( fc );
+      fc = ingredientListContents.firstChild;
+  }
+}
+
+function deleteIngredientListItem(RowId) {
+  console.log('deleteIngredientListItem: ', RowId);
+  
+  //Reference the Table.
+  var table = document.getElementById("ingredients-table");
+  var rows = table.getElementsByTagName("tr");
+
+  //Loop through the rows and check if it is the one we want them to remove.
+  for(var i = 1; i < rows.length; i++) {
+    try{
+      // ToDo: Is there a better way of getting the id?
+      var rowData = rows[i].innerHTML;
+      var start = rowData.lastIndexOf("[") + 1;
+      var end = rowData.lastIndexOf("]");
+      var thisRowId = rowData.slice(start, end);
+      
+      console.log('thisRowId: ', thisRowId);
+      
+      if (RowId == thisRowId){
+        console.log('RowId found', RowId);
+        table.deleteRow(i);
+        console.log('Row deleted: ', i);
+      }
+    }  catch (e) {
+      console.error("Error", e);
+    }
+  }
+  console.log('Remove row done.');
+}
+
+// Build HTML for the shopping list rows
+function displayIngredientListItem(id, orderBy, item, qty, unit){
+  console.log('displayIngredientListItem: ', orderBy, item, qty, unit);
+
+  const container = document.createElement('tr');
+  container.setAttribute('id', id);
+
+  var tableRow = document.getElementById(id) 
+
+  var content = `<tr>`;  
+  content += `<td id="row[` + id + `]">` + orderBy.toString() + `</td>`;
+  content += `<td class="mdl-data-table__cell--non-numeric">` + item + `</td>`;
+  content += `<td>` + qty.toString() + ` ` + unit + `</td>`;
+  content += `<td>
+                <!-- Colored FAB button with ripple -->
+                <button class="delete-ingredient mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                  <i class="material-icons">delete</i>
+                </button>
+              </td>
+              </tr>`;
+
+  container.innerHTML = content;
+    
+  //console.log('container.innerHTML',container.innerHTML);   
+
+  container.addEventListener('click', function(e) {
+    console.log('Click',e);   
+    
+    var r = confirm("Remove '" + item + "' from the ingredients list?");
+    if (r == true) {
+      deleteIngredient(container.id);
+    } else {
+      console.log('ignore click');  
+    }
+  });  
+
+  console.log('container.innerHTML: ', container.innerHTML);
+
+  ingredientListContents.appendChild(container);
+}
+
+function deleteIngredient(rowId){  
+  console.log('Recipe ', selectedRecipeID);   
+  console.log('deleteIngredient',rowId);   
+
+  // Delete the row...
+  firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
+    console.log("Item successfully deleted!");
+    deleteIngredientListItem(rowId);
+  }).catch(function(error) {
+      console.error("Error removing document: ", error);
+  });
+}
+
 /*=======================================================================================================*/
 
 
@@ -1035,14 +1057,12 @@ function shoppingListHTML(){
     // Display and populate the shopping list.
     console.log('Show shopping list:');
     
-    clearShoppingList();
-  
+    clearShoppingList();  
     popShoppingList();
   
     shoppingListElement.removeAttribute('hidden');
   
   }
-
 
 const shoppingListContents = document.getElementById('shoppingListContents');
 
@@ -1055,8 +1075,6 @@ const inputItemUnitData = document.querySelector("#itemUnit");
 // Shopping list buttons
 const submitItemButtonElement = document.getElementById('submitItem');
 const submitRefreshButtonElement = document.getElementById('submitRefresh');
-
-
 
 var shoppingListData = firestore.collection('shoppingList');
 
@@ -1132,6 +1150,7 @@ submitRefreshButtonElement.addEventListener("click", function() {
       }
     }
   }
+  console.log("click done.");
 })
 
 function popShoppingList(){
@@ -1153,6 +1172,7 @@ function popShoppingList(){
     var rowid = 0
     
     if (change.type === 'removed') {
+      console.log('Remove Shopping list item');
       deleteListItem(change.doc.id);
     } else {
       var ListItem = change.doc.data();
@@ -1246,7 +1266,11 @@ function aboutShow(){
     var div = document.getElementById(id);
     // If an element for that message exists we delete it.
     if (div) {
+      console.log('removeChild: ', div);
+      console.log('parentNode: ', div.parentNode.nodeName);
       div.parentNode.removeChild(div);
+    } else {
+      console.log('problem with div: ', div);
     }
   }
 
