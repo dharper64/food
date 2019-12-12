@@ -197,19 +197,11 @@
                         </table>
                       </div>  
                   </form>   
+                  <br>
 
                   <div hidden id="detail-Update">
-                    <!--<div hidden id="detail-Update">-->
 
-                    <!-- Ingredients start -->
-                    <!-- <div class="mdl-grid portfolio-max-width"> -->
-                      <!-- <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp"> -->
-          
-                        <!--<div class="mdl-card__title">
-                          <h2 class="mdl-card__title-text">ingredients</h2>
-                        </div> -->
-                        <!--<h2 class="mdl-layout-title">Shopping List</h2>-->
-                        <h2 class="mdl-card__title-text">ingredients</h2>
+                        <h2 class="mdl-card__title-text">Ingredients</h2>
                         <br>
 
                         <div style = "padding-left:10px; padding-right:10px;">
@@ -230,8 +222,9 @@
                         <br>
                         <form id="ingredients-form" action="#" style = "padding:10px;">
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="ingredientNum" />
+                            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="ingredientNum" />
                             <label class="mdl-textfield__label" for="sample3">Item No.</label>
+                            <span class="mdl-textfield__error">Input is not a number!</span>
                           </div>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" id="ingredientDesc" />
@@ -250,9 +243,45 @@
                             <button id="submitIngredient" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Ingredient</button>
                           </div>  
                         </form>
-                      <!-- </div> -->
-                    <!-- </div> -->                    
-                    <!-- Ingredients end -->
+                        <br>
+
+                        <h2 class="mdl-card__title-text">Method</h2>
+                        <br>
+
+                        <div style = "padding-left:10px; padding-right:10px;">
+                          <table id="method-table" class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp">
+                            <thead>
+                              <tr> 
+                                <th>No.</th>
+                                <th class="mdl-data-table__cell--non-numeric">Instruction</th>
+                                <th><!--dummy column header for delete buttons--></th>
+                              </tr>
+                            </thead>
+                            <tbody id="ingredientsListContents">    
+                            </tbody>  
+                          </table>
+                        </div>
+
+                        <br>
+                        <form id="method-form" action="#" style = "padding:10px;">
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="methodNum" />
+                            <label class="mdl-textfield__label" for="sample3">No.</label>
+                            <span class="mdl-textfield__error">Input is not a number!</span>
+                          </div>
+                          <br>
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--expandable">
+                            <!--<input class="mdl-textfield__input mdl-textfield--expandable" type="text" rows= "4" id="methosDesc" />-->
+                            <textarea class="mdl-textfield__input" type="text" rows= "3" id="methosDesc" ></textarea>
+                            <label class="mdl-textfield__label" for="sample3">Instruction</label>
+                          </div>
+                                           
+                          <div style = "padding:10px;">
+                            <button id="submitMethod" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Ingredient</button>
+                          </div>  
+                        </form>
+                        <br>
+
                   </div>
                 </div>          
               </div>        
