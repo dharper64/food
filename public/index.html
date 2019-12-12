@@ -223,20 +223,21 @@
                         <form id="ingredients-form" action="#" style = "padding:10px;">
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="ingredientNum" />
-                            <label class="mdl-textfield__label" for="sample3">Item No.</label>
+                            <label class="mdl-textfield__label" for="ingredientNum">Item No.</label>
                             <span class="mdl-textfield__error">Input is not a number!</span>
                           </div>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" id="ingredientDesc" />
-                            <label class="mdl-textfield__label" for="sample3">Ingredient Desciption</label>
+                            <label class="mdl-textfield__label" for="ingredientDesc">Ingredient Desciption</label>
                           </div>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="ingredientQty" />
-                            <label class="mdl-textfield__label" for="sample3">Quantity</label>
+                            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="ingredientQty" />
+                            <label class="mdl-textfield__label" for="ingredientQty">Quantity</label>
+                            <span class="mdl-textfield__error">Input is not a number!</span>
                           </div>                      
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" id="ingredientUnit" />
-                            <label class="mdl-textfield__label" for="sample3">Unit Type</label>
+                            <label class="mdl-textfield__label" for="ingredientUnit">Unit Type</label>
                           </div>
                                            
                           <div style = "padding:10px;">
@@ -263,22 +264,39 @@
                         </div>
 
                         <br>
+
+
                         <form id="method-form" action="#" style = "padding:10px;">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="methodNum" />
-                            <label class="mdl-textfield__label" for="sample3">No.</label>
-                            <span class="mdl-textfield__error">Input is not a number!</span>
-                          </div>
-                          <br>
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--expandable">
-                            <!--<input class="mdl-textfield__input mdl-textfield--expandable" type="text" rows= "4" id="methosDesc" />-->
-                            <textarea class="mdl-textfield__input" type="text" rows= "3" id="methosDesc" ></textarea>
-                            <label class="mdl-textfield__label" for="sample3">Instruction</label>
-                          </div>
-                                           
+                          <table border = "0" cellpadding="10">
+                            <tbody>
+                              <tr>
+                                <td><h5>No</h2></td>
+                                <td> 
+                                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="methodNum" />
+                                    <label class="mdl-textfield__label" for="methodNum">No.</label>
+                                    <span class="mdl-textfield__error">Input is not a number!</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><h5>Instruction</h2></td>
+                                <td> 
+                                  <div class="mdl-textfield mdl-js-textfield">
+                                    <!--<input class="mdl-textfield__input mdl-textfield--expandable" type="text" rows= "4" id="methosDesc" />-->
+                                    <textarea class="mdl-textfield__input" type="text" rows= "4" id="methodDesc" ></textarea>
+                                    <label class="mdl-textfield__label" for="methodDesc">Instruction</label>
+                                  </div>
+                                </td>
+                              </tr>
+
+                            </tbody>
+                          </table>
+                                                    
                           <div style = "padding:10px;">
-                            <button id="submitMethod" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Ingredient</button>
+                            <button id="submitMethod" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Add Instruction</button>
                           </div>  
+
                         </form>
                         <br>
 
