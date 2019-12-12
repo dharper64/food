@@ -743,6 +743,8 @@ function popRecipeDetailForUpdate(){
     });
   })    
   recipeDetailUpdateEement.removeAttribute('hidden'); 
+  
+  console.log('popRecipeDetailForUpdate - Done');
 }
 
 function NewRecipeShow(){
@@ -810,7 +812,7 @@ function NewRecipeShow(){
         document.forms['UpdateNew-form'].elements['NewDescription'].value = RecipeItem.desc;
         
         popRecipeDetailForUpdate();
-
+                
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -896,6 +898,14 @@ const inputIngredientDescData = document.querySelector("#ingredientDesc");
 const inputIngredientQtyData = document.querySelector("#ingredientQty");
 const inputIngredientUnitData = document.querySelector("#ingredientUnit");
 
+//inputIngredientNumData.addEventListener('mouseover', ingredientNumSet);
+inputIngredientNumData.addEventListener('click', ingredientNumSet);
+
+function ingredientNumSet(){
+  console.log("mouseOverTest");
+  inputIngredientNumData.value = listGetNextIntemNum('ingredients-table');
+}
+
 submitIngredientButton.addEventListener('click', function(){
   console.log("Adding ingredient item.");
 
@@ -925,6 +935,7 @@ submitIngredientButton.addEventListener('click', function(){
       }).then(function() {
         
         resetMaterialTextfield(inputIngredientNumData);
+        //ingredientNumSet();
         resetMaterialTextfield(inputIngredientDescData);
         resetMaterialTextfield(inputIngredientQtyData);
         resetMaterialTextfield(inputIngredientUnitData);
@@ -985,6 +996,33 @@ function deleteIngredientListItem(RowId) {
     }
   }
   console.log('Remove row done.');
+}
+
+function listGetNextIntemNum(tableName){
+  console.log("listGetNextIntemNum", tableName); // "ingredients-table"
+
+  //Reference the Table.
+  var table = document.getElementById(tableName);
+  var rows = table.getElementsByTagName("tr");
+  var nextItemNum = 1;
+
+  for(var i = 1; i < rows.length; i++) {
+    try{
+      console.log("Row : ", i);
+      var cellVal = table.rows[i].cells[0].innerHTML;
+      console.log("cellVal", cellVal);
+
+      if (cellVal >= nextItemNum){
+        nextItemNum = Number(cellVal) + 1;
+      }
+
+    } catch (e) {
+      console.error("Error", e);
+    }
+  }
+
+  console.log('nextItemNum: ', nextItemNum);
+  return nextItemNum;
 }
 
 // Build HTML for the shopping list rows
