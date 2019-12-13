@@ -718,8 +718,8 @@ const recipeDetailUpdateEement = document.getElementById('detail-Update');// Con
 
 saveRecipeHeadeButtonElement.addEventListener('click', SaveUpdateRecipe);
 
-function popRecipeDetailForUpdate(){
-  console.log("popRecipeDetailForUpdate");
+function popIngredientDetailForUpdate(){
+  console.log("popIngredientDetailForUpdate");
 
   clearIngredientsList();
 
@@ -742,9 +742,36 @@ function popRecipeDetailForUpdate(){
     }
     });
   })    
-  recipeDetailUpdateEement.removeAttribute('hidden'); 
-  
-  console.log('popRecipeDetailForUpdate - Done');
+  recipeDetailUpdateEement.removeAttribute('hidden');   
+  console.log('popIngredientDetailForUpdate - Done');
+}
+
+function popMethodDetailForUpdate(){
+  console.log("popMethodDetailForUpdate");
+
+  clearMethodList();
+
+  var methodUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Method').orderBy('orderBy');
+
+  console.log('methodUpdateListData...');
+
+  // Start listening to the query to get shopping list data.
+  methodUpdateListData.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+    
+    var rowid = 0
+    
+    if (change.type === 'removed') {
+      deleteListItem(change.doc.id);
+    } else {
+      var ListItem = change.doc.data();
+      console.log('Method list item: ', ListItem.orderBy, ListItem.method);
+      displayMethodListItem(change.doc.id, ListItem.orderBy, ListItem.method)      
+    }
+    });
+  })    
+  recipeDetailUpdateEement.removeAttribute('hidden');   
+  console.log('popMethodDetailForUpdate - Done');
 }
 
 function NewRecipeShow(){
@@ -811,7 +838,8 @@ function NewRecipeShow(){
         document.forms['UpdateNew-form'].elements['NewSubmittedBy'].value = RecipeItem.addedBy;       
         document.forms['UpdateNew-form'].elements['NewDescription'].value = RecipeItem.desc;
         
-        popRecipeDetailForUpdate();
+        popIngredientDetailForUpdate();
+        popMethodDetailForUpdate();
                 
       } else {
         // doc.data() will be undefined in this case
@@ -942,7 +970,7 @@ submitIngredientButton.addEventListener('click', function(){
         
         console.log("Ingredient list item saved")
         
-        //popRecipeDetailForUpdate();
+        //popIngredientDetailForUpdate();
 
       }).catch(function (error){
         console.log("Got an error: ", error)
@@ -962,7 +990,7 @@ function clearIngredientsList(){
   var fc = ingredientListContents.firstChild;
 
   while( fc ) {
-    console.log('Clear shopping list row.');
+    console.log('Clear ingredient list row.');
     ingredientListContents.removeChild( fc );
       fc = ingredientListContents.firstChild;
   }
@@ -998,32 +1026,7 @@ function deleteIngredientListItem(RowId) {
   console.log('Remove row done.');
 }
 
-function listGetNextIntemNum(tableName){
-  console.log("listGetNextIntemNum", tableName); // "ingredients-table"
 
-  //Reference the Table.
-  var table = document.getElementById(tableName);
-  var rows = table.getElementsByTagName("tr");
-  var nextItemNum = 1;
-
-  for(var i = 1; i < rows.length; i++) {
-    try{
-      console.log("Row : ", i);
-      var cellVal = table.rows[i].cells[0].innerHTML;
-      console.log("cellVal", cellVal);
-
-      if (cellVal >= nextItemNum){
-        nextItemNum = Number(cellVal) + 1;
-      }
-
-    } catch (e) {
-      console.error("Error", e);
-    }
-  }
-
-  console.log('nextItemNum: ', nextItemNum);
-  return nextItemNum;
-}
 
 // Build HTML for the shopping list rows
 function displayIngredientListItem(id, orderBy, item, qty, unit){
@@ -1072,6 +1075,157 @@ function deleteIngredient(rowId){
 
   // Delete the row...
   firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
+    console.log("Item successfully deleted!");
+    deleteIngredientListItem(rowId);
+  }).catch(function(error) {
+      console.error("Error removing document: ", error);
+  });
+}
+
+/*----------------------------------------------------------------------------------------------------------*/
+/* Method update & add */
+const methodListContents = document.getElementById('methodListContents'); // List of method steps
+const submitMethodButton = document.getElementById('submitMethod'); // Button to add methos step
+
+const inputMethodNumData = document.querySelector("#methodNum");
+const inputMethodDescData = document.querySelector("#methodDesc");
+
+//inputIngredientNumData.addEventListener('mouseover', ingredientNumSet);
+inputMethodNumData.addEventListener('click', methodNumSet);
+
+function methodNumSet(){
+  console.log("mouseOverTest");
+  inputMethodNumData.value = listGetNextIntemNum('method-table');
+}
+
+submitMethodButton.addEventListener('click', function(){
+  console.log("Adding method item.");
+
+  if(isNaN(inputMethodNumData.value)){
+    console.log("inputMethodNumData.value is not a number.");
+    popupToastMsg("The 'Item No.' must be a number.");    
+  }  else {
+    if (inputMethodDescData.value){
+      const methodNum = inputMethodNumData.value;
+      const methodDesc = inputMethodDescData.value;
+      
+      console.log("Instanciate method collection.");
+
+      var methodUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Method');
+
+      return methodUpdateListData.add({
+        orderBy: Number(methodNum),
+        method: methodDesc,
+        user: firebase.auth().currentUser.email
+      }).then(function() {
+        
+        resetMaterialTextfield(inputMethodNumData);
+        resetMaterialTextfield(inputMethodDescData);
+        
+        console.log("Method list item saved")
+
+      }).catch(function (error){
+        console.log("Got an error: ", error)
+      });
+    } else {
+      console.log("Nothing to save.");
+      popupToastMsg('Please enter the detail of the method.');    
+    }
+  }
+  console.log("click done.");
+});
+
+
+function clearMethodList(){
+  // Remove existing rows from the method list table before being repopulated.
+  console.log('clearMethodList...');
+  
+  var fc = methodListContents.firstChild;
+
+  while( fc ) {
+    console.log('Clear method list row.');
+    methodListContents.removeChild( fc );
+      fc = methodListContents.firstChild;
+  }
+}
+
+function deleteMethodListItem(RowId) {
+  console.log('deleteMethodListItem: ', RowId);
+  
+  //Reference the Table.
+  var table = document.getElementById("method-table");
+  var rows = table.getElementsByTagName("tr");
+
+  //Loop through the rows and check if it is the one we want them to remove.
+  for(var i = 1; i < rows.length; i++) {
+    try{
+      // ToDo: Is there a better way of getting the id?
+      var rowData = rows[i].innerHTML;
+      var start = rowData.lastIndexOf("[") + 1;
+      var end = rowData.lastIndexOf("]");
+      var thisRowId = rowData.slice(start, end);
+      
+      console.log('thisRowId: ', thisRowId);
+      
+      if (RowId == thisRowId){
+        console.log('RowId found', RowId);
+        table.deleteRow(i);
+        console.log('Row deleted: ', i);
+      }
+    }  catch (e) {
+      console.error("Error", e);
+    }
+  }
+  console.log('Remove row done.');
+}
+
+// Build HTML for the shopping list rows
+function displayMethodListItem(id, orderBy, method){
+  console.log('displayMethodListItem: ', orderBy, method);
+
+  const container = document.createElement('tr');
+  container.setAttribute('id', id);
+
+  var tableRow = document.getElementById(id) 
+
+  var content = `<tr>`;  
+  content += `<td id="row[` + id + `]">` + orderBy.toString() + `</td>`;
+  content += `<td class="mdl-data-table__cell--non-numeric">` + method + `</td>`;
+  //content += `<td>` + qty.toString() + ` ` + unit + `</td>`;
+  content += `<td>
+                <!-- Colored FAB button with ripple -->
+                <button class="delete-ingredient mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                  <i class="material-icons">delete</i>
+                </button>
+              </td>
+              </tr>`;
+
+  container.innerHTML = content;
+    
+  //console.log('container.innerHTML',container.innerHTML);   
+
+  container.addEventListener('click', function(e) {
+    console.log('Click',e);   
+    
+    var r = confirm("Remove '" + method + "' from the instructions list?");
+    if (r == true) {
+      deleteMethod(container.id);
+    } else {
+      console.log('ignore click');  
+    }
+  });  
+
+  console.log('container.innerHTML: ', container.innerHTML);
+
+  methodListContents.appendChild(container);
+}
+
+function deleteMethod(rowId){  
+  console.log('Recipe ', selectedRecipeID);   
+  console.log('deleteMethod',rowId);   
+
+  // Delete the row...
+  firestore.collection('recipes').doc(selectedRecipeID).collection('Method').doc(rowId).delete().then(function() {
     console.log("Item successfully deleted!");
     deleteIngredientListItem(rowId);
   }).catch(function(error) {
@@ -1310,6 +1464,33 @@ function aboutShow(){
     } else {
       console.log('problem with div: ', div);
     }
+  }
+
+  function listGetNextIntemNum(tableName){
+    console.log("listGetNextIntemNum", tableName); // "ingredients-table"
+  
+    //Reference the Table.
+    var table = document.getElementById(tableName);
+    var rows = table.getElementsByTagName("tr");
+    var nextItemNum = 1;
+  
+    for(var i = 1; i < rows.length; i++) {
+      try{
+        console.log("Row : ", i);
+        var cellVal = table.rows[i].cells[0].innerHTML;
+        console.log("cellVal", cellVal);
+  
+        if (cellVal >= nextItemNum){
+          nextItemNum = Number(cellVal) + 1;
+        }
+  
+      } catch (e) {
+        console.error("Error", e);
+      }
+    }
+  
+    console.log('nextItemNum: ', nextItemNum);
+    return nextItemNum;
   }
 
   /* Date Formatting */
