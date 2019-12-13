@@ -931,7 +931,7 @@ inputIngredientNumData.addEventListener('click', ingredientNumSet);
 
 function ingredientNumSet(){
   console.log("mouseOverTest");
-  inputIngredientNumData.value = listGetNextIntemNum('ingredients-table');
+  inputIngredientNumData.value = tableGetNextIntemNum('ingredients-table');
 }
 
 submitIngredientButton.addEventListener('click', function(){
@@ -1084,7 +1084,7 @@ function deleteIngredient(rowId){
 
 /*----------------------------------------------------------------------------------------------------------*/
 /* Method update & add */
-const methodListContents = document.getElementById('methodListContents'); // List of method steps
+const methodListContents = document.getElementById('methodListForEdit'); // List of method steps
 const submitMethodButton = document.getElementById('submitMethod'); // Button to add methos step
 
 const inputMethodNumData = document.querySelector("#methodNum");
@@ -1095,7 +1095,7 @@ inputMethodNumData.addEventListener('click', methodNumSet);
 
 function methodNumSet(){
   console.log("mouseOverTest");
-  inputMethodNumData.value = listGetNextIntemNum('method-table');
+  inputMethodNumData.value = listGetNextIntemNum('methodListForEdit');
 }
 
 submitMethodButton.addEventListener('click', function(){
@@ -1152,24 +1152,27 @@ function clearMethodList(){
 function deleteMethodListItem(RowId) {
   console.log('deleteMethodListItem: ', RowId);
   
-  //Reference the Table.
-  var table = document.getElementById("method-table");
-  var rows = table.getElementsByTagName("tr");
+  //Reference the list.
+  var list = document.getElementById("methodListContents");
+  var rows = table.getElementsByTagName("li");
+
+  //console.log('deleteMethodLList row count: ', rows.length);
 
   //Loop through the rows and check if it is the one we want them to remove.
   for(var i = 1; i < rows.length; i++) {
     try{
       // ToDo: Is there a better way of getting the id?
       var rowData = rows[i].innerHTML;
-      var start = rowData.lastIndexOf("[") + 1;
-      var end = rowData.lastIndexOf("]");
+      var start = 0
+      var end = rowData.lastIndexOf(".");
       var thisRowId = rowData.slice(start, end);
       
       console.log('thisRowId: ', thisRowId);
       
       if (RowId == thisRowId){
         console.log('RowId found', RowId);
-        table.deleteRow(i);
+        //table.deleteRow(i);
+        list.deleteListItem(i);
         console.log('Row deleted: ', i);
       }
     }  catch (e) {
@@ -1188,6 +1191,14 @@ function displayMethodListItem(id, orderBy, method){
 
   var tableRow = document.getElementById(id) 
 
+  var content = `<li  id="row[` + id + `]class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          ` + orderBy + `. ` + method + `
+          </span>
+        </li>
+        <br>`;
+
+  /*
   var content = `<tr>`;  
   content += `<td id="row[` + id + `]">` + orderBy.toString() + `</td>`;
   content += `<td class="mdl-data-table__cell--non-numeric">` + method + `</td>`;
@@ -1199,6 +1210,7 @@ function displayMethodListItem(id, orderBy, method){
                 </button>
               </td>
               </tr>`;
+*/
 
   container.innerHTML = content;
     
@@ -1227,7 +1239,7 @@ function deleteMethod(rowId){
   // Delete the row...
   firestore.collection('recipes').doc(selectedRecipeID).collection('Method').doc(rowId).delete().then(function() {
     console.log("Item successfully deleted!");
-    deleteIngredientListItem(rowId);
+    deleteMethodListItem(rowId);
   }).catch(function(error) {
       console.error("Error removing document: ", error);
   });
@@ -1466,8 +1478,8 @@ function aboutShow(){
     }
   }
 
-  function listGetNextIntemNum(tableName){
-    console.log("listGetNextIntemNum", tableName); // "ingredients-table"
+  function tableGetNextIntemNum(tableName){
+    console.log("tableGetNextIntemNum", tableName); // "ingredients-table"
   
     //Reference the Table.
     var table = document.getElementById(tableName);
@@ -1486,6 +1498,45 @@ function aboutShow(){
   
       } catch (e) {
         console.error("Error", e);
+      }
+    }
+  
+    console.log('nextItemNum: ', nextItemNum);
+    return nextItemNum;
+  }
+
+  function listGetNextIntemNum(listName){
+    console.log("listGetNextIntemNum", listName);
+  
+    //Reference the list.
+    var ul = document.getElementById(listName);
+    var nextItemNum = 1;
+
+    var items = ul.getElementsByTagName("li");
+
+    console.log("List item count : ", items.length);
+
+    for (var i = 0; i < items.length; ++i) {
+      // do something with items[i], which is a <li> element
+      console.log("list item : ", i);
+      //console.log("list item text : ", items[i].innerHTML);
+
+      var itemVal = items[i].innerHTML;
+      //var itemVal = items[i].value;
+      //console.log("cell Val: ", itemVal);
+
+      var start = itemVal.indexOf(">") + 1;
+      var end = itemVal.indexOf(".");
+      
+      //console.log("start: ", start);
+      //console.log("end: ", end);
+
+      var thisRowId = itemVal.slice(start, end);
+
+      console.log("thisRowId: ", thisRowId);
+
+      if (thisRowId >= nextItemNum){
+        nextItemNum = Number(thisRowId) + 1;
       }
     }
   
