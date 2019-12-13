@@ -918,7 +918,7 @@ function NewRecipeShow(){
 
 /*----------------------------------------------------------------------------------------------------------*/
 /* Ingredients update & add */
-const ingredientListContents = document.getElementById('ingredientsListContents'); // List of ingredients
+const ingredientListContents = document.getElementById('ingredientsListForEdit'); // List of ingredients
 const submitIngredientButton = document.getElementById('submitIngredient'); // Button to add ingredient
 
 const inputIngredientNumData = document.querySelector("#ingredientNum");
@@ -931,7 +931,7 @@ inputIngredientNumData.addEventListener('click', ingredientNumSet);
 
 function ingredientNumSet(){
   console.log("mouseOverTest");
-  inputIngredientNumData.value = tableGetNextIntemNum('ingredients-table');
+  inputIngredientNumData.value = listGetNextIntemNum('ingredientsListForEdit');
 }
 
 submitIngredientButton.addEventListener('click', function(){
@@ -999,24 +999,27 @@ function clearIngredientsList(){
 function deleteIngredientListItem(RowId) {
   console.log('deleteIngredientListItem: ', RowId);
   
-  //Reference the Table.
-  var table = document.getElementById("ingredients-table");
-  var rows = table.getElementsByTagName("tr");
+  //Reference the list.
+  var list = document.getElementById("ingredientsListForEdit");
+  var rows = table.getElementsByTagName("li");
+
+  console.log('deleteIngredientListItem row count: ', rows.length);
 
   //Loop through the rows and check if it is the one we want them to remove.
   for(var i = 1; i < rows.length; i++) {
     try{
       // ToDo: Is there a better way of getting the id?
       var rowData = rows[i].innerHTML;
-      var start = rowData.lastIndexOf("[") + 1;
-      var end = rowData.lastIndexOf("]");
+      var start = 0
+      var end = rowData.lastIndexOf(".");
       var thisRowId = rowData.slice(start, end);
       
       console.log('thisRowId: ', thisRowId);
       
       if (RowId == thisRowId){
         console.log('RowId found', RowId);
-        table.deleteRow(i);
+        //table.deleteRow(i);
+        list.deleteListItem(i);
         console.log('Row deleted: ', i);
       }
     }  catch (e) {
@@ -1026,28 +1029,20 @@ function deleteIngredientListItem(RowId) {
   console.log('Remove row done.');
 }
 
-
-
 // Build HTML for the shopping list rows
 function displayIngredientListItem(id, orderBy, item, qty, unit){
   console.log('displayIngredientListItem: ', orderBy, item, qty, unit);
 
-  const container = document.createElement('tr');
+  const container = document.createElement('li');
   container.setAttribute('id', id);
 
-  var tableRow = document.getElementById(id) 
+  var tableRow = document.getElementById(id)
 
-  var content = `<tr>`;  
-  content += `<td id="row[` + id + `]">` + orderBy.toString() + `</td>`;
-  content += `<td class="mdl-data-table__cell--non-numeric">` + item + `</td>`;
-  content += `<td>` + qty.toString() + ` ` + unit + `</td>`;
-  content += `<td>
-                <!-- Colored FAB button with ripple -->
-                <button class="delete-ingredient mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                  <i class="material-icons">delete</i>
-                </button>
-              </td>
-              </tr>`;
+  var content = `<li id="row[` + id + `] class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+          ` + orderBy + `. ` +  item + ` ` + qty + ` ` + unit + ` 
+          </span>
+        </li>`;
 
   container.innerHTML = content;
     
@@ -1191,7 +1186,7 @@ function displayMethodListItem(id, orderBy, method){
 
   var tableRow = document.getElementById(id) 
 
-  var content = `<li  id="row[` + id + `]class="mdl-list__item">
+  var content = `<li id="row[` + id + `]class="mdl-list__item">
           <span class="mdl-list__item-primary-content">
           ` + orderBy + `. ` + method + `
           </span>
