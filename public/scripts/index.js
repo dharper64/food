@@ -316,6 +316,8 @@ function addSizeToGoogleProfilePic(url) {
     NewElement.setAttribute('hidden', 'true');
     shoppingListElement.setAttribute('hidden', 'true');
     aboutElement.setAttribute('hidden', 'true');
+    
+    console.log("All hidden.");
   }
 
   // Click event to call function that populates the main div.
@@ -439,7 +441,7 @@ function homeShow(){
 function popRecipes(){
     console.log('popRecipes:');
    
-    cleaRecipeListElement();
+    clearRecipeListElement();
 
     const query = firestore.collection('recipes');
 
@@ -459,17 +461,24 @@ function popRecipes(){
     })
 }; 
 
-// Remove existing rows from recipe list table when selected from menu.
-function cleaRecipeListElement(){
-  console.log('cleaRecipeListElement...');
-  
+// Remove existing rows from recipe list when selected from menu.
+function clearRecipeListElement(){
+  console.log('clearRecipeListElement...');
+    
+  // If the <ul> element has any child nodes, remove its first child node
+  if (recipeListElement.hasChildNodes()) {
+    recipeListElement.removeChild(recipeListElement.childNodes[0]);
+  }
+
+  /*
   var fc = recipeListElement.firstChild;
 
   while( fc ) {
     console.log('Clear recipe list row.');
-    recipeListElement.removeChild( fc );
+    recipeListElement.removeChild( fc ); // ToDo: This may be erroring
       fc = recipeListElement.firstChild;
   }
+  */
 }
 
 function displayRecipeCard(id, title, desc){
@@ -680,7 +689,7 @@ function displayMethodItem(id, orderBy, method) {
 
   var tableRow = document.getElementById(id)
 
-  var content = `<li  id="row[` + id + `]class="mdl-list__item">
+  var content = `<li id="row[` + id + `]class="mdl-list__item">
           <span class="mdl-list__item-primary-content">
           ` + orderBy + `. ` + method + `
           </span>
@@ -690,7 +699,6 @@ function displayMethodItem(id, orderBy, method) {
   container.innerHTML = content;
     
   console.log('container.innerHTML: ', container.innerHTML);
-
 
   methodElement.appendChild(container);
 }
