@@ -1097,7 +1097,7 @@ const inputMethodDescData = document.querySelector("#methodDesc");
 inputMethodNumData.addEventListener('click', methodNumSet);
 
 function methodNumSet(){
-  console.log("mouseOverTest");
+  console.log("methodNumSet");
   inputMethodNumData.value = listGetNextIntemNum('methodListForEdit');
 }
 
@@ -1520,23 +1520,10 @@ function aboutShow(){
     console.log("List item count : ", items.length);
 
     for (var i = 0; i < items.length; ++i) {
-      // do something with items[i], which is a <li> element
-      console.log("list item : ", i);
-      //console.log("list item text : ", items[i].innerHTML);
-
       var itemVal = items[i].innerHTML;
-      //var itemVal = items[i].value;
-      //console.log("cell Val: ", itemVal);
-
       var start = itemVal.indexOf(">") + 1;
       var end = itemVal.indexOf(".");
-      
-      //console.log("start: ", start);
-      //console.log("end: ", end);
-
       var thisRowId = itemVal.slice(start, end);
-
-      console.log("thisRowId: ", thisRowId);
 
       if (thisRowId >= nextItemNum){
         nextItemNum = Number(thisRowId) + 1;
