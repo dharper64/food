@@ -439,9 +439,13 @@ function homeShow(){
   }
 
 function popRecipes(){
-    console.log('popRecipes:');
-   
-    clearRecipeListElement();
+  console.log('popRecipes:', recipeListElement.childElementCount);
+  
+  if (recipeListElement.childElementCount > 0){
+    console.log('Recipe cards already loaded.');
+  } else {
+
+    //clearRecipeListElement();
 
     const query = firestore.collection('recipes');
 
@@ -459,6 +463,7 @@ function popRecipes(){
         }
         });
     })
+  }
 }; 
 
 // Remove existing rows from recipe list when selected from menu.
