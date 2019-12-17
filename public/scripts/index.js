@@ -1261,7 +1261,7 @@ function deleteMethod(rowId){
   firestore.collection('recipes').doc(selectedRecipeID).collection('Method').doc(rowId).delete().then(function() {
     console.log("Item successfully deleted!");
     //deleteMethodListItem(rowId);
-    listRemoveRow(methodListContents, rowId);
+    listRemoveRow('methodListForEdit', rowId);
   }).catch(function(error) {
       console.error("Error removing document: ", error);
   });
@@ -1553,10 +1553,11 @@ function aboutShow(){
     return nextItemNum;
   }
 
-  function listRemoveRow(ul, RowID){
-    console.log("listRemoveRow List: ", ul.nodeName);
+  function listRemoveRow(listName, RowID){
+    console.log("listRemoveRow List: ", listName);
     console.log("listRemoveRow ID: ", RowID);
   
+    var ul = document.getElementById(listName);
     var items = ul.getElementsByTagName("li");
 
     console.log("List item count : ", items.length);
