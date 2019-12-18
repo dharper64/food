@@ -991,14 +991,11 @@ submitIngredientButton.addEventListener('click', function(){
       }).then(function() {
         
         resetMaterialTextfield(inputIngredientNumData);
-        //ingredientNumSet();
         resetMaterialTextfield(inputIngredientDescData);
         resetMaterialTextfield(inputIngredientQtyData);
         resetMaterialTextfield(inputIngredientUnitData);
         
         console.log("Ingredient list item saved")
-        
-        //popIngredientDetailForUpdate();
 
       }).catch(function (error){
         console.log("Got an error: ", error)
@@ -1024,41 +1021,6 @@ function clearIngredientsList(){
   }
 }
 
-/*
-function deleteIngredientListItem(RowId) {
-  console.log('deleteIngredientListItem: ', RowId);
-  
-  //Reference the list.
-  var list = document.getElementById("ingredientsListForEdit");
-  var rows = table.getElementsByTagName("li");
-
-  console.log('deleteIngredientListItem row count: ', rows.length);
-
-  //Loop through the rows and check if it is the one we want them to remove.
-  for(var i = 1; i < rows.length; i++) {
-    try{
-      // ToDo: Is there a better way of getting the id?
-      var rowData = rows[i].innerHTML;
-      var start = 0
-      var end = rowData.lastIndexOf(".");
-      var thisRowId = rowData.slice(start, end);
-      
-      console.log('thisRowId: ', thisRowId);
-      
-      if (RowId == thisRowId){
-        console.log('RowId found', RowId);
-        //table.deleteRow(i);
-        list.deleteListItem(i);
-        console.log('Row deleted: ', i);
-      }
-    }  catch (e) {
-      console.error("Error", e);
-    }
-  }
-  console.log('Remove row done.');
-}
-*/
-
 // Build HTML for the shopping list rows
 function displayIngredientListItem(id, orderBy, item, qty, unit){
   console.log('displayIngredientListItem: ', orderBy, item, qty, unit);
@@ -1075,8 +1037,6 @@ function displayIngredientListItem(id, orderBy, item, qty, unit){
         </li>`;
 
   container.innerHTML = content;
-    
-  //console.log('container.innerHTML',container.innerHTML);   
 
   container.addEventListener('click', function(e) {
     console.log('Click',e);   
@@ -1101,7 +1061,6 @@ function deleteIngredient(rowId){
   // Delete the row...
   firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
     console.log("Item successfully deleted!");
-    //deleteIngredientListItem(rowId);
     listRemoveRowByID(rowId);
   }).catch(function(error) {
       console.error("Error removing document: ", error);
@@ -1181,46 +1140,6 @@ function clearMethodList(){
   }
 }
 
-/*
-function deleteMethodListItem(RowId) {
-  console.log('deleteMethodListItem: ', RowId);
-  
-  //Reference the list.
-  var list = methodListContents; //document.getElementById("methodListContents");
-  //var rows = table.getElementsByTagName("li");
-
-  //console.log('deleteMethodLList row count: ', rows.length);
-
-  //Loop through the rows and check if it is the one we want them to remove.
-  for(var i = 1; i < list.childNodes.length; i++) {
-    try{
-      console.log('deleteMethodListItem row: ', i);
-
-      // ToDo: Is there a better way of getting the id?
-      //var rowData = rows[i].innerHTML;
-      var rowData = list.childNodes[i].innerHTML;
-      console.log('thisRow: ', rowData);
-
-      var start = rowData.lastIndexOf("[");
-      var end = rowData.lastIndexOf("]");
-      var thisRowId = rowData.slice(start, end);
-      
-      console.log('thisRowId: ', thisRowId);
-      
-      if ('ed-' + RowId == thisRowId){
-        console.log('RowId found', RowId);
-        //table.deleteRow(i);
-        list.deleteListItem(i);
-        console.log('Row deleted: ', i);
-      }
-    }  catch (e) {
-      console.error("Error", e);
-    }
-  }
-  console.log('Remove row done.');
-}
-*/
-
 // Build HTML for the shopping list rows
 function displayMethodListItem(id, orderBy, method){
   console.log('displayMethodListItem: ', orderBy, method);
@@ -1239,26 +1158,8 @@ function displayMethodListItem(id, orderBy, method){
         </li>
         <br>`;
 
-// <div class="mdl-tooltip" for="mytooltip2">
-
-  /*
-  var content = `<tr>`;  
-  content += `<td id="row[` + id + `]">` + orderBy.toString() + `</td>`;
-  content += `<td class="mdl-data-table__cell--non-numeric">` + method + `</td>`;
-  //content += `<td>` + qty.toString() + ` ` + unit + `</td>`;
-  content += `<td>
-                <!-- Colored FAB button with ripple -->
-                <button class="delete-ingredient mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                  <i class="material-icons">delete</i>
-                </button>
-              </td>
-              </tr>`;
-*/
-
   container.innerHTML = content;
     
-  //console.log('container.innerHTML',container.innerHTML);   
-
   container.addEventListener('click', function(e) {
     console.log('Click',e);   
     
@@ -1279,20 +1180,9 @@ function deleteMethod(rowId){
   console.log('Recipe ', selectedRecipeID);   
   console.log('deleteMethod',rowId);   
 
-  /*
-  var liRowId = rowId;
-
-  if (rowId.substring(0, 3) == 'ed-') {
-    rowId = rowId.substring(3) 
-    console.log('rowId',rowId);   
-  }
-*/
-
   // Delete the row...
   firestore.collection('recipes').doc(selectedRecipeID).collection('Method').doc(rowId).delete().then(function() {
     console.log("Item successfully deleted!");
-    //deleteMethodListItem(rowId);
-    //listRemoveRow('methodListForEdit', rowId);
     listRemoveRowByID(rowId);
   }).catch(function(error) {
       console.error("Error removing document: ", error);
