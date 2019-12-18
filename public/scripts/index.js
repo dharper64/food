@@ -962,13 +962,22 @@ function ingredientNumSet(){
   inputIngredientNumData.value = listGetNextIntemNum('ingredientsListForEdit');
 }
 
+
 submitIngredientButton.addEventListener('click', function(){
   console.log("Adding ingredient item.");
 
-  if(isNaN(inputIngredientNumData.value)){
-    console.log("inputIngredientNumData.value is not a number.");
-    popupToastMsg("The 'Item No.' must be a number.");    
-  } else if (isNaN(inputIngredientQtyData.value)){
+  // ToDo : Set default item number
+  if (inputIngredientNumData.value == ""){
+    console.log("methodNum not entered. ", inputIngredientNumData.value);
+    inputIngredientNumData.value = listGetNextIntemNum('ingredientsListForEdit');
+    console.log("methodNum not entered so default to ", inputIngredientNumData.value);
+  }
+
+  //if(isNaN(inputIngredientNumData.value)){
+  //  console.log("inputIngredientNumData.value is not a number.");
+  //  popupToastMsg("The 'Item No.' must be a number.");    
+  //} else 
+  if (isNaN(inputIngredientQtyData.value)){
     console.log("inputIngredientQtyData.value is not a number.");
     popupToastMsg("The 'Quantity' must be a number.");    
   } else {
