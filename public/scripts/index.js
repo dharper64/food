@@ -1223,7 +1223,7 @@ function shoppingListHTML(){
 
 const shoppingListContents = document.getElementById('shoppingListContents');
 
-const galleryElement = document.getElementById('Gallery-container');
+//const galleryElement = document.getElementById('Gallery-container');
 
 const inputItemDescData = document.querySelector("#itemDesc");
 const inputItemQtyData = document.querySelector("#itemQty");
