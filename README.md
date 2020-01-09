@@ -13,7 +13,8 @@ Web page for recipies with built in shopping list
 
 # Run the starter app locally
 Now that you have imported and configured your project, you are ready to run the web app for the first time.
-1.	In a console from the 'top level' directory, run the following Firebase CLI command: firebase serve --only hosting
+1.	In a console from the 'top level' directory, run the following Firebase CLI command: 
+    firebase serve --only hosting
 2.	Your command line should display the following response: ✔ hosting: Local server: http://localhost:5000
 3.	Using your browser, open your app at http://localhost:5000.
 

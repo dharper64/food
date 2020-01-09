@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <!-- Use https://getmdl.io/customize/index.html to creat theme-->
-  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-orange.min.css" /> 
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-orange.min.css"> 
   <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 
   <!-- App Styling -->
@@ -160,43 +160,59 @@
                 </div>   
                 <div class="mdl-card__supporting-text">
                   
+
                   <form id="UpdateNew-form" action="#" style = "padding:10px;">
 
                     <table border = "0" cellpadding="10">
-                        <tbody>
-                          <tr>
-                            <td><h5>Title</h2></td>
-                            <td>                            
-                              <div class="mdl-textfield mdl-js-textfield mdl-textfield__input">
-                              <input class="mdl-textfield__input" type="text" id="newTitle" />
-                              </div>  
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><h5>Submitted By</h2></td>
-                            <td>
-                              <div class="mdl-textfield mdl-js-textfield mdl-textfield__input">
-                              <input class="mdl-textfield__input" type="text" id="NewSubmittedBy" />
-                              </div>    
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><h5>Description</h2></td>
-                            <td>
-                              <div class="mdl-textfield mdl-js-textfield">
-                                <textarea class="mdl-textfield__input" type="text" rows= "4" id="NewDescription" ></textarea>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      <tbody>
+                        <tr>
+                          <td><h5>Title</h2></td>
+                          <td>                            
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield__input">
+                            <input class="mdl-textfield__input" type="text" id="newTitle" />
+                            </div>  
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><h5>Submitted By</h2></td>
+                          <td>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield__input">
+                            <input class="mdl-textfield__input" type="text" id="NewSubmittedBy" />
+                            </div>    
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><h5>Description</h2></td>
+                          <td>
+                            <div class="mdl-textfield mdl-js-textfield">
+                              <textarea class="mdl-textfield__input" type="text" rows= "4" id="NewDescription" ></textarea>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
 
                     <div style = "padding:10px;">  
-                        <table border = "0">                       
-                          <td><button id="saveRecipeHeader" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button></td>
-                        </table>
-                      </div>  
+                      <table border = "0">                       
+                        <td><button id="saveRecipeHeader" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button></td>
+                      </table>
+                    </div>  
                   </form>   
+                  <hr>
+                  <br>
+
+                  <h2 class="mdl-card__title-text">Recipe Image</h2>
+                  <div class="mdl-card__supporting-text mdl-color-text--grey-600">  
+
+                    <form id="image-form" action="#">
+                      <input id="mediaCapture" type="file" accept="image/*" capture="camera">
+                      <button id="submitImage" title="Add an image" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
+                        <i class="material-icons">image</i>
+                      </button>
+                    </form>                  
+
+                  </div>
+
                   <hr>
                   <br>
 
