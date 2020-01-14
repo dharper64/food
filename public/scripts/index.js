@@ -955,12 +955,16 @@ imageButtonElement.addEventListener('click', function(e) {
   e.preventDefault();
   mediaCaptureElement.click();
 });
-mediaCaptureElement.addEventListener('change', onMediaFileSelected);
 
+mediaCaptureElement.addEventListener('change', onMediaFileSelected);
 
 // Triggered when a file is selected via the media picker.
 function onMediaFileSelected(event) {
+  console.log("onMediaFileSelected");
+  
   event.preventDefault();
+
+  // Get the file
   var file = event.target.files[0];
 
   // Clear the selection in the file picker input.
@@ -984,28 +988,36 @@ function onMediaFileSelected(event) {
 // Saves a new message containing an image in Firebase.
 // This first saves the image in Firebase storage.
 function saveImageMessage(file) {
-  // 1 - We add a message with a loading icon that will get updated with the shared image.
-  firebase.firestore().collection('messages').add({
-    name: getUserName(),
-    imageUrl: LOADING_IMAGE_URL,
-    profilePicUrl: getProfilePicUrl(),
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(function(messageRef) {
-    // 2 - Upload the image to Cloud Storage.
-    var filePath = firebase.auth().currentUser.uid + '/' + messageRef.id + '/' + file.name;
-    return firebase.storage().ref(filePath).put(file).then(function(fileSnapshot) {
-      // 3 - Generate a public URL for the file.
-      return fileSnapshot.ref.getDownloadURL().then((url) => {
-        // 4 - Update the chat message placeholder with the image's URL.
-        return messageRef.update({
-          imageUrl: url,
-          storageUri: fileSnapshot.metadata.fullPath
-        });
-      });
-    });
-  }).catch(function(error) {
-    console.error('There was an error uploading a file to Cloud Storage:', error);
-  });
+  console.log("saveImageMessage");
+
+  // Set image path
+  var filePath = 'recipeImages/' + selectedRecipeID; // + '/' + file.name;
+
+  console.log("filePath", filePath);
+
+  // Create a storage ref
+  var storageRef = firebase.storage().ref(filePath);
+
+  // Upload the 
+  var task = storageRef.put(file);
+
+  // Update progress bar
+  task.on('state_changed',
+    function progress(snapshot){
+      var percentage = (snapshot.bytesTransfered / snapshot.totalBytes) * 100;
+      uploader.value = percentage;
+    },
+
+    function error(err){
+      console.error('There was an error uploading a file to Cloud Storage:', error);
+    },
+
+    function complete(){
+      console.log('Image upladed:');
+    }
+  );
+  console.log("saveImageMessage - done");
+
 }
 
 /*----------------------------------------------------------------------------------------------------------*/
@@ -1028,7 +1040,7 @@ function ingredientNumSet(){
 
 
 submitIngredientButton.addEventListener('click', function(){
-  console.log("Adding ingredient item.");
+  console.log("addEventListener.");
 
   // ToDo : Set default item number
   if (inputIngredientNumData.value == ""){
@@ -1375,6 +1387,7 @@ submitRefreshButtonElement.addEventListener("click", function() {
 })
 
 function popShoppingList(){
+  console.log("popShoppingList");
 
   const query = firestore.collection('shoppingList');
   //const query = firestore.collection('shoppingList').doc('user.email').collection('items');

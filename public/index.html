@@ -206,6 +206,14 @@
                   <div class="mdl-card__supporting-text mdl-color-text--grey-600">  
 
                     <form id="image-form" action="#">
+                      <figure id="recipeImageEd" class="mdl-card__media">
+                        <img src="/images/default.jpg" alt="" style="width:100%" />
+                      </figure>
+
+                      <!-- Slider with Starting Value -->
+                      <input id="uploader" class="mdl-slider mdl-js-slider" type="range"
+                        min="0" max="100" value="0" tabindex="0">
+
                       <input hidden id="mediaCapture" type="file" accept="image/*" capture="camera">
                       <button id="submitImage" title="Add an image" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
                         <i class="material-icons">image</i>
@@ -386,7 +394,7 @@
   <script  src="/__/firebase/7.3.0/firebase-firestore.js"></script>  
   <!-- <script defer src="/__/firebase/7.3.0/firebase-database.js"></script> -->
   <!-- <script defer src="/__/firebase/7.3.0/firebase-messaging.js"></script> -->
-  <!-- <script defer src="/__/firebase/7.3.0/firebase-storage.js"></script> -->
+  <script defer src="/__/firebase/7.3.0/firebase-storage.js"></script>
   <!-- initialize the SDK after all desired features are loaded -->
   <script  src="/__/firebase/init.js"></script>
 
