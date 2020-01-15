@@ -1060,8 +1060,6 @@ function loadRecipeImage(imageElm, RecipeID){
       console.log("loadRecipeImage - file NOT found!");
       image.src = "/images/default.jpg";      
     }
-
-    console.log("loadRecipeImage - default: ", image.src);
   });
 
   console.log("loadRecipeImage - done");
