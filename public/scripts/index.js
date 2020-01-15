@@ -1044,48 +1044,29 @@ function loadRecipeImage(imageElm, RecipeID){
 
   var storage    = firebase.storage();
   var storageRef = storage.ref();
-  //var spaceRef = storageRef.child('recipeImages/' + RecipeID);
+
+  var image = document.getElementById(imageElm);
   
   storageRef.child('recipeImages/' + RecipeID).getDownloadURL().then(function(url) {
-  
-  console.log("loadRecipeImage - url : ", url);
+      console.log("loadRecipeImage - url : ", url);
 
-  //var image = document.getElementById("recipeImageEd");
-  var image = document.getElementById(imageElm);
-  image.src = url;
-  
-  console.log("image.src: ", image.src);
-
+      image.src = url;
+      
+      console.log("image.src: ", image.src);
   }).catch(function(error) {
-    image.src = "/images/default.jpg"
     console.error('There was an error downloading a file from Cloud Storage:', error);  
+
+    if (error.code == "storage/object-not-found") {
+      console.log("loadRecipeImage - file NOT found!");
+      image.src = "/images/default.jpg";      
+    }
+
+    console.log("loadRecipeImage - default: ", image.src);
   });
+
   console.log("loadRecipeImage - done");
 }
 
-function getRecipeImageURL(RecipeID){
-  console.log("getRecipeImageURL : ", RecipeID);
-
-  var imgURL = "/images/default.jpg";
-  //var imgURL = "/images/testcard.jpg";
-  var storage    = firebase.storage();
-  var storageRef = storage.ref();
-  //var spaceRef = storageRef.child('recipeImages/' + RecipeID);
-  
-  storageRef.child('recipeImages/' + RecipeID).getDownloadURL().then(function(url) {
-  
-  imgURL = url;
-
-  console.log("loadRecipeImage - url : ", imgURL);
-
-  }).catch(function(error) {
-    console.error('There was an error downloading a file from Cloud Storage:', error);  
-  });
-
-  return imgURL;
-
-  console.log("getRecipeImageURL - done");  
-}
 
 /*----------------------------------------------------------------------------------------------------------*/
 /* Ingredients update & add */
