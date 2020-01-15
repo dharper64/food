@@ -949,6 +949,7 @@ function NewRecipeShow(){
 var imageFormElement = document.getElementById('image-form');
 var mediaCaptureElement = document.getElementById('mediaCapture');
 var imageButtonElement = document.getElementById('submitImage');
+var recipeImageEdElement = document.getElementById('recipeImageEd');
 
 // Events for image upload.
 imageButtonElement.addEventListener('click', function(e) {
@@ -981,17 +982,17 @@ function onMediaFileSelected(event) {
   }
   // Check if the user is signed-in
   if (checkSignedInWithMessage()) {
-    saveImageMessage(file);
+    saveRecipeImage(file);
   }
 }
 
 // Saves a new message containing an image in Firebase.
 // This first saves the image in Firebase storage.
-function saveImageMessage(file) {
-  console.log("saveImageMessage");
+function saveRecipeImage(file) {
+  console.log("saveRecipeImage");
 
   // Set image path
-  var filePath = 'recipeImages/' + selectedRecipeID; // + '/' + file.name;
+  var filePath = 'recipeImages/' + selectedRecipeID;
 
   console.log("filePath", filePath);
 
@@ -1014,10 +1015,42 @@ function saveImageMessage(file) {
 
     function complete(){
       console.log('Image upladed:');
+      popupToastMsg("Recipe image saved.");    
+      uploader.value = 100;
+      loadRecipeImage();
     }
   );
-  console.log("saveImageMessage - done");
+  console.log("saveRecipeImage - done");
+}
 
+function loadRecipeImage(){
+  console.log("loadRecipeImage - done");
+
+  var storage    = firebase.storage();
+  var storageRef = storage.ref();
+  var spaceRef = storageRef.child('recipeImages/' + selectedRecipeID);
+  
+  storageRef.child('recipeImages/' + selectedRecipeID).getDownloadURL().then(function(url) {
+  
+  //var test = url;
+  //  add this line here:
+  //document.getElementById("recipeImageEd").src = test;
+  //document.getElementById("recipeImageEd").src = "/images/testcard.jpg";
+
+  console.log("loadRecipeImage - url : ", url);
+
+  //recipeImageEdElement.src = url;
+  //recipeImageEdElement.src = "/images/default.jpg";
+
+  var image = document.getElementsByClassName("recipeImageEd");
+  image.src = "/images/default.jpg"
+  
+  console.log("image.src: ", image.src);
+
+  }).catch(function(error) {
+      console.error('There was an error downloading a file from Cloud Storage:', error);  
+  });
+  console.log("loadRecipeImage - done");
 }
 
 /*----------------------------------------------------------------------------------------------------------*/
