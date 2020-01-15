@@ -465,6 +465,7 @@ function popRecipes(){
             var ListItem = change.doc.data();
             console.log('Resipes list: ', ListItem.title, ', ', ListItem.desc);
             displayRecipeCard(change.doc.id, ListItem.title, ListItem.desc)      
+            loadRecipeImage("img-" + change.doc.id, change.doc.id);
         }
         });
     })
@@ -494,6 +495,9 @@ function clearRecipeListElement(){
 function displayRecipeCard(id, title, desc){
     console.log('displayListItem: ', id, title, desc);
 
+    //var imgURL = getRecipeImageURL(id);
+    //console.log('imgURL', imgURL);
+
     if (desc.length > 125){
       console.log('Recipe description too long', desc.length);
       desc = desc.substring(1, 122);
@@ -505,16 +509,23 @@ function displayRecipeCard(id, title, desc){
 
     const container = document.createElement('div');
     container.setAttribute('id', id);
-    
+
     var tableRow = document.getElementById(id) 
+
+    var imgID = "img-" + id;
+    console.log('imgID ', imgID);
 
     var content = '';
     content += `<div class="mdl-cell mdl-cell--6-col">`
     content += `<div class="recipeCard demo-card-square mdl-card mdl-shadow--2dp">`
     content += `<div id="` + id + `>`
 
+    //content += `<figure class="mdl-card__media">
+    //                <img  id=` + imgID + ` src="/images/default.jpg" alt="" style="width:100%" />
+    //            </figure>`
+
     content += `<figure class="mdl-card__media">
-                    <img src="/images/default.jpg" alt="" style="width:100%" />
+                <img  id=` + imgID + ` src="" alt="Recipe image" style="width:100%" />
                 </figure>`
 
     content += `<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text">` + title + `"</h2></div>`;
@@ -527,7 +538,7 @@ function displayRecipeCard(id, title, desc){
     container.innerHTML = content;
         
     console.log('container.innerHTML: ', container.innerHTML);
-
+    
     container.addEventListener('click', function() {
       console.log('Click',container.id);   
       loadRecipeDetail(container.id);
@@ -559,6 +570,8 @@ function loadRecipeDetail(id){
 
     // Load Recipe Method
     loadRecipeMethod(id);
+
+    loadRecipeImage("recipeImageDt", id);
 
     console.log('loadRecipeDetail: Done', id);
 
@@ -844,6 +857,8 @@ function NewRecipeShow(){
     
     console.log('popRecipeForm ', selectedRecipeID);
 
+    //loadRecipeImage("recipeImageEd", selectedRecipeID);
+
     if (selectedRecipeID !== ""){
       console.log('popRecipeForm : Show detail');
     } else {
@@ -1017,40 +1032,59 @@ function saveRecipeImage(file) {
       console.log('Image upladed:');
       popupToastMsg("Recipe image saved.");    
       uploader.value = 100;
-      loadRecipeImage();
+      loadRecipeImage("recipeImageEd", selectedRecipeID);
     }
   );
   console.log("saveRecipeImage - done");
 }
 
-function loadRecipeImage(){
-  console.log("loadRecipeImage - done");
+function loadRecipeImage(imageElm, RecipeID){
+  console.log("loadRecipeImage for : ", imageElm);
+  console.log("loadRecipeImage id : ", RecipeID);
 
   var storage    = firebase.storage();
   var storageRef = storage.ref();
-  var spaceRef = storageRef.child('recipeImages/' + selectedRecipeID);
+  //var spaceRef = storageRef.child('recipeImages/' + RecipeID);
   
-  storageRef.child('recipeImages/' + selectedRecipeID).getDownloadURL().then(function(url) {
+  storageRef.child('recipeImages/' + RecipeID).getDownloadURL().then(function(url) {
   
-  //var test = url;
-  //  add this line here:
-  //document.getElementById("recipeImageEd").src = test;
-  //document.getElementById("recipeImageEd").src = "/images/testcard.jpg";
-
   console.log("loadRecipeImage - url : ", url);
 
-  //recipeImageEdElement.src = url;
-  //recipeImageEdElement.src = "/images/default.jpg";
-
-  var image = document.getElementsByClassName("recipeImageEd");
-  image.src = "/images/default.jpg"
+  //var image = document.getElementById("recipeImageEd");
+  var image = document.getElementById(imageElm);
+  image.src = url;
   
   console.log("image.src: ", image.src);
 
   }).catch(function(error) {
-      console.error('There was an error downloading a file from Cloud Storage:', error);  
+    image.src = "/images/default.jpg"
+    console.error('There was an error downloading a file from Cloud Storage:', error);  
   });
   console.log("loadRecipeImage - done");
+}
+
+function getRecipeImageURL(RecipeID){
+  console.log("getRecipeImageURL : ", RecipeID);
+
+  var imgURL = "/images/default.jpg";
+  //var imgURL = "/images/testcard.jpg";
+  var storage    = firebase.storage();
+  var storageRef = storage.ref();
+  //var spaceRef = storageRef.child('recipeImages/' + RecipeID);
+  
+  storageRef.child('recipeImages/' + RecipeID).getDownloadURL().then(function(url) {
+  
+  imgURL = url;
+
+  console.log("loadRecipeImage - url : ", imgURL);
+
+  }).catch(function(error) {
+    console.error('There was an error downloading a file from Cloud Storage:', error);  
+  });
+
+  return imgURL;
+
+  console.log("getRecipeImageURL - done");  
 }
 
 /*----------------------------------------------------------------------------------------------------------*/
