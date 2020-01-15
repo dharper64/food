@@ -1040,7 +1040,12 @@ function loadRecipeImage(){
   console.log("loadRecipeImage - url : ", url);
 
   //recipeImageEdElement.src = url;
-  recipeImageEdElement.src = "/images/default.jpg";
+  //recipeImageEdElement.src = "/images/default.jpg";
+
+  var image = document.getElementsByClassName("recipeImageEd");
+  image.src = "/images/default.jpg"
+  
+  console.log("image.src: ", image.src);
 
   }).catch(function(error) {
       console.error('There was an error downloading a file from Cloud Storage:', error);  
