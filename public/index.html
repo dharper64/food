@@ -136,11 +136,30 @@
                   
                   <div class = "mdl-tabs__panel" id = "tab3-panel">
                       <div style = "padding:20px;">  
-                        <ul id = "method" class="demo-list-item mdl-list">
+                        <!-- <ul id = "comments" class="demo-list-item mdl-list"> -->  
                           <!-- Generated from index.js -->          
-                          <P>Comments will be listed here.</P>            
-                        </ul>
-                      </div>   
+                          <P>Comments will be listed here.</P>    
+
+                          <div id="Comments">
+                            <span id="comments-filler"></span>
+                          </div>
+                          <form id="comments-form" action="#">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <input class="mdl-textfield__input" type="text" id="commentName">
+                              <label class="mdl-textfield__label" for="name">Name...</label>
+                            </div>
+                            <br>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <textarea class="mdl-textfield__input" type="text" rows= "4" id="commentTxt" ></textarea>
+                              <label class="mdl-textfield__label" for="comment">New Comment...</label>
+                            </div>
+                            <button id="submitComments" disabled type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                              Save
+                            </button>
+                          </form>
+
+                        <!-- </ul> -->  
+                      </div>
                     </div>
                 </div>
 

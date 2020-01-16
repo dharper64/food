@@ -1047,6 +1047,9 @@ function loadRecipeImage(imageElm, RecipeID){
 
   var image = document.getElementById(imageElm);
   
+  //image.width = "400";
+  //console.log("image.width: ", image.width);
+
   storageRef.child('recipeImages/' + RecipeID).getDownloadURL().then(function(url) {
       console.log("loadRecipeImage - url : ", url);
 
@@ -1061,7 +1064,7 @@ function loadRecipeImage(imageElm, RecipeID){
       image.src = "/images/default.jpg";      
     }
   });
-
+  
   console.log("loadRecipeImage - done");
 }
 
