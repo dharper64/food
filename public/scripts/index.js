@@ -857,7 +857,7 @@ function NewRecipeShow(){
     
     console.log('popRecipeForm ', selectedRecipeID);
 
-    //loadRecipeImage("recipeImageEd", selectedRecipeID);
+    loadRecipeImage("recipeImageEd", selectedRecipeID);
 
     if (selectedRecipeID !== ""){
       console.log('popRecipeForm : Show detail');
@@ -965,6 +965,7 @@ var imageFormElement = document.getElementById('image-form');
 var mediaCaptureElement = document.getElementById('mediaCapture');
 var imageButtonElement = document.getElementById('submitImage');
 var recipeImageEdElement = document.getElementById('recipeImageEd');
+var uploaderElement = document.getElementById('uploader');
 
 // Events for image upload.
 imageButtonElement.addEventListener('click', function(e) {
@@ -1006,6 +1007,9 @@ function onMediaFileSelected(event) {
 function saveRecipeImage(file) {
   console.log("saveRecipeImage");
 
+  // "uploader" hidden
+  uploaderElement.removeAttribute('hidden');
+
   // Set image path
   var filePath = 'recipeImages/' + selectedRecipeID;
 
@@ -1033,6 +1037,7 @@ function saveRecipeImage(file) {
       popupToastMsg("Recipe image saved.");    
       uploader.value = 100;
       loadRecipeImage("recipeImageEd", selectedRecipeID);
+      uploaderElement.setAttribute('hidden', 'true');
     }
   );
   console.log("saveRecipeImage - done");
@@ -1041,6 +1046,7 @@ function saveRecipeImage(file) {
 function loadRecipeImage(imageElm, RecipeID){
   console.log("loadRecipeImage for : ", imageElm);
   console.log("loadRecipeImage id : ", RecipeID);
+
 
   var storage    = firebase.storage();
   var storageRef = storage.ref();
