@@ -571,6 +571,9 @@ function loadRecipeDetail(id){
     // Load Recipe Method
     loadRecipeMethod(id);
 
+    // Load comments
+    loadRecipeComments(id); //loadRecipeMethod
+
     loadRecipeImage("recipeImageDt", id);
 
     console.log('loadRecipeDetail: Done', id);
@@ -681,7 +684,7 @@ function loadRecipeMethod(id){
 
   methodElement.deleteListItem;
 
-  // Start listening to the query to get shopping list data.
+  // Start listening to the query to get recipe list data.
   query.onSnapshot(function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
     //console.log("Document data:", change.doc.data());
@@ -729,6 +732,14 @@ function displayMethodItem(id, orderBy, method) {
 
   methodElement.appendChild(container);
 }
+
+/* Recipe Comments */
+function loadRecipeComments(id){
+  console.log('loadRecipeComments');
+  // ToDo
+
+
+} 
 
 /* #endregion */
 
