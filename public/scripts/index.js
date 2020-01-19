@@ -733,7 +733,15 @@ function displayMethodItem(id, orderBy, method) {
   methodElement.appendChild(container);
 }
 
+/*=======================================================================================================*/
 /* Recipe Comments */
+
+const submitCommentButton = document.getElementById('submitComment'); // Button to save comment
+const commentAddedByElement = document.getElementById('commentAddedBy'); 
+const commentTxtElement = document.getElementById('commentTxt'); 
+
+commentAddedBy
+
 function loadRecipeComments(id){
   console.log('loadRecipeComments');
   // ToDo
@@ -741,6 +749,61 @@ function loadRecipeComments(id){
 
 } 
 
+submitCommentButton.addEventListener('click', function(){
+  console.log("submitCommentButton.addEventListener.");
+
+  if (commentAddedByElement.value == ""){
+    console.log("Name not entered.");
+    popupToastMsg("Please enter your name.");    
+  } else if (commentTxtElement.value == ""){
+    console.log("Comment not entered.");
+    popupToastMsg("You have not entered a comment.");    
+  } else {
+    //if (inputIngredientDescData.value){
+      const addedBy = commentAddedByElement.value;
+      const comment = commentTxtElement.value;
+      
+      console.log("Instanciate comments collection.");
+
+      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Comments');
+
+      return ingredientsUpdateListData.add({
+        addedBy: addedBy,
+        comment: comment,
+        dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
+        user: firebase.auth().currentUser.email
+      }).then(function() {
+        
+        resetMaterialTextfield(commentAddedByElement);
+        resetMaterialTextfield(commentTxtElement);
+        
+        console.log("Comment saved")
+
+      }).catch(function (error){
+        console.log("Got an error: ", error)
+      });
+    //} else {
+    //  console.log("Nothing to save.");
+    //  popupToastMsg('Please enter a description of the ingredients.');    
+    //}
+  }
+  console.log("click done.");
+});
+
+/*
+function clearCommentsList(){
+  // Remove existing rows from the ingredients list table before being repopulated.
+  console.log('clearIngredientsList...');
+  
+  var fc = ingredientListContents.firstChild;
+
+  while( fc ) {
+    console.log('Clear ingredient list row.');
+    ingredientListContents.removeChild( fc );
+      fc = ingredientListContents.firstChild;
+  }
+}
+*/
 /* #endregion */
 
 /*=======================================================================================================*/
