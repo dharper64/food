@@ -197,6 +197,10 @@ function authStateObserver(user) {
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
 
+    // Show recipe edit button
+    editRecipeButtonElement.removeAttribute('hidden');
+    console.log("Un-Hidded Edit button!...");
+
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     console.log("User is not signed in!...");
@@ -206,6 +210,11 @@ function authStateObserver(user) {
 
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+
+    // Hide recipe edit button
+    editRecipeButtonElement.setAttribute('hidden', 'true');
+    console.log("Hidded Edit button!...");
+
 
     //loggedInLinks.setAttribute('hidden', 'true');
   }
@@ -1169,7 +1178,7 @@ function loadRecipeImage(imageElm, RecipeID){
     console.error('There was an error downloading a file from Cloud Storage:', error);  
 
     if (error.code == "storage/object-not-found") {
-      console.log("loadRecipeImage - file NOT found!");
+      console.log("loadRecipeImage - File NOT found! Load the default.");
       image.src = "/images/default.jpg";      
     }
   });
