@@ -739,14 +739,32 @@ function displayMethodItem(id, orderBy, method) {
 const submitCommentButton = document.getElementById('submitComment'); // Button to save comment
 const commentAddedByElement = document.getElementById('commentAddedBy'); 
 const commentTxtElement = document.getElementById('commentTxt'); 
-
-commentAddedBy
+const commentsListContents = document.getElementById('Comments'); 
 
 function loadRecipeComments(id){
   console.log('loadRecipeComments');
   // ToDo
 
+  //clearCommentsListElement();
 
+  const query = firestore.collection('recipes').doc(id).collection('Comments');
+  //.orderBy('orderBy', 'asc');
+  // See https://firebase.google.com/docs/firestore/data-model for sub collection.
+
+  //methodElement.deleteListItem;
+
+  // Start listening to the query to get recipe list data.
+  query.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+    //console.log("Document data:", change.doc.data());
+
+    var ListItem = change.doc.data();
+    console.log('Comment: ', ListItem.addedBy, ListItem.comment);
+    displayCommentItem(change.doc.id, ListItem.addedBy, ListItem.comment);
+
+    }) 
+  })
+  console.log('loadRecipeComments - Done');
 } 
 
 submitCommentButton.addEventListener('click', function(){
@@ -782,28 +800,46 @@ submitCommentButton.addEventListener('click', function(){
       }).catch(function (error){
         console.log("Got an error: ", error)
       });
-    //} else {
-    //  console.log("Nothing to save.");
-    //  popupToastMsg('Please enter a description of the ingredients.');    
-    //}
   }
   console.log("click done.");
 });
 
-/*
-function clearCommentsList(){
-  // Remove existing rows from the ingredients list table before being repopulated.
-  console.log('clearIngredientsList...');
+function displayCommentItem(id, addedBy, comment) {
+  console.log('displayCommentItem: ', addedBy, comment);
   
-  var fc = ingredientListContents.firstChild;
+  const container = document.createElement('li');
+  container.setAttribute('id', id);
+
+  var tableRow = document.getElementById(id)
+
+  var content = `<li class="mdl-list__item mdl-list__item--three-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons mdl-list__item-avatar">person</i>
+        <span>` + addedBy + `</span>
+        <span class="mdl-list__item-text-body">` + comment + `</span>
+      </span>
+    </li>`
+
+  container.innerHTML = content;
+    
+  console.log('container.innerHTML: ', container.innerHTML);
+
+  commentsListContents.appendChild(container);
+}
+
+function clearCommentsListElement(){
+  // Remove existing rows from the ingredients list table before being repopulated.
+  console.log('clearCommentsList...');
+  
+  var fc = commentsListContents.firstChild;
 
   while( fc ) {
     console.log('Clear ingredient list row.');
-    ingredientListContents.removeChild( fc );
-      fc = ingredientListContents.firstChild;
+    commentsListContents.removeChild( fc );
+      fc = commentsListContents.firstChild;
   }
 }
-*/
+
 /* #endregion */
 
 /*=======================================================================================================*/
@@ -1171,7 +1207,6 @@ function ingredientNumSet(){
 submitIngredientButton.addEventListener('click', function(){
   console.log("addEventListener.");
 
-  // ToDo : Set default item number
   if (inputIngredientNumData.value == ""){
     console.log("methodNum not entered. ", inputIngredientNumData.value);
     inputIngredientNumData.value = listGetNextIntemNum('ingredientsListForEdit');
@@ -1494,7 +1529,7 @@ submitRefreshButtonElement.addEventListener("click", function() {
           var row = document.getElementById("shoppingList-table").rows[i+1].cells;
           var itemName = row[1].innerHTML;
 
-          // ToDo: Is there a better way of getting the id?
+          // Is there a better way of getting the id?
           var colZero = row[0].innerHTML;
           var start = colZero.lastIndexOf("[") + 1;
           var end = colZero.lastIndexOf("]");
