@@ -755,7 +755,8 @@ function loadRecipeComments(id){
 
   clearCommentsListElement();
 
-  const query = firestore.collection('recipes').doc(id).collection('Comments');
+  const query = firestore.collection('recipes').doc(id).collection('Comments')
+  .orderBy('dateAdded', 'desc');
 
   // Start listening to the query to get recipe list data.
   query.onSnapshot(function(snapshot) {
