@@ -743,20 +743,14 @@ const commentsListContents = document.getElementById('Comments');
 
 function loadRecipeComments(id){
   console.log('loadRecipeComments');
-  // ToDo
 
   clearCommentsListElement();
 
   const query = firestore.collection('recipes').doc(id).collection('Comments');
-  //.orderBy('orderBy', 'asc');
-  // See https://firebase.google.com/docs/firestore/data-model for sub collection.
-
-  //methodElement.deleteListItem;
 
   // Start listening to the query to get recipe list data.
   query.onSnapshot(function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
-    //console.log("Document data:", change.doc.data());
 
     var ListItem = change.doc.data();
     console.log('Comment: ', ListItem.addedBy, ListItem.comment);
@@ -777,7 +771,6 @@ submitCommentButton.addEventListener('click', function(){
     console.log("Comment not entered.");
     popupToastMsg("You have not entered a comment.");    
   } else {
-    //if (inputIngredientDescData.value){
       const addedBy = commentAddedByElement.value;
       const comment = commentTxtElement.value;
       
@@ -828,7 +821,7 @@ function displayCommentItem(id, addedBy, comment) {
 }
 
 function clearCommentsListElement(){
-  // Remove existing rows from the ingredients list table before being repopulated.
+  // Remove existing rows from the comments list table before being repopulated.
   console.log('clearCommentsList...');
   
   var fc = commentsListContents.firstChild;
