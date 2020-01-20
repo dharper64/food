@@ -745,7 +745,7 @@ function loadRecipeComments(id){
   console.log('loadRecipeComments');
   // ToDo
 
-  //clearCommentsListElement();
+  clearCommentsListElement();
 
   const query = firestore.collection('recipes').doc(id).collection('Comments');
   //.orderBy('orderBy', 'asc');
