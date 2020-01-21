@@ -774,44 +774,41 @@ function loadRecipeComments(id){
 submitCommentButton.addEventListener('click', function(){
   console.log("submitCommentButton.addEventListener.");
 
-// ToDo - add toast
+  if (isUserSignedIn()) {
+    if (commentAddedByElement.value == ""){
+      console.log("Name not entered.");
+      popupToastMsg("Please enter your name.");    
+    } else if (commentTxtElement.value == ""){
+      console.log("Comment not entered.");
+      popupToastMsg("You have not entered a comment.");    
+    } else {
+        const addedBy = commentAddedByElement.value;
+        const comment = commentTxtElement.value;
+        
+        console.log("Instanciate comments collection.");
 
-if (isUserSignedIn()) {
-  if (commentAddedByElement.value == ""){
-    console.log("Name not entered.");
-    popupToastMsg("Please enter your name.");    
-  } else if (commentTxtElement.value == ""){
-    console.log("Comment not entered.");
-    popupToastMsg("You have not entered a comment.");    
+        var commentsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Comments');
+
+        return commentsUpdateListData.add({
+          addedBy: addedBy,
+          comment: comment,
+          dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
+          user: firebase.auth().currentUser.email
+        }).then(function() {
+          
+          resetMaterialTextfield(commentAddedByElement);
+          resetMaterialTextfield(commentTxtElement);
+          
+          console.log("Comment saved")
+
+        }).catch(function (error){
+          console.log("Got an error: ", error)
+        });
+    }
   } else {
-      const addedBy = commentAddedByElement.value;
-      const comment = commentTxtElement.value;
-      
-      console.log("Instanciate comments collection.");
-
-      var commentsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Comments');
-
-      return commentsUpdateListData.add({
-        addedBy: addedBy,
-        comment: comment,
-        dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
-        user: firebase.auth().currentUser.email
-      }).then(function() {
-        
-        resetMaterialTextfield(commentAddedByElement);
-        resetMaterialTextfield(commentTxtElement);
-        
-        console.log("Comment saved")
-
-      }).catch(function (error){
-        console.log("Got an error: ", error)
-      });
+    console.log("User is signed in.");
+    popupToastMsg('Please log-in to add acomment,');
   }
-} else {
-  console.log("User is signed in.");
-  popupToastMsg('Please log-in to add acomment,');
-}
-
   console.log("click done.");
 });
 
