@@ -774,6 +774,9 @@ function loadRecipeComments(id){
 submitCommentButton.addEventListener('click', function(){
   console.log("submitCommentButton.addEventListener.");
 
+// ToDo - add toast
+
+if (isUserSignedIn()) {
   if (commentAddedByElement.value == ""){
     console.log("Name not entered.");
     popupToastMsg("Please enter your name.");    
@@ -786,9 +789,9 @@ submitCommentButton.addEventListener('click', function(){
       
       console.log("Instanciate comments collection.");
 
-      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Comments');
+      var commentsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Comments');
 
-      return ingredientsUpdateListData.add({
+      return commentsUpdateListData.add({
         addedBy: addedBy,
         comment: comment,
         dateAdded: firebase.firestore.FieldValue.serverTimestamp(),
@@ -804,6 +807,11 @@ submitCommentButton.addEventListener('click', function(){
         console.log("Got an error: ", error)
       });
   }
+} else {
+  console.log("User is signed in.");
+  popupToastMsg('Please log-in to add acomment,');
+}
+
   console.log("click done.");
 });
 
