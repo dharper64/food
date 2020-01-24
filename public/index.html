@@ -41,12 +41,14 @@
     <!-- Always shows a header, even in smaller screens. -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header">
+        <!-- Expandable Textfield -->
+
         <div class="mdl-layout__header-row">
           <!-- Title -->
           <span class="mdl-layout-title">Random Foodie Title</span>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
-
+          
           <!-- log in with Google. -->
           <div id="user-container">
             <div hidden id="user-pic"></div>
@@ -58,6 +60,18 @@
               <i class="material-icons">account_circle</i>Sign-in with Google
             </button>
           </div>
+        
+          <form action="#">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+              <label class="mdl-button mdl-js-button mdl-button--icon" for="searchText">
+                <i class="material-icons">search</i>
+              </label>
+              <div class="mdl-textfield__expandable-holder">
+                <input class="mdl-textfield__input" type="text" id="searchText">
+                <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
+              </div>
+            </div>
+          </form>
         </div>
       </header>
 
