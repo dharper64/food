@@ -376,6 +376,25 @@ function addSizeToGoogleProfilePic(url) {
 
 /* #endregion */
 /*=======================================================================================================*/
+// Query on serach text - test
+// searchText
+
+const searchTextElement = document.getElementById('searchText');
+
+searchTextElement.addEventListener('change', searchTextChanged);
+
+/* function */
+function searchTextChanged(){
+  console.log('searchTextChanged: ', this.value);   
+
+  var searchTxt = this.value;
+
+  // Display the text entered in an alert popup.
+   alert('Horray! You wrote "' + searchTxt + '"!');
+
+}
+
+/*=======================================================================================================*/
 /* #region RecipieCards */
 /* Home - Recipie Cards */
 
