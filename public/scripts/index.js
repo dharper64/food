@@ -389,8 +389,15 @@ function searchTextChanged(){
 
   var searchTxt = this.value;
 
-  // Display the text entered in an alert popup.
-   alert('Horray! You wrote "' + searchTxt + '"!');
+  if(!!searchTxt){
+    // Display the text entered in an alert popup.
+    alert('Horray! You wrote "' + searchTxt + '"!');
+  } else {
+    // Searxh string is empty
+    //alert('Ooh, nothing to say?');
+    console.log('searchTextChanged: No search text.');   
+  }
+
 
 }
 
