@@ -383,45 +383,12 @@ const searchTextElement = document.getElementById('searchText');
 
 searchTextElement.addEventListener('change', searchTextChanged);
 
-/* function */
 function searchTextChanged(){
   console.log('searchTextChanged: ', this.value);   
 
   var searchTxt = this.value;
 
   popRecipes(searchTxt);
-
-  //if(!!searchTxt){
-    // Display the text entered in an alert popup.
-    // alert('Horray! You wrote "' + searchTxt + '"!');
-
-    // ToDo
-
-    //popRecipes(searchTxt);
-
-    /*
-    const query = firestore.collection('recipes').where("searchTxt", "array-contains", searchTxt);
-
-    console.log('Got Recipes:', query.count);
-
-    // Start listening to the query to get shopping list data.
-    query.onSnapshot(function(snapshot) {
-        snapshot.docChanges().forEach(function(change) {                
-        if (change.type === 'removed') {
-            //deleteListItem(change.doc.id);
-            console.log('Doc not found: ', change.doc.id);
-        } else {
-            var ListItem = change.doc.data();
-            console.log('Resipes list: ', ListItem.title, ', ', ListItem.desc);
-        }
-        });
-    })
-    */
-  //} else {
-    // Searxh string is empty
-    //alert('Ooh, nothing to say?');
-    //console.log('searchTextChanged: No search text.');   
-  //}
 }
 
 /*=======================================================================================================*/
@@ -515,35 +482,31 @@ function popRecipes(searchTxt){
     }
   } 
   
-  //else {
+  var query = firestore.collection('recipes');
 
-    //clearRecipeListElement();
-    var query = firestore.collection('recipes');
+  if(!!searchTxt){
+    console.log('Get all recipes with: ', searchTxt);
+    query = firestore.collection('recipes').where("searchTxt", "array-contains", searchTxt);
+  } else {
+    console.log('Get all recipes.');
+    //query = firestore.collection('recipes');
+  }
 
-    if(!!searchTxt){
-      console.log('Get all recipes with: ', searchTxt);
-      query = firestore.collection('recipes').where("searchTxt", "array-contains", searchTxt);
-    } else {
-      console.log('Get all recipes.');
-      //query = firestore.collection('recipes');
-    }
+  console.log('Got Recipes:');
 
-    console.log('Got Recipes:');
-
-    // Start listening to the query to get shopping list data.
-    query.onSnapshot(function(snapshot) {
-        snapshot.docChanges().forEach(function(change) {                
-        if (change.type === 'removed') {
-            deleteListItem(change.doc.id);
-        } else {
-            var ListItem = change.doc.data();
-            console.log('Resipes list: ', ListItem.title, ', ', ListItem.desc);
-            displayRecipeCard(change.doc.id, ListItem.title, ListItem.desc)      
-            loadRecipeImage("img-" + change.doc.id, change.doc.id);
-        }
-        });
-    })
-  //}
+  // Start listening to the query to get shopping list data.
+  query.onSnapshot(function(snapshot) {
+      snapshot.docChanges().forEach(function(change) {                
+      if (change.type === 'removed') {
+          deleteListItem(change.doc.id);
+      } else {
+          var ListItem = change.doc.data();
+          console.log('Resipes list: ', ListItem.title, ', ', ListItem.desc);
+          displayRecipeCard(change.doc.id, ListItem.title, ListItem.desc)      
+          loadRecipeImage("img-" + change.doc.id, change.doc.id);
+      }
+      });
+  })
 }; 
 
 // Remove existing rows from recipe list when selected from menu.
