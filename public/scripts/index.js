@@ -497,8 +497,6 @@ function popRecipes(searchArr){
   }
   */
 
-  // ToDo: Add search on title
-
   if(typeof searchArr != "undefined"  
       && searchArr != ""  
       && searchArr != null  
@@ -507,8 +505,7 @@ function popRecipes(searchArr){
     console.log('Get all recipes with: ', searchArr);
     console.log('Or title is: ', searchArr[0]);
     query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr);
-    //query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr).where("title", "<=", searchArr[0]);
-    
+
   } else {
     console.log('Get all recipes.');
     query = firestore.collection('recipes');
@@ -1068,6 +1065,8 @@ function NewRecipeShow(){
 
     if(validateHeaderUpdate(titleTxt, submittedTxt, descTxt)){
       if(selectedRecipeID !== ""){
+
+        // ToDo: get recipe title for removal from searchTxt
         firestore.collection("recipes").doc(selectedRecipeID).update({
           title: titleTxt,
           addedBy: submittedTxt,
@@ -1076,6 +1075,8 @@ function NewRecipeShow(){
 
         console.log('Recipe header updated');
         popupToastMsg('Recipe has been updated');    
+        
+        // ToDo: Save recipe title to searchTxt
 
       } else {
         // Add a new document with a generated id.
@@ -1090,6 +1091,9 @@ function NewRecipeShow(){
           console.log("New recipe header saved with ID: ", docRef.id);
           popRecipeForm();
           popupToastMsg('New recipe header has been added');    
+          
+          // ToDo: Save recipe title to searchTxt
+
         })
         .catch(function(error) {
           console.error("Error adding new recipe header: ", error);
@@ -1296,6 +1300,7 @@ submitIngredientButton.addEventListener('click', function(){
         
         console.log("Ingredient list item saved")
 
+        // ToDo: Turn this into a function
         const itemDescArr = itemDesc.split(" ");
         
         console.log("Add Ingredient to searchTxt array.", itemDescArr)
@@ -1379,6 +1384,7 @@ function deleteIngredient(rowId, titleTxt){
     console.log("Item successfully deleted!");
     listRemoveRowByID(rowId);
 
+    // ToDo: Turn the belowinto a function
     // Remove from searchTxt array
     const titleArr = titleTxt.split(" ");
         
