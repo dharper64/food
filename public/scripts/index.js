@@ -387,8 +387,11 @@ function searchTextChanged(){
   console.log('searchTextChanged: ', this.value);   
 
   var searchTxt = this.value;
+  var searchArr = searchTxt.split(" ");
 
-  popRecipes(searchTxt);
+  console.log('searchText Array: ', searchArr);  
+
+  popRecipes(searchArr);
 }
 
 /*=======================================================================================================*/
@@ -468,7 +471,7 @@ function homeShow(){
     homeElement.removeAttribute('hidden');  
   }
 
-function popRecipes(searchTxt){
+function popRecipes(searchArr){
   console.log('popRecipes:', recipeListElement.childElementCount);
   
   if (recipeListElement.childElementCount > 0){
@@ -482,14 +485,28 @@ function popRecipes(searchTxt){
     }
   } 
   
-  var query = firestore.collection('recipes');
+  var query; // = firestore.collection('recipes');
 
+  /*
   if(!!searchTxt){
     console.log('Get all recipes with: ', searchTxt);
     query = firestore.collection('recipes').where("searchTxt", "array-contains", searchTxt);
   } else {
     console.log('Get all recipes.');
     //query = firestore.collection('recipes');
+  }
+  */
+
+  if(typeof searchArr != "undefined"  
+      && searchArr != ""  
+      && searchArr != null  
+      && searchArr.length != null  
+      && searchArr.length > 0){
+    console.log('Get all recipes with: ', searchArr);
+    query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr);
+  } else {
+    console.log('Get all recipes.');
+    query = firestore.collection('recipes');
   }
 
   console.log('Got Recipes:');
@@ -1255,9 +1272,11 @@ submitIngredientButton.addEventListener('click', function(){
       
       console.log("Instanciate ingredient collection.");
 
-      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+      //var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients');
+      var ingredientsUpdateListData = firestore.collection('recipes').doc(selectedRecipeID);
 
-      return ingredientsUpdateListData.add({
+      //return ingredientsUpdateListData.add({
+      return ingredientsUpdateListData.collection('Ingredients').add({
         orderBy: Number(itemNum),
         item: itemDesc,
         qty: Number(itemQty),
@@ -1271,6 +1290,19 @@ submitIngredientButton.addEventListener('click', function(){
         resetMaterialTextfield(inputIngredientUnitData);
         
         console.log("Ingredient list item saved")
+
+        const itemDescArr = itemDesc.split(" ");
+        
+        console.log("Add Ingredient to searchTxt array.", itemDescArr)
+
+        itemDescArr.forEach(function(element){
+          console.log(element)
+          ingredientsUpdateListData.update({
+            searchTxt: firebase.firestore.FieldValue.arrayUnion(element)
+          })
+        })
+
+        console.log("Ingredient added to searchTxt array.")
 
       }).catch(function (error){
         console.log("Got an error: ", error)
@@ -1318,7 +1350,7 @@ function displayIngredientListItem(id, orderBy, item, qty, unit){
     
     var r = confirm("Remove '" + item + "' from the ingredients list?");
     if (r == true) {
-      deleteIngredient(container.id);
+      deleteIngredient(container.id, container.innerText);
     } else {
       console.log('ignore click');  
     }
@@ -1329,14 +1361,31 @@ function displayIngredientListItem(id, orderBy, item, qty, unit){
   ingredientListContents.appendChild(container);
 }
 
-function deleteIngredient(rowId){  
+function deleteIngredient(rowId, titleTxt){  
   console.log('Recipe ', selectedRecipeID);   
-  console.log('deleteIngredient',rowId);   
+  console.log('deleteIngredient', rowId);   
+  console.log('Ingredient title', titleTxt);   
 
+  var ingredientsListData = firestore.collection('recipes').doc(selectedRecipeID);
+  
   // Delete the row...
-  firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
+  // firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients').doc(rowId).delete().then(function() {
+  ingredientsListData.collection('Ingredients').doc(rowId).delete().then(function() {
     console.log("Item successfully deleted!");
     listRemoveRowByID(rowId);
+
+    // Remove from searchTxt array
+    const titleArr = titleTxt.split(" ");
+        
+    console.log("Remove Ingredient from searchTxt array.", titleArr)
+
+    titleArr.forEach(function(element){
+      console.log(element)
+      ingredientsListData.update({
+        searchTxt: firebase.firestore.FieldValue.arrayRemove(element)
+      })
+    })
+
   }).catch(function(error) {
       console.error("Error removing document: ", error);
   });
