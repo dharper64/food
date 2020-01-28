@@ -497,13 +497,18 @@ function popRecipes(searchArr){
   }
   */
 
+  // ToDo: Add search on title
+
   if(typeof searchArr != "undefined"  
       && searchArr != ""  
       && searchArr != null  
       && searchArr.length != null  
       && searchArr.length > 0){
     console.log('Get all recipes with: ', searchArr);
+    console.log('Or title is: ', searchArr[0]);
     query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr);
+    //query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr).where("title", "<=", searchArr[0]);
+    
   } else {
     console.log('Get all recipes.');
     query = firestore.collection('recipes');
