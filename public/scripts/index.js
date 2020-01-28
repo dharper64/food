@@ -389,16 +389,39 @@ function searchTextChanged(){
 
   var searchTxt = this.value;
 
-  if(!!searchTxt){
+  popRecipes(searchTxt);
+
+  //if(!!searchTxt){
     // Display the text entered in an alert popup.
-    alert('Horray! You wrote "' + searchTxt + '"!');
-  } else {
+    // alert('Horray! You wrote "' + searchTxt + '"!');
+
+    // ToDo
+
+    //popRecipes(searchTxt);
+
+    /*
+    const query = firestore.collection('recipes').where("searchTxt", "array-contains", searchTxt);
+
+    console.log('Got Recipes:', query.count);
+
+    // Start listening to the query to get shopping list data.
+    query.onSnapshot(function(snapshot) {
+        snapshot.docChanges().forEach(function(change) {                
+        if (change.type === 'removed') {
+            //deleteListItem(change.doc.id);
+            console.log('Doc not found: ', change.doc.id);
+        } else {
+            var ListItem = change.doc.data();
+            console.log('Resipes list: ', ListItem.title, ', ', ListItem.desc);
+        }
+        });
+    })
+    */
+  //} else {
     // Searxh string is empty
     //alert('Ooh, nothing to say?');
-    console.log('searchTextChanged: No search text.');   
-  }
-
-
+    //console.log('searchTextChanged: No search text.');   
+  //}
 }
 
 /*=======================================================================================================*/
@@ -473,21 +496,37 @@ function homeShow(){
     // Display and populate the gallery.
     console.log('Show Home:');
     
-    popRecipes();
+    popRecipes("");
 
     homeElement.removeAttribute('hidden');  
   }
 
-function popRecipes(){
+function popRecipes(searchTxt){
   console.log('popRecipes:', recipeListElement.childElementCount);
   
   if (recipeListElement.childElementCount > 0){
-    console.log('Recipe cards already loaded.');
-  } else {
+    console.log('Recipe cards already loaded so clear...');
+    var fc = recipeListElement.firstChild;
+
+    while( fc ) {
+      console.log('Clear ingredient list row.');
+      recipeListElement.removeChild( fc );
+        fc = recipeListElement.firstChild;
+    }
+  } 
+  
+  //else {
 
     //clearRecipeListElement();
+    var query = firestore.collection('recipes');
 
-    const query = firestore.collection('recipes');
+    if(!!searchTxt){
+      console.log('Get all recipes with: ', searchTxt);
+      query = firestore.collection('recipes').where("searchTxt", "array-contains", searchTxt);
+    } else {
+      console.log('Get all recipes.');
+      //query = firestore.collection('recipes');
+    }
 
     console.log('Got Recipes:');
 
@@ -504,7 +543,7 @@ function popRecipes(){
         }
         });
     })
-  }
+  //}
 }; 
 
 // Remove existing rows from recipe list when selected from menu.
@@ -515,16 +554,6 @@ function clearRecipeListElement(){
   if (recipeListElement.hasChildNodes()) {
     recipeListElement.removeChild(recipeListElement.childNodes[0]);
   }
-
-  /*
-  var fc = recipeListElement.firstChild;
-
-  while( fc ) {
-    console.log('Clear recipe list row.');
-    recipeListElement.removeChild( fc ); // ToDo: This may be erroring
-      fc = recipeListElement.firstChild;
-  }
-  */
 }
 
 function displayRecipeCard(id, title, desc){
