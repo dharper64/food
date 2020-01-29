@@ -1066,7 +1066,15 @@ function NewRecipeShow(){
     if(validateHeaderUpdate(titleTxt, submittedTxt, descTxt)){
       if(selectedRecipeID !== ""){
 
-        // ToDo: get recipe title for removal from searchTxt
+        // ToDo: Get current recipe title so it can be removed from searchTxt        
+        var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
+        
+        console.log('recipeDoc', recipeDoc);
+        
+        var oldTitleTxt = firestore.collection('recipes').doc(selectedRecipeID).FieldValue("title");
+        
+        removeSearchTxt(oldTitleTxt);
+
         firestore.collection("recipes").doc(selectedRecipeID).update({
           title: titleTxt,
           addedBy: submittedTxt,
@@ -1076,7 +1084,8 @@ function NewRecipeShow(){
         console.log('Recipe header updated');
         popupToastMsg('Recipe has been updated');    
         
-        // ToDo: Save recipe title to searchTxt
+        // Save recipe title to searchTxt
+        addSearchTxt(titleTxt);
 
       } else {
         // Add a new document with a generated id.
@@ -1093,7 +1102,7 @@ function NewRecipeShow(){
           popupToastMsg('New recipe header has been added');    
           
           // ToDo: Save recipe title to searchTxt
-
+          addSearchTxt(titleTxt);
         })
         .catch(function(error) {
           console.error("Error adding new recipe header: ", error);
@@ -1300,19 +1309,7 @@ submitIngredientButton.addEventListener('click', function(){
         
         console.log("Ingredient list item saved")
 
-        // ToDo: Turn this into a function
-        const itemDescArr = itemDesc.split(" ");
-        
-        console.log("Add Ingredient to searchTxt array.", itemDescArr)
-
-        itemDescArr.forEach(function(element){
-          console.log(element)
-          ingredientsUpdateListData.update({
-            searchTxt: firebase.firestore.FieldValue.arrayUnion(element)
-          })
-        })
-
-        console.log("Ingredient added to searchTxt array.")
+        addSearchTxt(itemDesc);
 
       }).catch(function (error){
         console.log("Got an error: ", error)
@@ -1384,22 +1381,47 @@ function deleteIngredient(rowId, titleTxt){
     console.log("Item successfully deleted!");
     listRemoveRowByID(rowId);
 
-    // ToDo: Turn the belowinto a function
-    // Remove from searchTxt array
-    const titleArr = titleTxt.split(" ");
-        
-    console.log("Remove Ingredient from searchTxt array.", titleArr)
-
-    titleArr.forEach(function(element){
-      console.log(element)
-      ingredientsListData.update({
-        searchTxt: firebase.firestore.FieldValue.arrayRemove(element)
-      })
-    })
+    removeSearchTxt(titleTxt);
 
   }).catch(function(error) {
       console.error("Error removing document: ", error);
   });
+}
+
+function addSearchTxt(searchTxt){
+  console.log("addSearchTxt: ", searchTxt)
+
+  // Add to searchTxt array
+  const itemDescArr = searchTxt.split(" ");
+  
+  var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
+
+  console.log("Add Ingredient to searchTxt array.", itemDescArr)
+
+  itemDescArr.forEach(function(element){
+    console.log(element)
+    recipeDoc.update({
+      searchTxt: firebase.firestore.FieldValue.arrayUnion(element)
+    })
+  })
+  console.log("addSearchTxt: Done")
+}
+
+function removeSearchTxt(searchTxt){
+  console.log("removeSearchTxt: ", searchTxt)
+
+  // Add to searchTxt array
+  const serachTxtArr = searchTxt.split(" ");
+
+  var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
+
+  serachTxtArr.forEach(function(element){
+    console.log(element)
+    recipeDoc.update({
+      searchTxt: firebase.firestore.FieldValue.arrayRemove(element)
+    })
+  })
+  console.log("removeSearchTxt: Done")
 }
 
 /*----------------------------------------------------------------------------------------------------------*/
