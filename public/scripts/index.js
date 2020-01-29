@@ -407,6 +407,7 @@ function searchTextChanged(){
 //});
 
 var selectedRecipeID = 0;
+var selectedRecipeTitle ="";
 
 const recipeTitleIDElement = document.getElementById('recipeTitle');
 //const recipeIDElement = document.getElementById('recipeID');
@@ -574,7 +575,7 @@ function displayRecipeCard(id, title, desc){
                 <img  id=` + imgID + ` src="" alt="Recipe image" style="width:100%" />
                 </figure>`
 
-    content += `<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text">` + title + `"</h2></div>`;
+    content += `<div class="mdl-card__title mdl-card--expand"><h2 class="mdl-card__title-text">` + title + `</h2></div>`;
     content += `<div class="mdl-card__supporting-text">` + desc + `</div>`;
     content += `</div>
                 </div>
@@ -647,6 +648,8 @@ function loadRecipeHeader(id){
         recipeTitleIDElement.innerHTML = RecipeItem.title
         recipeAddedByElement.innerHTML = "Submitted By : " + RecipeItem.addedBy
         recipeDescElement.innerHTML = RecipeItem.desc
+
+        selectedRecipeTitle = RecipeItem.title;
 
       } else {
           // doc.data() will be undefined in this case
@@ -1005,6 +1008,8 @@ function NewRecipeShow(){
 
     NewUpdateTitleElement.innerHTML = 'New Recipe'
     
+    selectedRecipeTitle = "";
+    
     console.log('NewRecipeForm defaults set');
   }
 
@@ -1039,6 +1044,8 @@ function NewRecipeShow(){
         popIngredientDetailForUpdate();
         popMethodDetailForUpdate();
                 
+        selectedRecipeTitle = RecipeItem.title;
+
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -1059,6 +1066,8 @@ function NewRecipeShow(){
     var submittedTxt = newSubmittedByElement.value;
     var descTxt = newDescElement.value;
 
+    selectedRecipeTitle = titleTxt;
+
     console.log('titleTxt : ', titleTxt);
     console.log('submittedTxt : ', submittedTxt);
     console.log('descTxt : ', descTxt);
@@ -1068,13 +1077,7 @@ function NewRecipeShow(){
 
         // ToDo: Get current recipe title so it can be removed from searchTxt        
         var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
-        
-        console.log('recipeDoc', recipeDoc);
-        
-        var oldTitleTxt = firestore.collection('recipes').doc(selectedRecipeID).FieldValue("title");
-        
-        removeSearchTxt(oldTitleTxt);
-
+                
         firestore.collection("recipes").doc(selectedRecipeID).update({
           title: titleTxt,
           addedBy: submittedTxt,
@@ -1083,6 +1086,9 @@ function NewRecipeShow(){
 
         console.log('Recipe header updated');
         popupToastMsg('Recipe has been updated');    
+        
+        // Clear old recipe title from searchTxt
+        removeSearchTxt(selectedRecipeTitle);
         
         // Save recipe title to searchTxt
         addSearchTxt(titleTxt);
