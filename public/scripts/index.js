@@ -1406,16 +1406,21 @@ function addSearchTxt(searchTxt){
 
   // Add to searchTxt array
   const itemDescArr = searchTxt.split(" ");
+  const ignoreTxt = [" ", "&", "a", "in", "of", "on", "and", "the", "with"];
   
   var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
 
   console.log("Add Ingredient to searchTxt array.", itemDescArr)
 
   itemDescArr.forEach(function(element){
-    console.log(element)
-    recipeDoc.update({
-      searchTxt: firebase.firestore.FieldValue.arrayUnion(element)
-    })
+    if (ignoreTxt.includes(element)){
+      console.log('Not adding:', element)
+    } else {
+      console.log('Adding:', element)
+      recipeDoc.update({
+        searchTxt: firebase.firestore.FieldValue.arrayUnion(element)
+      })
+    }
   })
   console.log("addSearchTxt: Done")
 }
