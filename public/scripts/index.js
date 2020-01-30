@@ -1035,6 +1035,13 @@ function NewRecipeShow(){
         console.log('Resipe id:', selectedRecipeID);
         console.log('Resipe: ', RecipeItem.title, ', ', RecipeItem.addedBy, ', ', RecipeItem.desc);
 
+        selectedRecipeTitle = RecipeItem.title;
+        console.log('***********************************************');
+        console.log('RecipeItem.title : ', RecipeItem.title);
+        console.log('RecipeItem.addedBy : ', RecipeItem.addedBy);
+        console.log('RecipeItem.desc : ', RecipeItem.desc);
+        console.log('selectedRecipeTitle : ', selectedRecipeTitle);
+
         NewUpdateTitleElement.innerHTML = 'Update Recipe';
 
         document.forms['UpdateNew-form'].elements['newTitle'].value = RecipeItem.title;
@@ -1044,8 +1051,6 @@ function NewRecipeShow(){
         popIngredientDetailForUpdate();
         popMethodDetailForUpdate();
                 
-        selectedRecipeTitle = RecipeItem.title;
-
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -1053,6 +1058,8 @@ function NewRecipeShow(){
     }).catch(function(error) {
         console.log("Error getting document:", error);
     });
+    
+    console.log('popRecipeForm: Done');
   }
   
   function SaveUpdateRecipe(){
@@ -1066,11 +1073,10 @@ function NewRecipeShow(){
     var submittedTxt = newSubmittedByElement.value;
     var descTxt = newDescElement.value;
 
-    selectedRecipeTitle = titleTxt;
-
     console.log('titleTxt : ', titleTxt);
     console.log('submittedTxt : ', submittedTxt);
     console.log('descTxt : ', descTxt);
+    console.log('selectedRecipeTitle : ', selectedRecipeTitle);
 
     if(validateHeaderUpdate(titleTxt, submittedTxt, descTxt)){
       if(selectedRecipeID !== ""){
@@ -1089,6 +1095,7 @@ function NewRecipeShow(){
         
         // Clear old recipe title from searchTxt
         removeSearchTxt(selectedRecipeTitle);
+        selectedRecipeTitle = titleTxt;
         
         // Save recipe title to searchTxt
         addSearchTxt(titleTxt);
@@ -1107,7 +1114,7 @@ function NewRecipeShow(){
           popRecipeForm();
           popupToastMsg('New recipe header has been added');    
           
-          // ToDo: Save recipe title to searchTxt
+          // Save recipe title to searchTxt
           addSearchTxt(titleTxt);
         })
         .catch(function(error) {
@@ -1422,7 +1429,7 @@ function removeSearchTxt(searchTxt){
   var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
 
   serachTxtArr.forEach(function(element){
-    console.log(element)
+    console.log('Removing:', element)
     recipeDoc.update({
       searchTxt: firebase.firestore.FieldValue.arrayRemove(element)
     })
