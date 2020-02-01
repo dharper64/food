@@ -106,6 +106,7 @@ function signIn() {
       //logSignIn();
       console.log("User displayName...", newUser.displayName);
       //console.log("User details...", newUser);
+      getAccessLevel();
     }
     catch(err) {
       console.error("Error logging on: ", err.textContent);
@@ -122,6 +123,39 @@ function signIn() {
     console.error("Error in signIn(): ", errorMessage);
   });  
   console.log("signIn done.");
+}
+
+function getAccessLevel(){
+  console.log("getAccessLevel...");
+  //ToDo: 
+
+  try{
+    //var userCol = firestore.collection('users');  
+
+    var userId = firebase.auth().currentUser.uid;
+    console.log("getAccessLevel userId:", userId);
+
+    //db.collection("stories").where("author", "==", user.uid).get()
+
+    firestore.collection("testData").where("userId", "==", userId)
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            //console.log(doc.id, " => ", doc.data());
+            console.log("Doc is: ", doc.data());
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+  }
+  catch(err) {
+    console.error("Error getAccessLevel: ", err.textContent);
+  }
+
+  console.log("getAccessLevel done.");
 }
 
 // Signs-out of Friendly Chat.
@@ -1081,7 +1115,7 @@ function NewRecipeShow(){
     if(validateHeaderUpdate(titleTxt, submittedTxt, descTxt)){
       if(selectedRecipeID !== ""){
 
-        // ToDo: Get current recipe title so it can be removed from searchTxt        
+        // Get current recipe title so it can be removed from searchTxt        
         var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
                 
         firestore.collection("recipes").doc(selectedRecipeID).update({
@@ -1587,6 +1621,8 @@ function shoppingListHTML(){
   
   }
 
+var shoppingListId = '';
+
 const shoppingListContents = document.getElementById('shoppingListContents');
 
 //const galleryElement = document.getElementById('Gallery-container');
@@ -1613,6 +1649,10 @@ submitItemButtonElement.addEventListener("click", function() {
     //var shoppingListData = firestore.collection('shoppingList').doc('user.email').collection('items');
     // See https://firebase.google.com/docs/firestore/data-model for sub collection.
 
+    if (shoppingListId == ""){
+      shoppingListId = getShoppingListId();
+    }
+
     // Saves a new item on the Cloud Firestore.
     //return firestore.collection('shoppingList').add({
     return shoppingListData.add({
@@ -1620,7 +1660,8 @@ submitItemButtonElement.addEventListener("click", function() {
       qty: itemQty,
       unit: itemUnit,
       gotit: false,
-      user: firebase.auth().currentUser.email
+      user: firebase.auth().currentUser.email,
+      listId: shoppingListId
     }).then(function() {
       
       resetMaterialTextfield(inputItemDescData);
@@ -1678,10 +1719,14 @@ submitRefreshButtonElement.addEventListener("click", function() {
 
 function popShoppingList(){
   console.log("popShoppingList");
+ 
+  if (shoppingListId == ""){
+    shoppingListId = getShoppingListId();
+  }
 
-  const query = firestore.collection('shoppingList');
-  //const query = firestore.collection('shoppingList').doc('user.email').collection('items');
-  // See https://firebase.google.com/docs/firestore/data-model for sub collection.
+  const query = firestore.collection('shoppingList')
+  .where("listId", "==", shoppingListId)
+  .orderBy('order', 'desc')
 
   console.log('shoppingListTableRowHTML...');
 
@@ -1760,6 +1805,13 @@ function popShoppingList(){
       shoppingListContents.removeChild( fc );
         fc = shoppingListContents.firstChild;
     }
+  }
+
+  function getShoppingListId(){
+    console.log('getShoppingListId.');
+
+    // ToDo: get the id of the shopping list the user can access
+
   }
 /*=======================================================================================================*/
 /* About */
