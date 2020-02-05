@@ -135,8 +135,6 @@ function getAccessLevel(){
     var userId = firebase.auth().currentUser.uid;
     console.log("getAccessLevel userId:", userId);
 
-    //db.collection("stories").where("author", "==", user.uid).get()
-
     firestore.collection("testData").where("userId", "==", userId)
     .get()
     .then(function(querySnapshot) {
@@ -410,7 +408,7 @@ function addSizeToGoogleProfilePic(url) {
 
 /* #endregion */
 /*=======================================================================================================*/
-// Query on serach text - test
+// Query on search text - test
 // searchText
 
 const searchTextElement = document.getElementById('searchText');
@@ -1621,8 +1619,6 @@ function shoppingListHTML(){
   
   }
 
-var shoppingListId = '';
-
 const shoppingListContents = document.getElementById('shoppingListContents');
 
 //const galleryElement = document.getElementById('Gallery-container');
@@ -1635,7 +1631,9 @@ const inputItemUnitData = document.querySelector("#itemUnit");
 const submitItemButtonElement = document.getElementById('submitItem');
 const submitRefreshButtonElement = document.getElementById('submitRefresh');
 
+//var shoppingListId = getShoppingListId();
 var shoppingListData = firestore.collection('shoppingList');
+
 
 submitItemButtonElement.addEventListener("click", function() {
   console.log("Adding new item:", firebase.auth().currentUser.email);
@@ -1649,9 +1647,10 @@ submitItemButtonElement.addEventListener("click", function() {
     //var shoppingListData = firestore.collection('shoppingList').doc('user.email').collection('items');
     // See https://firebase.google.com/docs/firestore/data-model for sub collection.
 
-    if (shoppingListId == ""){
-      shoppingListId = getShoppingListId();
-    }
+
+    var shoppingListId = getShoppingListId();
+
+    console.log("Adding new item to list ID:", shoppingListId);
 
     // Saves a new item on the Cloud Firestore.
     //return firestore.collection('shoppingList').add({
@@ -1661,7 +1660,8 @@ submitItemButtonElement.addEventListener("click", function() {
       unit: itemUnit,
       gotit: false,
       user: firebase.auth().currentUser.email,
-      listId: shoppingListId
+      listId: shoppingListId,
+      Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
       
       resetMaterialTextfield(inputItemDescData);
@@ -1720,9 +1720,9 @@ submitRefreshButtonElement.addEventListener("click", function() {
 function popShoppingList(){
   console.log("popShoppingList");
  
-  if (shoppingListId == ""){
-    shoppingListId = getShoppingListId();
-  }
+  var shoppingListId = getShoppingListId();
+  
+  console.log("Loading ShoppingList data from list ID:", shoppingListId);
 
   const query = firestore.collection('shoppingList')
   .where("listId", "==", shoppingListId)
@@ -1808,11 +1808,53 @@ function popShoppingList(){
   }
 
   function getShoppingListId(){
-    console.log('getShoppingListId.');
+    console.log('getShoppingListId');
 
-    // ToDo: get the id of the shopping list the user can access
+    // ToDo: Get the id of the shopping list the user can access
 
+    var ThisListID = '';
+
+    var userId = firebase.auth().currentUser.uid;
+
+    //var listIndexRef = firestore.collection('shoppingListIndex').where("userId", "==", userId);
+    var listIndexRef = firestore.collection('shoppingListIndex').doc(userId);
+
+    console.log("Get ShoppingListId for userId:", userId);
+
+    listIndexRef.get().then(function(doc) {
+      if (doc.exists) {
+        console.log("Look up ShoppingListId for user: ", userId);
+        // If lookup exists get ThisListID.
+        var indexItem = doc.data();
+        ThisListID = indexItem.ListID;
+        console.log("shoppingListID loaded: ", ThisListID);
+      } else {
+        // If lookup does not exist, save and use userId as ShoppingListId.
+        console.log("No such document! - Create one...");
+        ThisListID = String(firebase.auth().currentUser.uid);
+
+        console.log("Create with ID", ThisListID);
+
+        listIndexRef.set({
+          userId: userId,
+          user: firebase.auth().currentUser.email,
+          listId: ThisListID,
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function() {      
+          console.log("New ShoppingListId index saved")
+        }).catch(function (error){
+          console.log("Error saving default ShoppingListId: ", error)
+        });
+      }
+    }).catch(function(error) {
+        console.log("Error getting ShoppingListId:", error);
+    });    
+
+    console.log("getShoppingListId done.", ThisListID);
+    ThisListID = 'JFZ95I2USyXIMJ0KbQivR4RUKH73';
+    return ThisListID;
   }
+
 /*=======================================================================================================*/
 /* About */
 function aboutShow(){
