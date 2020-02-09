@@ -1632,10 +1632,10 @@ const submitItemButtonElement = document.getElementById('submitItem');
 const submitRefreshButtonElement = document.getElementById('submitRefresh');
 
 //var shoppingListId = getShoppingListId();
-var shoppingListData = firestore.collection('shoppingList');
-
+var shoppingListData = firestore.collection('shoppingList');//.where("userId", "==", userId);
 
 submitItemButtonElement.addEventListener("click", function() {
+  console.log("Adding new item:");
   console.log("Adding new item:", firebase.auth().currentUser.email);
 
   if (inputItemDescData.value){
@@ -1650,6 +1650,11 @@ submitItemButtonElement.addEventListener("click", function() {
 
     //var shoppingListId = getShoppingListId();
     //console.log("Adding new item to list ID:", shoppingListId);
+    console.log("  itemDesc: ", itemDesc);
+    console.log("  itemQty:  ", itemQty);
+    console.log("  itemUnit: ", itemUnit);
+    console.log("  User:     ", firebase.auth().currentUser.email);
+    console.log("  userId:   ", firebase.auth().currentUser.uid);
 
     // Saves a new item on the Cloud Firestore.
     //return firestore.collection('shoppingList').add({
@@ -1659,7 +1664,7 @@ submitItemButtonElement.addEventListener("click", function() {
       unit: itemUnit,
       gotit: false,
       user: firebase.auth().currentUser.email,
-      userId: firebase.auth().currentUser.userId,
+      userId: firebase.auth().currentUser.uid,
       //listId: shoppingListId,
       Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
@@ -1720,21 +1725,23 @@ submitRefreshButtonElement.addEventListener("click", function() {
 function popShoppingList(){
   console.log("popShoppingList");
  
+  // ToDo: Set access by user.
+
   //var shoppingListId = getShoppingListId();
   //console.log("Loading ShoppingList data from list ID:", shoppingListId);
 
+  var userId = firebase.auth().currentUser.uid;
+
   const query = firestore.collection('shoppingList')
-  .where("listId", "==", shoppingListId)
-  .orderBy('order', 'desc')
+  .where("userId", "==", userId);
+  //.orderBy('order', 'desc');
 
-  console.log('shoppingListTableRowHTML...');
-
-  //var query = firestore.collection('shoppingList');
-  //.orderBy('order', 'desc')
-  //.limit(12);
+  console.log('shoppingListTableRowHTML...', userId);
 
   // Start listening to the query to get shopping list data.
   query.onSnapshot(function(snapshot) {
+    console.log("ShoppingList snapshot.");
+
     snapshot.docChanges().forEach(function(change) {
     
     var rowid = 0
@@ -1748,7 +1755,10 @@ function popShoppingList(){
       displayListItem(change.doc.id, ListItem.desc, ListItem.qty, ListItem.unit, ListItem.gotit)      
     }
     });
-  })}; 
+  })
+
+  console.log("popShoppingList done.");
+}; 
 
   // Build HTML for the shopping list rows
   function displayListItem(id, desc, qty, unit, gotit){
