@@ -1648,9 +1648,8 @@ submitItemButtonElement.addEventListener("click", function() {
     // See https://firebase.google.com/docs/firestore/data-model for sub collection.
 
 
-    var shoppingListId = getShoppingListId();
-
-    console.log("Adding new item to list ID:", shoppingListId);
+    //var shoppingListId = getShoppingListId();
+    //console.log("Adding new item to list ID:", shoppingListId);
 
     // Saves a new item on the Cloud Firestore.
     //return firestore.collection('shoppingList').add({
@@ -1660,7 +1659,8 @@ submitItemButtonElement.addEventListener("click", function() {
       unit: itemUnit,
       gotit: false,
       user: firebase.auth().currentUser.email,
-      listId: shoppingListId,
+      userId: firebase.auth().currentUser.userId,
+      //listId: shoppingListId,
       Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
       
@@ -1720,9 +1720,8 @@ submitRefreshButtonElement.addEventListener("click", function() {
 function popShoppingList(){
   console.log("popShoppingList");
  
-  var shoppingListId = getShoppingListId();
-  
-  console.log("Loading ShoppingList data from list ID:", shoppingListId);
+  //var shoppingListId = getShoppingListId();
+  //console.log("Loading ShoppingList data from list ID:", shoppingListId);
 
   const query = firestore.collection('shoppingList')
   .where("listId", "==", shoppingListId)
@@ -1807,34 +1806,31 @@ function popShoppingList(){
     }
   }
 
+  /*
   function getShoppingListId(){
     console.log('getShoppingListId');
-
     // ToDo: Get the id of the shopping list the user can access
 
-    var ThisListID = '';
-
     var userId = firebase.auth().currentUser.uid;
-
-    //var listIndexRef = firestore.collection('shoppingListIndex').where("userId", "==", userId);
-    var listIndexRef = firestore.collection('shoppingListIndex').doc(userId);
-
     console.log("Get ShoppingListId for userId:", userId);
 
-    listIndexRef.get().then(function(doc) {
+    var docRef = firestore.collection("shoppingListIndex").doc(userId);
+    //var docRef = firestore.collection('shoppingListIndex').where("userId", "==", userId);
+
+    console.log("Get document");
+
+    docRef.get().then(function(doc) {
       if (doc.exists) {
-        console.log("Look up ShoppingListId for user: ", userId);
-        // If lookup exists get ThisListID.
+        console.log("Found document!");
+        console.log("Document data:", doc.data());
         var indexItem = doc.data();
-        ThisListID = indexItem.ListID;
-        console.log("shoppingListID loaded: ", ThisListID);
+        console.log("shoppingListID found: ", indexItem.listId);
+        return indexItem.listId;
       } else {
-        // If lookup does not exist, save and use userId as ShoppingListId.
-        console.log("No such document! - Create one...");
-        ThisListID = String(firebase.auth().currentUser.uid);
-
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        var ThisListID = String(firebase.auth().currentUser.uid);
         console.log("Create with ID", ThisListID);
-
         listIndexRef.set({
           userId: userId,
           user: firebase.auth().currentUser.email,
@@ -1844,16 +1840,20 @@ function popShoppingList(){
           console.log("New ShoppingListId index saved")
         }).catch(function (error){
           console.log("Error saving default ShoppingListId: ", error)
-        });
+        }); 
+        
+        return ThisListID;
       }
     }).catch(function(error) {
-        console.log("Error getting ShoppingListId:", error);
-    });    
+      console.log("Error getting document:", error);
+      return "?";
+    });
 
-    console.log("getShoppingListId done.", ThisListID);
-    ThisListID = 'JFZ95I2USyXIMJ0KbQivR4RUKH73';
-    return ThisListID;
+    //ThisListID = 'JFZ95I2USyXIMJ0KbQivR4RUKH73';
+    console.log("getShoppingListId done.", listId);
+    return listId;
   }
+*/
 
 /*=======================================================================================================*/
 /* About */
