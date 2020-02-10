@@ -465,7 +465,7 @@ addToShoppingListButtonElement.addEventListener('click', function() {
 
   console.log('addIncredientsToShoppingList ', selectedRecipeID);
 
-  addRecipeToShoppingList();
+  addRecipeIngredientToShoppingList();
 
   //linkClicked("Home");
 }); 
@@ -1820,13 +1820,13 @@ function popShoppingList(){
     console.log("addNewItemToShoppingList done.");
   }
 
-  function addRecipeToShoppingList(){
-    console.log('addRecipeToShoppingList');
+  function addRecipeIngredientToShoppingList(){
+    console.log('addRecipeIngredientToShoppingList');
     // ToDo: Copy ingredients from recipe ingredients sub collection to shopping list.
     // Note. Can't do this from the list as this is just a string.
         
 
-    console.log('addRecipeToShoppingList - Done');
+    console.log('addRecipeIngredientToShoppingList - Done');
   }
 
 /*=======================================================================================================*/
