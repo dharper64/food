@@ -1822,9 +1822,20 @@ function popShoppingList(){
 
   function addRecipeIngredientToShoppingList(){
     console.log('addRecipeIngredientToShoppingList');
-    // ToDo: Copy ingredients from recipe ingredients sub collection to shopping list.
+    // Copy ingredients from recipe ingredients sub collection to shopping list.
     // Note. Can't do this from the list as this is just a string.
-        
+
+    const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
+
+    // Start listening to the query to get shopping list data.
+    query.onSnapshot(function(snapshot) {
+      snapshot.docChanges().forEach(function(change) {
+  
+      var ListItem = change.doc.data();
+      console.log('Ingredient: ', ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
+      addNewItemToShoppingList(ListItem.item, ListItem.qty, ListItem.unit);
+      }) 
+    })
 
     console.log('addRecipeIngredientToShoppingList - Done');
   }
