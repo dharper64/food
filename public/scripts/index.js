@@ -127,7 +127,7 @@ function signIn() {
 
 function getAccessLevel(){
   console.log("getAccessLevel...");
-  //ToDo: 
+  //ToDo: Testing only - test rules for setting data access to user only
 
   try{
     //var userCol = firestore.collection('users');  
@@ -465,6 +465,8 @@ addToShoppingListButtonElement.addEventListener('click', function() {
 
   console.log('addIncredientsToShoppingList ', selectedRecipeID);
 
+  addRecipeToShoppingList();
+
   //linkClicked("Home");
 }); 
 
@@ -490,8 +492,6 @@ editRecipeButtonElement.addEventListener('click', function() {
 
 //addToShoppingListButtonElement.addEventListener('click', addIncredientsToShoppingList());
 //editRecipeButtonElement.addEventListener('click', editRecipe());
-
-
 
 //var recipiesListData = firestore.collection('recipies');
 
@@ -1643,40 +1643,7 @@ submitItemButtonElement.addEventListener("click", function() {
     const itemQty = inputItemQtyData.value;
     const itemUnit = inputItemUnitData.value;
     
-    //var shoppingListData = firestore.collection('shoppingList');
-    //var shoppingListData = firestore.collection('shoppingList').doc('user.email').collection('items');
-    // See https://firebase.google.com/docs/firestore/data-model for sub collection.
-
-
-    //var shoppingListId = getShoppingListId();
-    //console.log("Adding new item to list ID:", shoppingListId);
-    console.log("  itemDesc: ", itemDesc);
-    console.log("  itemQty:  ", itemQty);
-    console.log("  itemUnit: ", itemUnit);
-    console.log("  User:     ", firebase.auth().currentUser.email);
-    console.log("  userId:   ", firebase.auth().currentUser.uid);
-
-    // Saves a new item on the Cloud Firestore.
-    //return firestore.collection('shoppingList').add({
-    return shoppingListData.add({
-      desc: itemDesc,
-      qty: itemQty,
-      unit: itemUnit,
-      gotit: false,
-      user: firebase.auth().currentUser.email,
-      userId: firebase.auth().currentUser.uid,
-      //listId: shoppingListId,
-      Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function() {
-      
-      resetMaterialTextfield(inputItemDescData);
-      resetMaterialTextfield(inputItemQtyData);
-      resetMaterialTextfield(inputItemUnitData);
-      
-      console.log("Shopping list item saved")
-    }).catch(function (error){
-      console.log("Got an error: ", error)
-    });
+    addNewItemToShoppingList(itemDesc, itemQty, itemUnit)
   }
   console.log("click done.");
 })
@@ -1725,16 +1692,13 @@ submitRefreshButtonElement.addEventListener("click", function() {
 function popShoppingList(){
   console.log("popShoppingList");
  
-  // ToDo: Set access by user.
-
-  //var shoppingListId = getShoppingListId();
-  //console.log("Loading ShoppingList data from list ID:", shoppingListId);
+  // Set access by user.
 
   var userId = firebase.auth().currentUser.uid;
 
   const query = firestore.collection('shoppingList')
-  .where("userId", "==", userId);
-  //.orderBy('order', 'desc');
+  .where("userId", "==", userId)
+  .orderBy('desc', 'asc');
 
   console.log('shoppingListTableRowHTML...', userId);
 
@@ -1816,54 +1780,54 @@ function popShoppingList(){
     }
   }
 
-  /*
-  function getShoppingListId(){
-    console.log('getShoppingListId');
-    // ToDo: Get the id of the shopping list the user can access
-
-    var userId = firebase.auth().currentUser.uid;
-    console.log("Get ShoppingListId for userId:", userId);
-
-    var docRef = firestore.collection("shoppingListIndex").doc(userId);
-    //var docRef = firestore.collection('shoppingListIndex').where("userId", "==", userId);
-
-    console.log("Get document");
-
-    docRef.get().then(function(doc) {
-      if (doc.exists) {
-        console.log("Found document!");
-        console.log("Document data:", doc.data());
-        var indexItem = doc.data();
-        console.log("shoppingListID found: ", indexItem.listId);
-        return indexItem.listId;
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-        var ThisListID = String(firebase.auth().currentUser.uid);
-        console.log("Create with ID", ThisListID);
-        listIndexRef.set({
-          userId: userId,
-          user: firebase.auth().currentUser.email,
-          listId: ThisListID,
-          Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(function() {      
-          console.log("New ShoppingListId index saved")
-        }).catch(function (error){
-          console.log("Error saving default ShoppingListId: ", error)
-        }); 
+  function addNewItemToShoppingList(itemDesc, itemQty, itemUnit){
+    console.log("addNewItemToShoppingList.");
+  
+      //var shoppingListData = firestore.collection('shoppingList');
+      //var shoppingListData = firestore.collection('shoppingList').doc('user.email').collection('items');
+      // See https://firebase.google.com/docs/firestore/data-model for sub collection.
+  
+      //var shoppingListId = getShoppingListId();
+      //console.log("Adding new item to list ID:", shoppingListId);
+      console.log("  itemDesc: ", itemDesc);
+      console.log("  itemQty:  ", itemQty);
+      console.log("  itemUnit: ", itemUnit);
+      console.log("  User:     ", firebase.auth().currentUser.email);
+      console.log("  userId:   ", firebase.auth().currentUser.uid);
+  
+      // Saves a new item on the Cloud Firestore.
+      //return firestore.collection('shoppingList').add({
+      return shoppingListData.add({
+        desc: itemDesc,
+        qty: itemQty,
+        unit: itemUnit,
+        gotit: false,
+        user: firebase.auth().currentUser.email,
+        userId: firebase.auth().currentUser.uid,
+        //listId: shoppingListId,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function() {
         
-        return ThisListID;
-      }
-    }).catch(function(error) {
-      console.log("Error getting document:", error);
-      return "?";
-    });
-
-    //ThisListID = 'JFZ95I2USyXIMJ0KbQivR4RUKH73';
-    console.log("getShoppingListId done.", listId);
-    return listId;
+        resetMaterialTextfield(inputItemDescData);
+        resetMaterialTextfield(inputItemQtyData);
+        resetMaterialTextfield(inputItemUnitData);
+        
+        console.log("Shopping list item saved")
+      }).catch(function (error){
+        console.log("Got an error: ", error)
+      });
+  
+    console.log("addNewItemToShoppingList done.");
   }
-*/
+
+  function addRecipeToShoppingList(){
+    console.log('addRecipeToShoppingList');
+    // ToDo: Copy ingredients from recipe ingredients sub collection to shopping list.
+    // Note. Can't do this from the list as this is just a string.
+        
+
+    console.log('addRecipeToShoppingList - Done');
+  }
 
 /*=======================================================================================================*/
 /* About */
