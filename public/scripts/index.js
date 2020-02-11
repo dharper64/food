@@ -425,10 +425,8 @@ function searchTextChanged(){
 
   popRecipes(searchArr);
 
-  // ToDo: clear search text after search
-  //searchTextElement.innerHtml = "Done";
+  // Clear search text after search
   document.getElementById("searchText").value = ""; 
-  console.log('searchTextChanged - Done');  
 }
 
 /*=======================================================================================================*/
