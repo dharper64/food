@@ -18,3 +18,7 @@ Now that you have imported and configured your project, you are ready to run the
 2.	Your command line should display the following response: ✔ hosting: Local server: http://localhost:5000
 3.	Using your browser, open your app at http://localhost:5000.
 
+# Deploy to Firebase hosting
+To deploy, run the following Firebase CLI command:
+    firebase deploy 
+

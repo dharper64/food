@@ -525,6 +525,9 @@ function popRecipes(searchArr){
       && searchArr.length > 0){
     console.log('Get all recipes with: ', searchArr);
     console.log('Or title is: ', searchArr[0]);
+
+    popupToastMsg('Search for: ' + searchArr[0]);
+
     query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr);
 
   } else {
