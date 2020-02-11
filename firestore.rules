@@ -1,8 +1,79 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+	match /databases/{database}/documents {
+  	
+    // Shared functions
+    function isSignedIn() {
+      return request.auth.uid != null &&
+      	request.auth.token.email_verified;
+    }  
+   
+    // Make sure the uid of the requesting user matches name of the user
+    // document. The wildcard expression {userId} makes the userId variable
+    // available in rules.
+    match /testData/{userId} {
+    	allow read, write: if isSignedIn() &&
+      	 request.auth.uid == userId &&
+      	 resource.data.userId == userId;
+      //allow read, write: if resource.data.userId == request.auth.uid;
+      //allow read, write: if request.auth.uid != null;
+      //allow read, write: if request.auth.uid == resource.data.userId;
+      //allow read, write: if 'JFZ95I2USyXIMJ0KbQivR4RUKH73' == request.auth.uid;
+      //allow read, write: if 'JFZ95I2USyXIMJ0KbQivR4RUKH73' == resource.data.userId;
     }
+   
+   // Sign in log Collection
+    match /signInLog/{docID} {
+      allow read: if request.auth.token.email.matches('dharper64@gmail.com');
+      allow write: if isSignedIn();
+        match /logDetail/{docID} {
+          allow read: if request.auth.token.email.matches('dharper64@gmail.com');
+          allow write: if isSignedIn();
+        }
+      }  
+      
+    // Recipes Collection
+    match /recipes/{docID} {
+      allow read;
+      allow write: if isSignedIn();
+        match /Method/{docID} {
+          allow read;
+          allow write: if isSignedIn();
+        }
+        match /Ingredients/{docID} {
+          allow read;
+          allow write: if isSignedIn();
+        }
+        match /Comments/{docID} {
+          allow read;
+          allow write: if isSignedIn();
+        }
+    }  
+
+		// Lookup linking users to shopping lists
+    // match /shoppingListIndex/{userId} {
+    //   allow read, write: if isSignedIn()&&
+    //  	 request.auth.uid == userId &&
+    //  	 resource.data.userId == userId;
+    //}
+
+		// Lookup linking users to shopping lists
+    //match /shoppingListIndex/{docID} {
+    	//allow read, write: if isSignedIn();// &&
+      	 //request.auth.uid == userId &&
+      	 //resource.data.userId == userId;
+    //}
+    
+    // Shoping list Collection
+    // Must be signed in to write
+    // and the owner to read or delete.
+    match /shoppingList/{userId} {
+    	allow create: if isSignedIn();
+    	allow read: if isSignedIn() && 
+      request.auth.uid == resource.data.userId;
+    	allow delete: if isSignedIn() && 
+      request.auth.uid == resource.data.userId;
+    }
+    
   }
 }
