@@ -424,6 +424,11 @@ function searchTextChanged(){
   console.log('searchText Array: ', searchArr);  
 
   popRecipes(searchArr);
+
+  // ToDo: clear search text after search
+  //searchTextElement.innerHtml = "Done";
+  document.getElementById("searchText").value = ""; 
+  console.log('searchTextChanged - Done');  
 }
 
 /*=======================================================================================================*/
