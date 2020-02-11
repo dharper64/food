@@ -460,9 +460,6 @@ goHomeButtonElement.addEventListener('click', function() {
 addToShoppingListButtonElement.addEventListener('click', function() {
   console.log('Add to shopping list Button Clicked');   
 
-  //var x = document.getElementById("myLI").parentElement.nodeName;
-  //var id = addToShoppingListButtonElement.parentElement.id
-
   console.log('addIncredientsToShoppingList ', selectedRecipeID);
 
   addRecipeIngredientToShoppingList();
@@ -1279,17 +1276,16 @@ function loadRecipeImage(imageElm, RecipeID){
       
       console.log("image.src: ", image.src);
   }).catch(function(error) {
-    console.error('There was an error downloading a file from Cloud Storage:', error);  
-
     if (error.code == "storage/object-not-found") {
       console.log("loadRecipeImage - File NOT found! Load the default.");
       image.src = "/images/default.jpg";      
+    } else {
+      console.error('There was an error downloading a file from Cloud Storage:', error);  
     }
   });
   
   console.log("loadRecipeImage - done");
 }
-
 
 /*----------------------------------------------------------------------------------------------------------*/
 /* Ingredients update & add */
@@ -1823,20 +1819,24 @@ function popShoppingList(){
   function addRecipeIngredientToShoppingList(){
     console.log('addRecipeIngredientToShoppingList');
     // Copy ingredients from recipe ingredients sub collection to shopping list.
-    // Note. Can't do this from the list as this is just a string.
 
-    const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
+    try{    
+      const query = firestore.collection('recipes').doc(selectedRecipeID).collection('Ingredients')
 
-    // Start listening to the query to get shopping list data.
-    query.onSnapshot(function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-  
-      var ListItem = change.doc.data();
-      console.log('Ingredient: ', ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
-      addNewItemToShoppingList(ListItem.item, ListItem.qty, ListItem.unit);
-      }) 
-    })
+      query.onSnapshot(function(snapshot) {
+        snapshot.docChanges().forEach(function(change) {
+    
+        var ListItem = change.doc.data();
+        console.log('Ingredient: ', ListItem.orderBy, ListItem.item, ListItem.qty, ListItem.unit);
+        addNewItemToShoppingList(ListItem.item, ListItem.qty, ListItem.unit);
+        }) 
+      })
+      alert("Ingredients added to shopping list.");
 
+    }
+    catch(err) {
+      console.error("Error addRecipeIngredientToShoppingList: ", err.textContent);
+    }
     console.log('addRecipeIngredientToShoppingList - Done');
   }
 
