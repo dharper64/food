@@ -460,8 +460,6 @@ goHomeButtonElement.addEventListener('click', function() {
 addToShoppingListButtonElement.addEventListener('click', function() {
   console.log('Add to shopping list Button Clicked');   
 
-  console.log('addIncredientsToShoppingList ', selectedRecipeID);
-
   addRecipeIngredientToShoppingList();
 
   //linkClicked("Home");
@@ -470,9 +468,6 @@ addToShoppingListButtonElement.addEventListener('click', function() {
 editRecipeButtonElement.addEventListener('click', function() {
   console.log('Edit Button Clicked');   
   
-  //var x = document.getElementById("myLI").parentElement.nodeName;
-  //var id = editRecipeButtonElement.parentElement.id;
-
   console.log('addIncredientsToEditList ', selectedRecipeID);
 
   // Clear lists used for menu view
@@ -484,13 +479,6 @@ editRecipeButtonElement.addEventListener('click', function() {
 
   //linkClicked("Home");
 }); 
-
-
-
-//addToShoppingListButtonElement.addEventListener('click', addIncredientsToShoppingList());
-//editRecipeButtonElement.addEventListener('click', editRecipe());
-
-//var recipiesListData = firestore.collection('recipies');
 
 function homeShow(){
     // Display and populate the gallery.
@@ -543,7 +531,7 @@ function popRecipes(searchArr){
 
   console.log('Got Recipes:');
 
-  // Start listening to the query to get shopping list data.
+  // Start listening to the query to get recipe list data.
   query.onSnapshot(function(snapshot) {
       snapshot.docChanges().forEach(function(change) {                
       if (change.type === 'removed') {
@@ -702,7 +690,7 @@ function loadRecipeIngredients(id){
 
   methodElement.deleteListItem;
 
-  // Start listening to the query to get shopping list data.
+  // Start listening to the query to get ingredients list data.
   query.onSnapshot(function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
     //console.log("Document data:", change.doc.data());
@@ -952,7 +940,7 @@ function popIngredientDetailForUpdate(){
 
   console.log('ingredientListTableRowHTML...');
 
-  // Start listening to the query to get shopping list data.
+  // Start listening to the query to get ingredients list data.
   ingredientsUpdateListData.onSnapshot(function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
     
@@ -983,7 +971,7 @@ function popMethodDetailForUpdate(){
 
   console.log('methodUpdateListData...');
 
-  // Start listening to the query to get shopping list data.
+  // Start listening to the query to get method list data.
   methodUpdateListData.onSnapshot(function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
     
@@ -1543,11 +1531,9 @@ function clearMethodList(){
   }
 }
 
-// Build HTML for the shopping list rows
+// Build HTML for the method list rows
 function displayMethodListItem(id, orderBy, method){
   console.log('displayMethodListItem: ', orderBy, method);
-
-  //id = 'ed-' + id;
 
   const container = document.createElement('tr');
   container.setAttribute('id', id);
