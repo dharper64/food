@@ -460,9 +460,9 @@ goHomeButtonElement.addEventListener('click', function() {
 addToShoppingListButtonElement.addEventListener('click', function() {
   console.log('Add to shopping list Button Clicked');   
 
-  addRecipeIngredientToShoppingList();
-
-  //linkClicked("Home");
+  if (checkSignedInWithMessage()) {
+    addRecipeIngredientToShoppingList();
+  }
 }); 
 
 editRecipeButtonElement.addEventListener('click', function() {
