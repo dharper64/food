@@ -357,7 +357,7 @@ function addSizeToGoogleProfilePic(url) {
     NewElement.setAttribute('hidden', 'true');
     shoppingListElement.setAttribute('hidden', 'true');
     aboutElement.setAttribute('hidden', 'true');
-        
+
     console.log("All hidden.");
   }
 
@@ -419,14 +419,22 @@ function searchTextChanged(){
   console.log('searchTextChanged: ', this.value);   
 
   var searchTxt = this.value;
+
+  searchTxt = searchTxt.toLowerCase()
+  console.log('searchTextChanged: ', searchTxt);  
   var searchArr = searchTxt.split(" ");
 
   console.log('searchText Array: ', searchArr);  
 
+  hideAllDynamicDivs();
+
   popRecipes(searchArr);
+  
+  homeElement.removeAttribute('hidden');  
 
   // Clear search text after search
   document.getElementById("searchText").value = ""; 
+
 }
 
 /*=======================================================================================================*/
@@ -523,23 +531,26 @@ function popRecipes(searchArr){
       && searchArr != null  
       && searchArr.length != null  
       && searchArr.length > 0){
+    // Display all recipes with search text
+    
     console.log('Get all recipes with: ', searchArr);
     console.log('Or title is: ', searchArr[0]);
 
-    popupToastMsg('Search for: ' + searchArr[0]);
+    popupToastMsg("Search for '" + searchArr[0] + "'");
 
     query = firestore.collection('recipes').where("searchTxt", "array-contains-any", searchArr);
 
   } else {
+    // Display all recipes
     console.log('Get all recipes.');
     query = firestore.collection('recipes');
   }
 
-  console.log('Got Recipes:');
+  console.log('Got Recipes:');   
 
   // Start listening to the query to get recipe list data.
   query.onSnapshot(function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {                
+      snapshot.docChanges().forEach(function(change) {     
       if (change.type === 'removed') {
           deleteListItem(change.doc.id);
       } else {
@@ -550,6 +561,8 @@ function popRecipes(searchArr){
       }
       });
   })
+   
+
 }; 
 
 // Remove existing rows from recipe list when selected from menu.
@@ -564,6 +577,8 @@ function clearRecipeListElement(){
 
 function displayRecipeCard(id, title, desc){
     console.log('displayListItem: ', id, title, desc);
+
+    //popupToastMsg(title);
 
     //var imgURL = getRecipeImageURL(id);
     //console.log('imgURL', imgURL);
@@ -1424,6 +1439,10 @@ function deleteIngredient(rowId, titleTxt){
 }
 
 function addSearchTxt(searchTxt){
+  console.log("addSearchTxt: ", searchTxt)
+
+  searchTxt = searchTxt.toLowerCase();
+
   console.log("addSearchTxt: ", searchTxt)
 
   // Add to searchTxt array
