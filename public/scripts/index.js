@@ -741,14 +741,28 @@ function clearIngredientsListElement(){
 function displayIngredientItem(id, orderBy, item, qty, unit) {
   console.log('displayMethodItem: ', orderBy, item, qty, unit);
   
+  var ingredientStr = item;
+
+  if (qty == 0){
+    console.log('qty is zero');
+    ingredientStr = ingredientStr + ' ' + unit;
+  } else {
+    console.log('qty is not zero');
+    ingredientStr = item + ' ' + qty + ' ' + unit;
+  }
+
+  console.log('ingredientStr: ', ingredientStr);
+
   const container = document.createElement('li');
   container.setAttribute('id', id);
 
   var tableRow = document.getElementById(id)
 
+  // item + ` ` + qty + ` ` + unit
+
   var content = `<li id="row[` + id + `] class="mdl-list__item">
           <span class="mdl-list__item-primary-content">
-          ` +  item + ` ` + qty + ` ` + unit + ` 
+          ` + ingredientStr + ` 
           </span>
         </li>`;
 
@@ -1389,6 +1403,20 @@ function clearIngredientsList(){
 function displayIngredientListItem(id, orderBy, item, qty, unit){
   console.log('displayIngredientListItem: ', orderBy, item, qty, unit);
 
+  var ingredientStr = item;
+
+  if (qty == 0){
+    console.log('qty is zero');
+    ingredientStr = orderBy + '. ' +  item + ' ' + unit;
+  } else {
+    console.log('qty is not zero');
+    ingredientStr = orderBy + '. ' +  item + ' ' + qty + ' ' + unit;
+  }
+
+  console.log('ingredientStr: ', ingredientStr);
+
+  // orderBy + `. ` +  item + ` ` + qty + ` ` + unit
+
   const container = document.createElement('li');
   container.setAttribute('id', id);
 
@@ -1396,7 +1424,7 @@ function displayIngredientListItem(id, orderBy, item, qty, unit){
 
   var content = `<li id="row[` + id + `] class="mdl-list__item">
           <span class="mdl-list__item-primary-content">
-          ` + orderBy + `. ` +  item + ` ` + qty + ` ` + unit + ` 
+          ` + ingredientStr + ` 
           </span>
         </li>`;
 
