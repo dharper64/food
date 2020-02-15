@@ -508,7 +508,7 @@ function popRecipes(searchArr){
     var fc = recipeListElement.firstChild;
 
     while( fc ) {
-      console.log('Clear ingredient list row.');
+      console.log('Clear recipe list row.');
       recipeListElement.removeChild( fc );
         fc = recipeListElement.firstChild;
     }
