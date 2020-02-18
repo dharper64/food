@@ -20,5 +20,10 @@ Now that you have imported and configured your project, you are ready to run the
 
 # Deploy to Firebase hosting
 To deploy, run the following Firebase CLI command:
-    firebase deploy 
+    - Everything
+        firebase deploy
+    - Hosting only
+        firebase deploy --only hosting
+    - Functions only
+        firebase deploy --only functions
 
