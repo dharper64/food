@@ -18,6 +18,19 @@ Now that you have imported and configured your project, you are ready to run the
 2.	Your command line should display the following response: ✔ hosting: Local server: http://localhost:5000
 3.	Using your browser, open your app at http://localhost:5000.
 
+# Test functions localy
+To run a function locally, run the following Firebase CLI command: 
+    firebase serve --only functions
+
+# Building and testing functions
+To build functions written in type script:
+1. cd to the functions folder and enter...
+    npm run-script build
+
+To test functions:
+1. Still in the functions folder enter...
+    npm run-script lint
+
 # Deploy to Firebase hosting
 To deploy, run the following Firebase CLI command:
     - Everything
