@@ -1,3 +1,4 @@
+// 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin'; //SDK
 admin.initializeApp()
@@ -7,14 +8,63 @@ admin.initializeApp()
 
  // Set function region to London - europe-west2
 
- export const helloWorld = functions
-    .region('europe-west2')
-    .https.onRequest((request, response) => {
-    
-        console.log('Hello!')
-        response.send("Hello from Firebase! " + Date.now());
+// When a comment changes, remove any unsuitable words.
+export const cleanUpComments = functions
+    .region('europe-west2') // Don't forget to set the region to London.
+    .firestore
+    .document('recipes/{recipeID}/Comments/{CommentID}')
+    .onWrite((change, context) => {
+        const commentData = change.after.data();
+        if (commentData) {
+            const commentText = commentData.comment;
+            const updatedText = sanitizedForYourProtection(commentText);
+            if (commentText === updatedText) {
+                // To avoid infinit loops, check for actual changes.
+                console.log('No change, do nothing.')
+                return null;
+            }
+            return change.after.ref.update({comment: updatedText})
+        } else {
+            return null;
+        }        
+    });
 
- });
+function sanitizedForYourProtection(inputText: String) {
+    console.log('inputText:', inputText)
+    const re = /shit|bum/gi;
+    const cleanedText = inputText.replace(re, "****");
+    console.log('cleanedText: ', cleanedText)
+    return cleanedText;
+}
+
+/* ==================================================================================== */ 
+/* ================================ Test function blow ================================ */
+/* ==================================================================================== */ 
+
+export const helloWorld = functions
+.region('europe-west2')
+.https.onRequest((request, response) => {
+
+    console.log('Hello!')
+    response.send("Hello from Firebase! " + Date.now());
+
+});
+
+/* 
+// onCreate version of the text sanitizer
+export const cleanUpComments = functions.firestore
+    .document('recipes/{recipeID}/Comments/{CommentID}')
+    .onCreate((snapshot, context) => {
+        const commentData = snapshot.data();
+        if (commentData) {
+            const commentText = commentData.comment;
+            const updatedText = sanitizedForYourProtection(commentText);
+            return snapshot.ref.update({comment: updatedText})
+        } else {
+            return null;
+        }        
+    });
+*/
 
  /*
 // Firestore trigger runs on update to document. https://www.youtube.com/watch?v=d9GrysWH1Lc
