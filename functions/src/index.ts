@@ -17,7 +17,7 @@ export const cleanUpComments = functions
         const commentData = change.after.data();
         if (commentData) {
             const commentText = commentData.comment;
-            const updatedText = sanitizedForYourProtection(commentText);
+            const updatedText = removeBadWords(commentText);
             if (commentText === updatedText) {
                 // To avoid infinit loops, check for actual changes.
                 console.log('No change, do nothing.')
@@ -29,9 +29,9 @@ export const cleanUpComments = functions
         }        
     });
 
-function sanitizedForYourProtection(inputText: String) {
+function removeBadWords(inputText: String) {
     console.log('inputText:', inputText)
-    const re = /shit|bum/gi;
+    const re = /shit|bollocks/gi;
     const cleanedText = inputText.replace(re, "****");
     console.log('cleanedText: ', cleanedText)
     return cleanedText;
