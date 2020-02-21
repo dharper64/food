@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   try {
     let app = firebase.app();
-    let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+    let features = ['auth', 'database', 'messaging', 'storage', 'functions'].filter(feature => typeof app[feature] === 'function');
     document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
   } catch (e) {
     console.error(e);
@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Get a reference to the database service
   var firestore = firebase.firestore();
+  
+  // Initialize Cloud Functions through Firebase
+  var functions = firebase.functions();
+
 
 /*=====================================================================================================*/
 /* #region Authentication */
@@ -135,6 +139,37 @@ function getAccessLevel(){
     var userId = firebase.auth().currentUser.uid;
     console.log("getAccessLevel userId:", userId);
 
+    var messageText = 'Test'
+
+    var testFunction = firebase.functions().httpsCallable('testFunction');
+    console.log("getAccessLevel: 1");
+    testFunction({text: messageText}).then(function(result) {
+      console.log("getAccessLevel: 2");
+      // Read result of the Cloud Function.
+      var rText = result.data.text;
+      console.log("getAccessLevel: 3 - ", rText);
+    });
+
+    console.log("getAccessLevel called function.");
+  }
+  catch(err) {
+    console.error("Error getAccessLevel: ", err.textContent);
+  }
+
+  console.log("getAccessLevel done.");
+}
+
+/*
+function getAccessLevel(){
+  console.log("getAccessLevel...");
+  //ToDo: Testing only - test rules for setting data access to user only
+
+  try{
+    //var userCol = firestore.collection('users');  
+
+    var userId = firebase.auth().currentUser.uid;
+    console.log("getAccessLevel userId:", userId);
+
     firestore.collection("testData").where("userId", "==", userId)
     .get()
     .then(function(querySnapshot) {
@@ -155,6 +190,7 @@ function getAccessLevel(){
 
   console.log("getAccessLevel done.");
 }
+*/
 
 // Signs-out of Friendly Chat.
 function signOut() {

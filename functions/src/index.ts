@@ -112,6 +112,31 @@ functions.firestore.document('weather/hamble').onUpdate(change => {
 })
 */
 
+// Saves a message to the Firebase Realtime Database but sanitizes the text by removing swearwords.
+export const testFunction = functions
+    .region('europe-west2')
+    .https.onCall((request, response) => {
+    //.https.onCall((data, context) => {
+        
+    request.set('Access-Control-Allow-Origin', '*');
+    if (request.method === 'OPTIONS') {
+        // Send response to OPTIONS requests
+        request.set('Access-Control-Allow-Methods', 'GET');
+        request.set('Access-Control-Allow-Headers', 'Content-Type');
+        request.set('Access-Control-Max-Age', '3600');
+        request.status(204).send('');
+      } else {
+        request.send('Hello World!');
+      }
+
+    console.log('Hello from testFunction!')
+
+    //const rData = 'Cool'       
+    //response.send(rData)
+    return { text: 'This is the result'};
+
+  });
+
  // HTTP API end point function. https://www.youtube.com/watch?v=7IkUgCLr5oA
 export const getWeatherData = functions//.https.onRequest((request, response) => {
     .region('europe-west2')
