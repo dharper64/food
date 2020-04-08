@@ -40,3 +40,11 @@ To deploy, run the following Firebase CLI command:
     - Functions only
         firebase deploy --only functions
 
+
+# ToDo
+1. Investigate Navigo javascript router as used in Friendly Eats.
+    Mentioned in this tutorial for sql like joins. https://www.youtube.com/watch?v=rffbpMzLrZ0
+
+2. Review Friendly Eats for use of multiple JS files.
+
+
