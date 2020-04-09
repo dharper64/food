@@ -298,21 +298,25 @@ function logSignIn(user, token){
 
   console.log("Save logon event to Firebase as ", currentDate);
 
-  var signInLog = firestore.collection("signInLog").doc(user.email);  
+  var users = firestore.collection("users").doc(user.email);  
 
-  signInLog.set({
-    userName: user.displayName,
-    lastLogOn: firebase.firestore.FieldValue.serverTimestamp()
+  // Build JSON object to save
+  const signInLogJSON = {userName: user.displayName, lastLogOn: firebase.firestore.FieldValue.serverTimestamp()}
+
+  users.set({
+    signInLogJSON
     })
     .then(function(docRef) {
       console.log("Logon event saved Firebase", user.displayName);
 
-      //var signInLogTimeStamp = firestore.collection("signInLog").doc(user.email).collection('log');
-      var logDoc = signInLog.collection('logDetail').doc(currentDate);
+      //var usersTimeStamp = firestore.collection("users").doc(user.email).collection('log');
+      var logDoc = users.collection('logDetail').doc(currentDate);
+
+      // Build JSON object to save
+      const DateTimeJSON = {date: firebase.firestore.FieldValue.serverTimestamp(), token: token};
 
       logDoc.set({
-        date: firebase.firestore.FieldValue.serverTimestamp(),
-        token: token
+          DateTimeJSON
         })
         .then(function(docRef) { 
           console.log("Logon timestamp saved.", user.displayName);
@@ -367,6 +371,8 @@ function addSizeToGoogleProfilePic(url) {
 /* #region MenuSelection */
   // Menu selection and showing/hiding div elements
   
+  const dynamicDivs = document.getElementsByClassName('template')
+
   const homeElement = document.getElementById('home-container');  
   const recipeListElement = document.getElementById('recipes-list-container'); // This is within home-container
   const recipeOuterElement = document.getElementById('recipe-outer-container');
@@ -387,7 +393,14 @@ function addSizeToGoogleProfilePic(url) {
   function hideAllDynamicDivs(){
     console.log("Hide all Divs :");
 
-    //mainDiv.setAttribute('hidden', 'true');
+    //dynamicDivs.setAttribute('hidden', 'true');
+
+    //dynamicDivs.style.visibility = "hidden";
+
+    //for (var i = 0; i < dynamicDivs.length; i ++) {
+    //  dynamicDivs[i].style.visibility = "hidden";
+    //}
+
     homeElement.setAttribute('hidden', 'true');  
     recipeOuterElement.setAttribute('hidden', 'true');  
     NewElement.setAttribute('hidden', 'true');
@@ -1171,11 +1184,12 @@ function NewRecipeShow(){
 
         // Get current recipe title so it can be removed from searchTxt        
         var recipeDoc = firestore.collection('recipes').doc(selectedRecipeID);
-                
+        
+        // Build JSON object to save
+        var recipeHeaderJSON = {title: titleTxt, addedBy: submittedTxt, desc: descTxt}
+
         firestore.collection("recipes").doc(selectedRecipeID).update({
-          title: titleTxt,
-          addedBy: submittedTxt,
-          desc: descTxt
+          recipeHeaderJSON
         });
 
         console.log('Recipe header updated');
