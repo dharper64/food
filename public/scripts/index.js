@@ -118,6 +118,9 @@ function signIn() {
   var provider = new firebase.auth.GoogleAuthProvider();
   
   firebase.auth().signInWithPopup(provider).then(function(result) {
+    
+    console.log("Google login result:", result);
+
     // This gives you a Google Access Token. You can use it to access the Google API.
     var token = result.credential.accessToken;
     
@@ -164,8 +167,11 @@ function signInWithEmail(){
 
   // All future sign-in request now include tenant ID.
   firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+
+    //console.log("Email login result:", result);
+
     // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = result.credential.accessToken;
+    var token = '';
     
     console.log("session token...", token);
     // The signed-in user info.    
@@ -173,7 +179,7 @@ function signInWithEmail(){
       var newUser = result.user;
       logSignIn(newUser, token);
       //logSignIn();
-      console.log("User displayName...", newUser.displayName);
+      console.log("User displayName...", newUser.email);
       //console.log("User details...", newUser);
       getAccessLevel();
     }
@@ -334,7 +340,17 @@ function getProfilePicUrl() {
 // Returns the signed-in user's display name.
 function getUserName() {
   console.log("getUserName...");
-  return firebase.auth().currentUser.displayName;
+
+  var UserName = firebase.auth().currentUser.displayName;
+
+  if(UserName === ""||!UserName || 0 === UserName.length){
+    console.log("No name so get email...", firebase.auth().currentUser.email);
+    UserName = firebase.auth().currentUser.email;
+  }
+
+  console.log("UserName: ", UserName);
+
+  return UserName;
 }
 
 // Returns true if a user is signed-in.
