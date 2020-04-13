@@ -35,12 +35,29 @@ var userPicElement = document.getElementById('user-pic');
 var userNameElement = document.getElementById('user-name');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
+var signInWithEmailButtonElement = document.getElementById('sign-in-email');
 
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+
+var logInEmailElement = document.getElementById('logInWithEmail'); // See commentTxtElement
+var logInPassElement = document.getElementById('userpass'); 
 
 // Saves message on form submit.
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
+signInWithEmailButtonElement.addEventListener('click', signInWithEmail);
+
+var dialog = document.querySelector('dialog');
+var showDialogButton = document.querySelector('#show-dialog');
+
+if (! dialog.showModal) {
+  console.log("Hi...");
+  dialogPolyfill.registerDialog(dialog);
+}
+showDialogButton.addEventListener('click', function() {
+  console.log("Click...");
+  dialog.showModal();
+});  
 
 // A loading image URL.
 var LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
@@ -96,6 +113,8 @@ function signIn() {
   // Sign into Firebase using popup auth & Google as the identity provider.
   console.log("signIn...");
   
+  dialog.close();
+
   var provider = new firebase.auth.GoogleAuthProvider();
   
   firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -128,6 +147,88 @@ function signIn() {
   });  
   console.log("signIn done.");
 }
+
+function signInWithEmail(){
+  console.log("signInWithEmail...");
+
+  // See commentTxtElement
+
+  const email = logInEmailElement.value;
+  const password = logInPassElement.value;
+  
+  console.log("signInWithEmail email:", email);
+  console.log("signInWithEmail password", password);
+
+  // Set the tenant ID on Auth instance.
+  //firebase.auth().tenantId = 'TENANT_PROJECT_ID';
+
+  // All future sign-in request now include tenant ID.
+  firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    var token = result.credential.accessToken;
+    
+    console.log("session token...", token);
+    // The signed-in user info.    
+    try {
+      var newUser = result.user;
+      logSignIn(newUser, token);
+      //logSignIn();
+      console.log("User displayName...", newUser.displayName);
+      //console.log("User details...", newUser);
+      getAccessLevel();
+    }
+    catch(err) {
+      console.error("Error logging on: ", err.textContent);
+    }
+  }).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+
+    // The email of the user's account used.
+    // var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    // var credential = error.credential;
+    // ...
+    console.error("Error in signIn() errorCode: ", errorCode);
+    console.error("Error in signIn() error: ", errorMessage);
+
+    if (errorCode === "auth/user-not-found") {
+      console.error("User not found, call create new user.");
+
+      if (confirm("Not been here before? Do you want to register with these credentials?")){
+        createNewUserFromEmail(email, password)
+      }
+    } else if (errorCode === "auth/wrong-password"){
+      alert('Oops. Your user name or password may be incorrect.')
+    } else {
+      alert('Oops. please try again.')
+    }
+
+  });  
+
+  function createNewUserFromEmail(email, password){
+    console.log('createNewUserFromEmail email:', email)
+    console.log('createNewUserFromEmail password:', password)
+
+    //Create User with Email and Password
+    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode);
+      console.log(errorMessage);
+    });
+  }
+
+  dialog.close();
+
+}
+
+//===========================================================================================================
+
+
+//===========================================================================================================
 
 function getAccessLevel(){
   console.log("getAccessLevel...");
@@ -263,7 +364,8 @@ function authStateObserver(user) {
     signOutButtonElement.removeAttribute('hidden');
 
     // Hide sign-in button.
-    signInButtonElement.setAttribute('hidden', 'true');
+    //signInButtonElement.setAttribute('hidden', 'true');
+    showDialogButton.setAttribute('hidden', 'true');
 
     // Show recipe edit button
     editRecipeButtonElement.removeAttribute('hidden');
@@ -277,7 +379,10 @@ function authStateObserver(user) {
     signOutButtonElement.setAttribute('hidden', 'true');
 
     // Show sign-in button.
-    signInButtonElement.removeAttribute('hidden');
+    //signInButtonElement.removeAttribute('hidden');
+
+    console.log('Unhide login dialog button');
+    showDialogButton.removeAttribute('hidden');
 
     // Hide recipe edit button
     editRecipeButtonElement.setAttribute('hidden', 'true');
@@ -456,6 +561,9 @@ function addSizeToGoogleProfilePic(url) {
   }
 
 /* #endregion */
+/*=======================================================================================================*/
+
+
 /*=======================================================================================================*/
 // Query on search text - test
 // searchText
