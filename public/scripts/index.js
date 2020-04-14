@@ -39,25 +39,39 @@ var signInWithEmailButtonElement = document.getElementById('sign-in-email');
 
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 
+
+var newUserNameDivElement = document.getElementById('newUserNameDiv'); 
+var newUserNameElement = document.getElementById('newUserName'); 
+
 var logInEmailElement = document.getElementById('logInWithEmail'); // See commentTxtElement
 var logInPassElement = document.getElementById('userpass'); 
+var cancelSignInElement = document.getElementById('cancel-sign-in'); 
+
 
 // Saves message on form submit.
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
 signInWithEmailButtonElement.addEventListener('click', signInWithEmail);
 
-var dialog = document.querySelector('dialog');
+var logInDialog = document.querySelector('dialog');
 var showDialogButton = document.querySelector('#show-dialog');
 
-if (! dialog.showModal) {
+if (! logInDialog.showModal) {
   console.log("Hi...");
-  dialogPolyfill.registerDialog(dialog);
+  dialogPolyfill.registerDialog(logInDialog);
 }
 showDialogButton.addEventListener('click', function() {
   console.log("Click...");
-  dialog.showModal();
+  
+  console.log("Hide newUserNameDivElement")
+  newUserNameDivElement.setAttribute('hidden', 'true');
+
+  logInDialog.showModal();
 });  
+
+cancelSignInElement.addEventListener('click', function(){
+  logInDialog.close();
+})
 
 // A loading image URL.
 var LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
@@ -113,7 +127,7 @@ function signIn() {
   // Sign into Firebase using popup auth & Google as the identity provider.
   console.log("signIn...");
   
-  dialog.close();
+  logInDialog.close();
 
   var provider = new firebase.auth.GoogleAuthProvider();
   
@@ -152,7 +166,7 @@ function signIn() {
 }
 
 function signInWithEmail(){
-  console.log("signInWithEmail...");
+  console.log("signInWithEmail... ");
 
   // See commentTxtElement
 
@@ -181,7 +195,9 @@ function signInWithEmail(){
       //logSignIn();
       console.log("User displayName...", newUser.email);
       //console.log("User details...", newUser);
-      getAccessLevel();
+      //getAccessLevel();
+
+      logInDialog.close();
     }
     catch(err) {
       console.error("Error logging on: ", err.textContent);
@@ -202,9 +218,40 @@ function signInWithEmail(){
     if (errorCode === "auth/user-not-found") {
       console.error("User not found, call create new user.");
 
-      if (confirm("Not been here before? Do you want to register with these credentials?")){
-        createNewUserFromEmail(email, password)
-      }
+      var isNameDivHidden = newUserNameDivElement.getAttribute('hidden');
+      console.log("newUserNameDivElement hidden", isNameDivHidden)
+
+      if (isNameDivHidden){
+        if (confirm("Not been here before? Do you want to register with these credentials?")){
+      
+          newUserNameDivElement.removeAttribute('hidden');
+          newUserNameElement.focus();
+            
+          alert('Please enter your name.') 
+
+        } 
+      } else {
+        console.log("newUserNameDivElement not hidden")
+
+        newUserName = newUserNameElement.value;
+
+        if (newUserName === "") {
+          alert('Please enter your name.')
+        } else {
+          console.log("New user: ", newUserName)
+          createNewUserFromEmail(email, password)
+
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              // User is signed in.
+            console.log("New user looged in so update display name: ", newUserName)
+              updateUserDisplayName(newUserName)
+            }
+          });
+
+          //updateUserDisplayName(newUserName)
+        } 
+      }    
     } else if (errorCode === "auth/wrong-password"){
       alert('Oops. Your user name or password may be incorrect.')
     } else {
@@ -213,22 +260,44 @@ function signInWithEmail(){
 
   });  
 
-  function createNewUserFromEmail(email, password){
-    console.log('createNewUserFromEmail email:', email)
-    console.log('createNewUserFromEmail password:', password)
+}
 
-    //Create User with Email and Password
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
-    });
-  }
+function createNewUserFromEmail(email, password){
+  console.log('createNewUserFromEmail email:', email)
+  console.log('createNewUserFromEmail password:', password)
 
-  dialog.close();
+  //Create User with Email and Password
+  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode);
+    console.log(errorMessage);
+    if (errorCode === "auth/weak-password") {
+      alert("Oops, " + errorMessage)
+    }
+  });
+}
 
+function updateUserDisplayName(newUserName){
+  console.log('updateUserDisplayName newUserName:', newUserName)
+
+  var user = firebase.auth().currentUser;
+
+  console.log('New user: ', user)
+
+  user.updateProfile({
+    displayName: newUserName
+  }).then(function() {
+    // Update successful.
+    console.log("User name updated", user);
+  }).catch(function(error) {
+    // An error happened.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log("createNewUserFromEmail Error", errorCode);
+    console.log("createNewUserFromEmail Msg", errorMessage);        
+  }); 
 }
 
 //===========================================================================================================
@@ -382,10 +451,12 @@ function authStateObserver(user) {
     // Hide sign-in button.
     //signInButtonElement.setAttribute('hidden', 'true');
     showDialogButton.setAttribute('hidden', 'true');
+    logInDialog.close();
 
     // Show recipe edit button
     editRecipeButtonElement.removeAttribute('hidden');
     console.log("Un-Hidded Edit button!...");
+
 
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
