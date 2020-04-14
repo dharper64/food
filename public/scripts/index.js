@@ -70,6 +70,7 @@ showDialogButton.addEventListener('click', function() {
 });  
 
 cancelSignInElement.addEventListener('click', function(){
+  logInPassElement.value = "";
   logInDialog.close();
 })
 
@@ -174,7 +175,6 @@ function signInWithEmail(){
   const password = logInPassElement.value;
   
   console.log("signInWithEmail email:", email);
-  console.log("signInWithEmail password", password);
 
   // Set the tenant ID on Auth instance.
   //firebase.auth().tenantId = 'TENANT_PROJECT_ID';
