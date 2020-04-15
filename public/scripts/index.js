@@ -66,6 +66,10 @@ showDialogButton.addEventListener('click', function() {
   console.log("Hide newUserNameDivElement")
   newUserNameDivElement.setAttribute('hidden', 'true');
 
+  signInButtonElement.removeAttribute('hidden');
+
+  signInWithEmailButtonElement.innerHTML = '<i class="material-icons">email</i> Sign In With Email';
+
   logInDialog.showModal();
 });  
 
@@ -169,15 +173,14 @@ function signIn() {
 function signInWithEmail(){
   console.log("signInWithEmail... ");
 
-  // See commentTxtElement
-
   const email = logInEmailElement.value;
   const password = logInPassElement.value;
   
   console.log("signInWithEmail email:", email);
 
   // Set the tenant ID on Auth instance.
-  //firebase.auth().tenantId = 'TENANT_PROJECT_ID';
+  //firebase.auth().tenantId = '' //'TENANT_PROJECT_ID';
+  //console.log("firebase.auth().tenantId:", firebase.auth().tenantId);
 
   // All future sign-in request now include tenant ID.
   firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
@@ -185,14 +188,13 @@ function signInWithEmail(){
     //console.log("Email login result:", result);
 
     // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = '';
+    var token = result.credential.accessToken;
     
     console.log("session token...", token);
     // The signed-in user info.    
     try {
       var newUser = result.user;
       logSignIn(newUser, token);
-      //logSignIn();
       console.log("User displayName...", newUser.email);
       //console.log("User details...", newUser);
       //getAccessLevel();
@@ -207,28 +209,23 @@ function signInWithEmail(){
     var errorCode = error.code;
     var errorMessage = error.message;
 
-    // The email of the user's account used.
-    // var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    // var credential = error.credential;
-    // ...
     console.error("Error in signIn() errorCode: ", errorCode);
     console.error("Error in signIn() error: ", errorMessage);
 
     if (errorCode === "auth/user-not-found") {
       console.error("User not found, call create new user.");
-
       var isNameDivHidden = newUserNameDivElement.getAttribute('hidden');
       console.log("newUserNameDivElement hidden", isNameDivHidden)
 
       if (isNameDivHidden){
-        if (confirm("Not been here before? Do you want to register with these credentials?")){
-      
+        if (confirm("Not been here before? Do you want to register with these credentials?")){      
+          console.log("Prompt for name");
           newUserNameDivElement.removeAttribute('hidden');
-          newUserNameElement.focus();
-            
-          alert('Please enter your name.') 
-
+          signInButtonElement.setAttribute('hidden', 'true');
+          newUserNameElement.focus();            
+          signInWithEmailButtonElement.innerHTML = '<i class="material-icons">email</i> Register'
+          console.log("signInWithEmailButtonElement.innerHTML", signInWithEmailButtonElement.innerHTML);
+          alert('Please enter your name.');
         } 
       } else {
         console.log("newUserNameDivElement not hidden")
@@ -248,8 +245,6 @@ function signInWithEmail(){
               updateUserDisplayName(newUserName)
             }
           });
-
-          //updateUserDisplayName(newUserName)
         } 
       }    
     } else if (errorCode === "auth/wrong-password"){
@@ -257,9 +252,7 @@ function signInWithEmail(){
     } else {
       alert('Oops. please try again.')
     }
-
   });  
-
 }
 
 function createNewUserFromEmail(email, password){
@@ -285,6 +278,8 @@ function updateUserDisplayName(newUserName){
   var user = firebase.auth().currentUser;
 
   console.log('New user: ', user)
+
+  userNameElement.textContent = newUserName;
 
   user.updateProfile({
     displayName: newUserName
