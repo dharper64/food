@@ -140,22 +140,6 @@ function signIn() {
     
     console.log("Google login result:", result);
 
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = result.credential.accessToken;
-    
-    console.log("session token...", token);
-    // The signed-in user info.    
-    try {
-      var newUser = result.user;
-      logSignIn(newUser, token);
-      //logSignIn();
-      console.log("User displayName...", newUser.displayName);
-      //console.log("User details...", newUser);
-      getAccessLevel();
-    }
-    catch(err) {
-      console.error("Error logging on: ", err.textContent);
-    }
   }).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -185,25 +169,9 @@ function signInWithEmail(){
   // All future sign-in request now include tenant ID.
   firebase.auth().signInWithEmailAndPassword(email, password).then(function(result) {
 
-    //console.log("Email login result:", result);
-
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = result.credential.accessToken;
+    logInPassElement.value = "";
+    console.log("Google login result:", result);
     
-    console.log("session token...", token);
-    // The signed-in user info.    
-    try {
-      var newUser = result.user;
-      logSignIn(newUser, token);
-      console.log("User displayName...", newUser.email);
-      //console.log("User details...", newUser);
-      //getAccessLevel();
-
-      logInDialog.close();
-    }
-    catch(err) {
-      console.error("Error logging on: ", err.textContent);
-    }
   }).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
@@ -241,7 +209,7 @@ function signInWithEmail(){
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
-            console.log("New user looged in so update display name: ", newUserName)
+              console.log("New user looged in so update display name: ", newUserName)
               updateUserDisplayName(newUserName)
             }
           });
@@ -452,6 +420,11 @@ function authStateObserver(user) {
     editRecipeButtonElement.removeAttribute('hidden');
     console.log("Un-Hidded Edit button!...");
 
+    // log sign in
+    logSignIn(user); //, token);
+    
+    getAccessLevel();
+
 
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
@@ -475,11 +448,8 @@ function authStateObserver(user) {
   }
 }
 
-function logSignIn(user, token){
-//function logSignIn(){
+function logSignIn(user){
   // Log a user signing on
-
-  console.log("logSignIn...");
 
   var currentDate = dateStringShort();
 
@@ -500,7 +470,7 @@ function logSignIn(user, token){
       var logDoc = users.collection('logDetail').doc(currentDate);
 
       // Build JSON object to save
-      const DateTimeJSON = {date: firebase.firestore.FieldValue.serverTimestamp(), token: token};
+      const DateTimeJSON = {date: firebase.firestore.FieldValue.serverTimestamp()};
 
       logDoc.set({
           DateTimeJSON
