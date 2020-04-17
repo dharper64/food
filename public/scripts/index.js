@@ -349,7 +349,12 @@ function signOut() {
   });
 }
 
+function getProfilePicUrl() {
+  return firebase.auth().currentUser.photoURL || '/images/profile_placeholder.png';
+}
+
 // Returns the signed-in user's profile Pic URL.
+/*
 function getProfilePicUrl() {
   try {
     console.log("getProfilePicUrl...");
@@ -368,6 +373,7 @@ function getProfilePicUrl() {
     console.error("Error logging on: ", err.textContent);
   }
 }
+*/
 
 // Returns the signed-in user's display name.
 function getUserName() {
@@ -400,9 +406,12 @@ function authStateObserver(user) {
     // Get the signed-in user's profile pic and name.
     var profilePicUrl = getProfilePicUrl();
     var userName = getUserName();
+    var picUrl = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
 
     // Set the user's profile pic and name.
-    userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
+    userPicElement.style.backgroundImage = picUrl;
+
+    console.log("picUrl:", userPicElement.style.backgroundImage);
 
     userNameElement.textContent = userName;
 
